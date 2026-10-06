@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.webkit.GeolocationPermissions;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -51,7 +52,10 @@ public class MainActivity extends Activity {
                 }
                 return false; // stay inside the app
             }
+        });
 
+        // geolocation permission prompt → auto-grant (user sees Android prompt too)
+        web.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onGeolocationPermissionsShowPrompt(String origin,
                                                            GeolocationPermissions.Callback cb) {
