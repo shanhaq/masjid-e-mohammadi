@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Masjid e Mohammadi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ SAJDA (design 3) — dark glass emerald tokens ============ */
+:root {
+  --bg: #0A0F0C;
+  --surface: rgba(255,255,255,.05);
+  --surface-2: rgba(255,255,255,.04);
+  --line: rgba(255,255,255,.09);
+  --line-soft: rgba(255,255,255,.06);
+  --text-1: #F2FAF5;
+  --text-2: #9DB3A7;
+  --text-3: #6F8579;
+  --accent: #34D399;
+  --accent-deep: #10B981;
+  --on-accent: #04120C;
+  --danger: #FF7A7A;
+  --radius: 16px;
+  --radius-lg: 20px;
+  --pad: 16px;
+  --gap: 12px;
+  --font: "Space Grotesk", -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+* { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--text-1);
+  font: 400 15px/1.45 var(--font);
+  -webkit-user-select: none; user-select: none;
+  overflow-x: hidden;
+}
+body::before {
+  content: ""; position: fixed; top: -140px; left: 50%; transform: translateX(-50%);
+  width: 420px; height: 420px; pointer-events: none;
+  background: radial-gradient(circle, rgba(16,185,129,.16), transparent 65%);
+}
+button, input { font-family: inherit; }
+button { cursor: pointer; }
+input { -webkit-user-select: text; user-select: text; }
+
+/* views */
+.view { display: none; min-height: 100dvh; flex-direction: column;
+  padding: calc(env(safe-area-inset-top) + 24px) var(--pad)
+           calc(env(safe-area-inset-bottom) + 20px); }
+.view.on { display: flex; }
+
+/* ---------- brand / login ---------- */
+.brand { display: flex; flex-direction: column; align-items: center;
+  text-align: center; margin-top: 7vh; }
+.logo-ring {
+  width: 96px; height: 96px; border-radius: 50%;
+  background: rgba(16,185,129,.10); border: 1px solid rgba(52,211,153,.35);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 48px rgba(16,185,129,.25);
+}
+.brand h1 { font-size: 24px; font-weight: 700; margin: 20px 0 0;
+  letter-spacing: .01em; color: #F2FAF5; }
+.brand .sub { font-size: 13px; color: var(--text-2); margin-top: 6px; }
+
+.login-card {
+  margin-top: auto; background: var(--surface);
+  border: 1px solid var(--line); border-radius: var(--radius-lg);
+  padding: 20px var(--pad) var(--pad);
+  backdrop-filter: blur(8px);
+}
+.oauth-btn {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  width: 100%; min-height: 52px; border-radius: 26px;
+  background: rgba(255,255,255,.06); border: 1px solid var(--line);
+  color: var(--text-1); font-size: 15px; font-weight: 600;
+}
+.oauth-btn:active { transform: scale(.97); opacity: .85; }
+.oauth-btn svg { flex: none; }
+
+.divider { display: flex; align-items: center; gap: 12px;
+  margin: 18px 0; color: var(--text-3); font-size: 11px; font-weight: 700;
+  letter-spacing: .12em; }
+.divider::before, .divider::after {
+  content: ""; height: 1px; flex: 1; background: var(--line-soft); }
+
+.field-label { font-size: 11px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--text-3); margin-bottom: 8px; }
+.phone-row {
+  display: flex; align-items: stretch; gap: 10px;
+}
+.cc {
+  display: flex; align-items: center; gap: 6px; padding: 0 14px;
+  min-height: 54px; border-radius: var(--radius);
+  background: rgba(255,255,255,.04); border: 1px solid var(--line);
+  color: var(--text-2); font-size: 15px; font-weight: 600; flex: none;
+}
+.grow { flex: 1; min-width: 0; }
+.phone-input, .otp-input {
+  width: 100%; min-height: 54px; padding: 0 16px;
+  background: rgba(255,255,255,.04); border: 1px solid var(--line);
+  border-radius: var(--radius); color: var(--text-1);
+  font-size: 17px; font-weight: 600; letter-spacing: .06em;
+  outline: none; font-variant-numeric: tabular-nums;
+}
+.phone-input::placeholder, .otp-input::placeholder {
+  color: #4E6157; font-weight: 500; letter-spacing: normal; font-size: 15px; }
+.phone-input:focus, .otp-input:focus {
+  border-color: var(--accent); box-shadow: 0 0 0 3px rgba(52,211,153,.18); }
+.err { min-height: 18px; margin-top: 6px; font-size: 12px; color: var(--danger); }
+
+.btn {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  width: 100%; min-height: 56px; border: 0; border-radius: 28px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-deep));
+  color: var(--on-accent); font-size: 15px; font-weight: 700;
+  margin-top: 14px; overflow: hidden;
+}
+.btn:active { transform: scale(.97); }
+.btn:disabled { opacity: .55; }
+.btn.ghost {
+  background: transparent; border: 1px solid var(--line);
+  color: var(--text-2); font-weight: 600;
+}
+.btn .spin { position: absolute; width: 22px; height: 22px;
+  border: 2.5px solid rgba(4,18,12,.25); border-top-color: var(--on-accent);
+  border-radius: 50%; animation: spin .7s linear infinite; display: none; }
+.btn.loading .label { visibility: hidden; }
+.btn.loading .spin { display: block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.foot { text-align: center; font-size: 11px; color: var(--text-3);
+  margin-top: 16px; line-height: 1.5; }
+
+/* ---------- otp ---------- */
+.top-row { display: flex; align-items: center; gap: 12px; }
+.back {
+  width: 48px; height: 48px; border-radius: 50%; flex: none;
+  background: var(--surface); border: 1px solid var(--line);
+  color: var(--text-1); font-size: 20px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+}
+.back:active { opacity: .7; }
+.top-row .t { font-size: 17px; font-weight: 600; }
+.otp-head { margin-top: 28px; }
+.otp-head h2 { margin: 0; font-size: 22px; font-weight: 700; }
+.otp-head p { margin: 8px 0 0; font-size: 13px; color: var(--text-2); }
+.mask { color: var(--accent); font-weight: 600; }
+.demo-chip {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 18px;
+  background: rgba(52,211,153,.10); border: 1px solid rgba(52,211,153,.3);
+  color: #6EE7B7; font-size: 12px; font-weight: 600;
+  padding: 8px 12px; border-radius: 20px;
+}
+.otp-box { margin-top: 22px; }
+.otp-input { text-align: center; font-size: 26px; letter-spacing: .55em;
+  padding-left: calc(16px + .55em); font-weight: 700; min-height: 62px; }
+.resend { text-align: center; margin-top: 16px; font-size: 13px;
+  color: var(--text-3); }
+.resend button {
+  background: none; border: 0; color: var(--accent); font-size: 13px;
+  font-weight: 700; padding: 8px 10px; min-height: 48px;
+}
+.resend button:disabled { color: var(--text-3); font-weight: 500; }
+
+/* ---------- home placeholder (screen 2 build ke baad hata diya jayega) ---------- */
+.ph-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: 56px;
+}
+.ph-bar .name { font-size: 17px; font-weight: 700; }
+.ph-bar .who { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+.ph-center {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center; gap: 10px; padding-bottom: 10vh;
+}
+.ph-center .ring {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: rgba(16,185,129,.10); border: 1px solid rgba(52,211,153,.35);
+  display: flex; align-items: center; justify-content: center;
+}
+.ph-center h3 { margin: 6px 0 0; font-size: 17px; font-weight: 700; }
+.ph-center p { margin: 0; font-size: 13px; color: var(--text-2); max-width: 240px; }
+.step-chip {
+  margin-top: 4px; font-size: 11px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--accent);
+  background: rgba(52,211,153,.10); border: 1px solid rgba(52,211,153,.3);
+  padding: 6px 12px; border-radius: 20px;
+}
+</style>
+</head>
+<body>
+
+<!-- ================= SCREEN 1a — LOGIN ================= -->
+<section class="view on" id="v-login">
+  <div class="brand">
+    <div class="logo-ring" aria-hidden="true">
+      <svg width="52" height="52" viewBox="0 0 108 108" fill="none">
+        <path fill-rule="evenodd" clip-rule="evenodd"
+          d="M56 30a24 24 0 1 0 0 48 24 24 0 0 0 0-48Zm3 5a19 19 0 1 1 0 38 19 19 0 0 1 0-38Z"
+          fill="#34D399"/>
+        <path d="M74 40l2.2 5.8 5.8 2.2-5.8 2.2L74 56l-2.2-5.8L66 48l5.8-2.2L74 40Z"
+          fill="#34D399"/>
+      </svg>
+    </div>
+    <h1>Masjid e Mohammadi</h1>
+    <div class="sub">Namaz, Quran aur masjid ki har khabar — ek jagah</div>
+  </div>
+
+  <div class="login-card">
+    <button class="oauth-btn" id="btn-google" type="button">
+      <svg width="20" height="20" viewBox="0 0 48 48">
+        <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.6 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.8 6.1C12.3 13.2 17.6 9.5 24 9.5Z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65Z"/>
+        <path fill="#FBBC05" d="M10.53 28.59A14.5 14.5 0 0 1 9.77 24c0-1.6.28-3.15.76-4.59l-7.92-6.15A23.98 23.98 0 0 0 0 24c0 3.87.93 7.52 2.56 10.74l7.97-6.15Z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.9-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.17 2.3-6.4 0-11.83-4.3-13.77-10.11l-7.97 6.15C6.45 42.62 14.64 48 24 48Z"/>
+      </svg>
+      Google se continue karo
+    </button>
+
+    <div class="divider">YA</div>
+
+    <div class="field-label">Phone number</div>
+    <div class="phone-row">
+      <div class="cc">🇮🇳 +91</div>
+      <input class="phone-input grow" id="phone" type="tel" inputmode="numeric"
+        maxlength="10" placeholder="10 digit number" autocomplete="tel">
+    </div>
+    <div class="err" id="phone-err"></div>
+
+    <button class="btn" id="btn-otp" type="button">
+      <span class="label">OTP bhejo</span><span class="spin"></span>
+    </button>
+
+    <div class="foot">Aage badhne par aap Terms &amp; Privacy se sehmat hote hain.</div>
+  </div>
+</section>
+
+<!-- ================= SCREEN 1b — OTP VERIFY ================= -->
+<section class="view" id="v-otp">
+  <div class="top-row">
+    <button class="back" id="otp-back" aria-label="Wapas">&#8592;</button>
+    <div class="t">Verify OTP</div>
+  </div>
+
+  <div class="otp-head">
+    <h2>OTP bhej diya</h2>
+    <p><span class="mask" id="otp-to">+91 •••••</span> pe 6-digit OTP bheja hai</p>
+    <div class="demo-chip">⚡ Demo mode — koi bhi 6-digit OTP chalega</div>
+  </div>
+
+  <div class="otp-box">
+    <input class="otp-input" id="otp" type="tel" inputmode="numeric"
+      maxlength="6" placeholder="••••••" autocomplete="one-time-code">
+    <div class="err" id="otp-err"></div>
+    <button class="btn" id="btn-verify" type="button">
+      <span class="label">Verify karo</span><span class="spin"></span>
+    </button>
+    <div class="resend">Nahi mila? <button id="btn-resend" type="button" disabled>
+      <span id="resend-t">30s</span> me dobara</button></div>
+  </div>
+</section>
+
+<!-- ============ placeholder — SCREEN 2 (Main) yahan aayegi ============ -->
+<section class="view" id="v-home">
+  <div class="ph-bar">
+    <div>
+      <div class="name">Masjid e Mohammadi</div>
+      <div class="who" id="home-who">—</div>
+    </div>
+    <button class="back" id="btn-logout" title="Logout" aria-label="Logout">&#x23FB;</button>
+  </div>
+  <div class="ph-center">
+    <div class="ring">
+      <svg width="34" height="34" viewBox="0 0 108 108" aria-hidden="true">
+        <path fill-rule="evenodd" clip-rule="evenodd"
+          d="M56 30a24 24 0 1 0 0 48 24 24 0 0 0 0-48Zm3 5a19 19 0 1 1 0 38 19 19 0 0 1 0-38Z"
+          fill="#34D399"/>
+      </svg>
+    </div>
+    <h3>Login ho gaya ✓</h3>
+    <p>Main screen (namaz time + announcements) agla build step hai — yahin dikhegi.</p>
+    <div class="step-chip">Screen 2 of 6 — building</div>
+  </div>
+</section>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var SESSION = "mm_session";
+
+  function show(viewId) {
+    var vs = document.querySelectorAll(".view");
+    for (var i = 0; i < vs.length; i++) vs[i].classList.remove("on");
+    $(viewId).classList.add("on");
+    window.scrollTo(0, 0);
+  }
+
+  function setLoading(btn, on) {
+    if (on) btn.classList.add("loading");
+    else btn.classList.remove("loading");
+    btn.disabled = !!on;
+  }
+
+  function session() {
+    try { return JSON.parse(localStorage.getItem(SESSION) || "null"); }
+    catch (e) { return null; }
+  }
+  function saveSession(obj) {
+    try { localStorage.setItem(SESSION, JSON.stringify(obj)); } catch (e) {}
+  }
+  function clearSession() {
+    try { localStorage.removeItem(SESSION); } catch (e) {}
+  }
+
+  function enterHome() {
+    var s = session();
+    if (!s) return false;
+    $("home-who").textContent = s.label || "Member";
+    show("v-home");
+    return true;
+  }
+
+  /* ---------- login ---------- */
+  $("btn-google").addEventListener("click", function () {
+    var btn = this;
+    setLoading(btn, true);
+    setTimeout(function () {
+      setLoading(btn, false);
+      saveSession({ via: "google", label: "Google account (demo)" });
+      enterHome();
+    }, 700);
+  });
+
+  $("btn-otp").addEventListener("click", function () {
+    var btn = this;
+    var val = $("phone").value.replace(/\D/g, "");
+    if (!/^[6-9]\d{9}$/.test(val)) {
+      $("phone-err").textContent = "Sahi 10 digit number daalo (6-9 se shuru)";
+      return;
+    }
+    $("phone-err").textContent = "";
+    setLoading(btn, true);
+    setTimeout(function () {
+      setLoading(btn, false);
+      $("otp-to").textContent = "+91 " + val.slice(0, 2) + "•••••" + val.slice(-3);
+      $("otp").value = "";
+      $("otp-err").textContent = "";
+      show("v-otp");
+      startResend();
+      setTimeout(function () { $("otp").focus(); }, 80);
+    }, 700);
+  });
+
+  $("phone").addEventListener("input", function () {
+    this.value = this.value.replace(/\D/g, "").slice(0, 10);
+    $("phone-err").textContent = "";
+  });
+
+  /* ---------- otp ---------- */
+  var resendTimer = null;
+  function startResend() {
+    var left = 30;
+    var btn = $("btn-resend");
+    btn.disabled = true;
+    $("resend-t").textContent = left + "s";
+    if (resendTimer) clearInterval(resendTimer);
+    resendTimer = setInterval(function () {
+      left -= 1;
+      if (left <= 0) {
+        clearInterval(resendTimer);
+        btn.disabled = false;
+        btn.textContent = "OTP dobara bhejo";
+        return;
+      }
+      $("resend-t").textContent = left + "s";
+    }, 1000);
+  }
+
+  $("btn-resend").addEventListener("click", function () {
+    startResend();
+    var btn = $("btn-resend");
+    btn.disabled = true;
+    setTimeout(function () {
+      btn.innerHTML = '<span id="resend-t">30s</span> me dobara';
+      startResend();
+    }, 500);
+  });
+
+  $("otp").addEventListener("input", function () {
+    this.value = this.value.replace(/\D/g, "").slice(0, 6);
+    $("otp-err").textContent = "";
+  });
+
+  $("btn-verify").addEventListener("click", function () {
+    var btn = this;
+    var code = $("otp").value;
+    if (code.length !== 6) {
+      $("otp-err").textContent = "6 digit OTP daalo";
+      return;
+    }
+    setLoading(btn, true);
+    setTimeout(function () {
+      setLoading(btn, false);
+      saveSession({ via: "phone", label: $("otp-to").textContent });
+      enterHome();
+    }, 700);
+  });
+
+  $("otp-back").addEventListener("click", function () {
+    if (resendTimer) clearInterval(resendTimer);
+    show("v-login");
+  });
+
+  /* ---------- logout ---------- */
+  $("btn-logout").addEventListener("click", function () {
+    clearSession();
+    $("phone").value = "";
+    show("v-login");
+  });
+
+  /* ---------- boot ---------- */
+  enterHome();
+})();
+</script>
+</body>
+</html>

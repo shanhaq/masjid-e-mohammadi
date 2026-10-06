@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Masjid e Mohammadi launcher mark: crescent + star, emerald on dark.
+     108x108 viewport, mark sits inside the middle 66dp safe zone. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#34D399"
+        android:fillRule="evenodd"
+        android:pathData="M56,30 a24,24 0 1 0 0,48 a24,24 0 1 0 0,-48 z M59,35 a19,19 0 1 1 0,38 a19,19 0 1 1 0,-38 z" />
+    <path
+        android:fillColor="#34D399"
+        android:pathData="M74,40 l2.2,5.8 5.8,2.2 -5.8,2.2 -2.2,5.8 -2.2,-5.8 -5.8,-2.2 5.8,-2.2 z" />
+</vector>

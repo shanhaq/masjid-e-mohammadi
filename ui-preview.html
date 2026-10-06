@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deen Saathi — Main screen ke 3 design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0; background: #0B0B0C; color: #EDEDED;
+    font: 400 15px/1.5 Manrope, "Segoe UI", Roboto, sans-serif;
+    padding: 28px 16px 60px;
+  }
+  .page-head { text-align: center; max-width: 720px; margin: 0 auto 28px; }
+  .page-head h1 { font-size: 22px; font-weight: 800; margin: 0 0 6px; }
+  .page-head p { margin: 0; color: #9A9AA0; font-size: 14px; }
+  .frames {
+    display: flex; flex-wrap: wrap; gap: 36px; justify-content: center;
+    align-items: flex-start; max-width: 1360px; margin: 0 auto;
+  }
+  figure { margin: 0; width: 390px; max-width: 100%; }
+  figcaption { margin-top: 14px; text-align: center; font-size: 14px; color: #C9C9CE; }
+  figcaption .num {
+    display: inline-block; width: 26px; height: 26px; line-height: 26px;
+    border-radius: 50%; background: #EDEDED; color: #0B0B0C;
+    font-weight: 800; font-size: 14px; margin-right: 6px;
+  }
+  figcaption b { color: #FFF; }
+  figcaption small { display: block; color: #8A8A8E; margin-top: 3px; }
+  .phone {
+    width: 390px; height: 844px; border-radius: 44px; overflow: hidden;
+    border: 6px solid #1C1C1F; box-shadow: 0 30px 60px rgba(0,0,0,.55);
+    position: relative; background: #FFF;
+  }
+  .screen { position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden; }
+  .statusbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 26px 4px; font-size: 13px; font-weight: 700; flex: none;
+  }
+  .statusbar .dots { letter-spacing: 2px; font-size: 11px; }
+  .content { flex: 1; overflow: hidden; padding: 0 16px; }
+  .content.scroll { overflow-y: auto; }
+  .content::-webkit-scrollbar { display: none; }
+  svg.ic { width: 22px; height: 22px; stroke: currentColor; fill: none;
+    stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .tabbar {
+    flex: none; display: flex; justify-content: space-around; align-items: center;
+    padding: 8px 6px 16px;
+  }
+  .tab { display: flex; flex-direction: column; align-items: center; gap: 3px;
+    font-size: 10px; font-weight: 600; min-width: 56px; }
+  .tab .ic { width: 23px; height: 23px; }
+
+  /* ============ shared content pieces ============ */
+  .alert {
+    display: flex; gap: 10px; align-items: flex-start;
+    border-radius: 14px; padding: 12px 14px; margin-top: 12px;
+    font-size: 13px; line-height: 1.4;
+  }
+  .alert .tag {
+    font-size: 10px; font-weight: 800; letter-spacing: .08em;
+    padding: 3px 8px; border-radius: 20px; flex: none;
+  }
+  .row-list { border-radius: 16px; overflow: hidden; }
+  .namaz-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 13px 14px; font-size: 15px;
+  }
+  .namaz-row .n-name { font-weight: 600; display: flex; align-items: center; gap: 10px; }
+  .namaz-row .n-time { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .sec-label {
+    font-size: 11px; font-weight: 800; letter-spacing: .1em;
+    text-transform: uppercase; margin: 20px 2px 10px;
+  }
+  .post { border-radius: 16px; padding: 14px; margin-bottom: 12px; }
+  .post .p-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+    font-size: 12px; font-weight: 700; }
+  .post .p-head .who { opacity: .65; font-weight: 600; }
+  .post .p-text { font-size: 14px; line-height: 1.45; }
+  .media {
+    height: 132px; border-radius: 12px; margin-top: 10px; position: relative;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .media .m-cap {
+    position: absolute; left: 10px; bottom: 8px; right: 10px;
+    font-size: 12px; font-weight: 700; color: #FFF;
+    text-shadow: 0 1px 6px rgba(0,0,0,.5);
+  }
+  .play-badge {
+    width: 46px; height: 46px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; z-index: 1;
+  }
+  .play-badge .ic { width: 20px; height: 20px; }
+  .voice { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
+  .voice .v-play {
+    width: 42px; height: 42px; border-radius: 50%; flex: none;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .wave { display: flex; align-items: center; gap: 3px; flex: 1; height: 28px; }
+  .wave i { width: 3px; border-radius: 3px; display: block; }
+  .v-time { font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; opacity: .7; }
+  .dur {
+    position: absolute; right: 8px; top: 8px; background: rgba(0,0,0,.55);
+    color: #FFF; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 8px;
+  }
+
+  /* ============ D1 — NOOR (soft pastel) ============ */
+  .d1 { background: #F4F8F4; color: #1A2E24; font-family: Manrope, sans-serif; }
+  .d1 .statusbar { color: #1A2E24; }
+  .d1-top { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+  .d1-top .greet { margin: 0; font-size: 13px; color: #7C8F84; font-weight: 600; }
+  .d1-top h2 { margin: 2px 0 0; font-size: 21px; font-weight: 800; color: #143124; }
+  .d1-top .date-pill {
+    background: #FFF; color: #4B6559; font-size: 12px; font-weight: 700;
+    padding: 8px 12px; border-radius: 20px; box-shadow: 0 2px 8px rgba(20,49,36,.06);
+  }
+  .d1 .alert { background: #FFF6E6; color: #6B4E12; border: 1px solid #F5E4BE;
+    justify-content: space-between; align-items: center; }
+  .d1 .alert .tag { background: #F5D98B; color: #5C430E; }
+  .d1 .cd-card {
+    margin-top: 12px; background: linear-gradient(135deg, #2E7D5B 0%, #3FA077 100%);
+    border-radius: 20px; padding: 18px; color: #FFF; position: relative; overflow: hidden;
+  }
+  .d1 .cd-card::after {
+    content: ""; position: absolute; right: -30px; top: -40px; width: 140px; height: 140px;
+    border-radius: 50%; background: rgba(255,255,255,.10);
+  }
+  .d1 .cd-over { font-size: 11px; font-weight: 800; letter-spacing: .1em; opacity: .85; }
+  .d1 .cd-num { font-size: 44px; font-weight: 800; letter-spacing: .5px; margin-top: 4px;
+    font-variant-numeric: tabular-nums; }
+  .d1 .cd-sub { font-size: 13px; opacity: .9; margin-top: 2px; }
+  .d1 .cd-bar { height: 6px; background: rgba(255,255,255,.25); border-radius: 6px;
+    margin-top: 14px; overflow: hidden; }
+  .d1 .cd-bar i { display: block; width: 72%; height: 100%; background: #FFF; border-radius: 6px; }
+  .d1 .sec-label { color: #7C8F84; }
+  .d1 .row-list { background: #FFF; box-shadow: 0 2px 10px rgba(20,49,36,.05); }
+  .d1 .namaz-row { border-bottom: 1px solid #EEF3EF; color: #3E5449; }
+  .d1 .namaz-row:last-child { border-bottom: 0; }
+  .d1 .namaz-row.active { background: #E9F5EE; }
+  .d1 .namaz-row.active .n-name { color: #2E7D5B; }
+  .d1 .namaz-row .dot { width: 8px; height: 8px; border-radius: 50%; background: #3FA077; }
+  .d1 .post { background: #FFF; box-shadow: 0 2px 10px rgba(20,49,36,.05); color: #23382D; }
+  .d1 .p-head .badge { background: #E9F5EE; color: #2E7D5B; padding: 3px 8px;
+    border-radius: 20px; font-size: 10px; font-weight: 800; letter-spacing: .06em; }
+  .d1 .p-head .urgent { background: #FDECEC; color: #C0392B; }
+  .d1 .media.photo { background: linear-gradient(135deg, #8FD3B6, #2E7D5B); }
+  .d1 .media.video { background: linear-gradient(135deg, #1E4D3B, #0E2A20); }
+  .d1 .voice .v-play { background: #2E7D5B; color: #FFF; }
+  .d1 .wave i { background: #9CCBB6; }
+  .d1 .wave i.on { background: #2E7D5B; }
+  .d1 .tabbar { background: #FFF; border-top: 1px solid #E7EEE9; }
+  .d1 .tab { color: #93A79C; }
+  .d1 .tab.on { color: #2E7D5B; }
+
+  /* ============ D2 — AZAAN (bold flat blocks) ============ */
+  .d2 { background: #F6F3EC; color: #171717; font-family: Inter, sans-serif; }
+  .d2 .statusbar { color: #FFF; background: #0E5C3A; padding-bottom: 10px; }
+  .d2-hero { background: #0E5C3A; color: #FFF; padding: 4px 20px 22px; }
+  .d2-top { display: flex; justify-content: space-between; align-items: center; }
+  .d2-top h2 { margin: 0; font-size: 19px; font-weight: 700; }
+  .d2-top .date { font-size: 12px; font-weight: 600; opacity: .8; }
+  .d2-hero .cd-over { font-size: 11px; font-weight: 800; letter-spacing: .14em;
+    margin-top: 18px; color: #A8E0C6; }
+  .d2-hero .cd-num {
+    font-family: "Archivo Black", sans-serif; font-size: 54px; line-height: 1.05;
+    margin-top: 6px; font-variant-numeric: tabular-nums; letter-spacing: -1px;
+  }
+  .d2-hero .cd-sub { font-size: 13px; font-weight: 600; opacity: .85; margin-top: 6px; }
+  .d2 .content { padding-top: 14px; }
+  .d2 .alert {
+    background: #FFE24B; color: #171717; border: 2px solid #171717;
+    border-radius: 12px; font-weight: 600; align-items: center;
+  }
+  .d2 .alert .tag { background: #171717; color: #FFE24B; border-radius: 6px; }
+  .d2 .sec-label { color: #171717; }
+  .d2 .row-list { background: #FFF; border: 2px solid #171717; border-radius: 12px; }
+  .d2 .namaz-row { border-bottom: 2px solid #171717; }
+  .d2 .namaz-row:last-child { border-bottom: 0; }
+  .d2 .namaz-row .n-time { font-weight: 800; }
+  .d2 .namaz-row.active { background: #0E5C3A; color: #FFF; }
+  .d2 .post { background: #FFF; border: 2px solid #171717; border-radius: 12px; color: #171717; }
+  .d2 .p-head .badge { background: #0E5C3A; color: #FFF; padding: 3px 8px;
+    border-radius: 6px; font-size: 10px; font-weight: 800; letter-spacing: .06em; }
+  .d2 .p-head .urgent { background: #E03131; color: #FFF; }
+  .d2 .media.photo { background: #0E5C3A; }
+  .d2 .media.photo::before {
+    content: ""; position: absolute; inset: 0;
+    background: repeating-linear-gradient(45deg, rgba(255,255,255,.07) 0 14px, transparent 14px 28px);
+  }
+  .d2 .media.video { background: #171717; }
+  .d2 .voice .v-play { background: #FFE24B; color: #171717; border: 2px solid #171717; }
+  .d2 .wave i { background: #C9C2B2; }
+  .d2 .wave i.on { background: #0E5C3A; }
+  .d2 .tabbar { background: #FFF; border-top: 2px solid #171717; }
+  .d2 .tab { color: #8A8A8E; }
+  .d2 .tab.on { color: #0E5C3A; }
+
+  /* ============ D3 — SAJDA (dark glass) ============ */
+  .d3 { background: #0A0F0C; color: #E8F2EC; font-family: "Space Grotesk", sans-serif; }
+  .d3 .statusbar { color: #DDEAE2; }
+  .d3-top { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+  .d3-top .greet { margin: 0; font-size: 13px; color: #6F8579; font-weight: 500; }
+  .d3-top h2 { margin: 2px 0 0; font-size: 21px; font-weight: 700; color: #F2FAF5; }
+  .d3-top .date-pill {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.09);
+    color: #9DB3A7; font-size: 12px; font-weight: 600; padding: 8px 12px; border-radius: 20px;
+  }
+  .d3 .alert {
+    background: rgba(245,166,35,.10); border: 1px solid rgba(245,166,35,.28);
+    color: #F0C987; justify-content: space-between; align-items: center;
+  }
+  .d3 .alert .tag { background: rgba(245,166,35,.2); color: #F5B942; }
+  .d3 .cd-card {
+    margin-top: 12px; background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.09); border-radius: 20px;
+    padding: 18px; display: flex; gap: 18px; align-items: center; position: relative;
+    overflow: hidden;
+  }
+  .d3 .cd-card::before {
+    content: ""; position: absolute; left: -40px; top: -60px; width: 180px; height: 180px;
+    background: radial-gradient(circle, rgba(16,185,129,.22), transparent 65%);
+  }
+  .d3 .cd-ring {
+    width: 96px; height: 96px; border-radius: 50%; flex: none; position: relative;
+    background: conic-gradient(#34D399 0% 72%, rgba(255,255,255,.08) 72% 100%);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .d3 .cd-ring::after {
+    content: ""; position: absolute; inset: 9px; border-radius: 50%; background: #101713;
+  }
+  .d3 .cd-ring span {
+    position: relative; z-index: 1; font-size: 12px; font-weight: 700; color: #34D399;
+    font-variant-numeric: tabular-nums;
+  }
+  .d3 .cd-over { font-size: 11px; font-weight: 700; letter-spacing: .12em; color: #6F8579; }
+  .d3 .cd-num {
+    font-size: 40px; font-weight: 700; margin-top: 4px; color: #F2FAF5;
+    font-variant-numeric: tabular-nums; text-shadow: 0 0 24px rgba(52,211,153,.35);
+  }
+  .d3 .cd-sub { font-size: 13px; color: #9DB3A7; margin-top: 2px; }
+  .d3 .sec-label { color: #6F8579; }
+  .d3 .row-list {
+    background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+    border-radius: 16px;
+  }
+  .d3 .namaz-row { border-bottom: 1px solid rgba(255,255,255,.06); color: #BFD2C8; }
+  .d3 .namaz-row:last-child { border-bottom: 0; }
+  .d3 .namaz-row.active { background: rgba(16,185,129,.12); }
+  .d3 .namaz-row.active .n-name { color: #34D399; }
+  .d3 .namaz-row .glow { width: 8px; height: 8px; border-radius: 50%; background: #34D399;
+    box-shadow: 0 0 10px #34D399; }
+  .d3 .post {
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); color: #D7E6DE;
+  }
+  .d3 .p-head .badge { background: rgba(52,211,153,.15); color: #34D399; padding: 3px 8px;
+    border-radius: 20px; font-size: 10px; font-weight: 700; letter-spacing: .06em; }
+  .d3 .p-head .urgent { background: rgba(224,49,49,.18); color: #FF7A7A; }
+  .d3 .media.photo { background: linear-gradient(135deg, #0E3B2E, #14B88A); }
+  .d3 .media.video { background: linear-gradient(135deg, #101713, #1E4D3B); }
+  .d3 .voice .v-play { background: rgba(52,211,153,.16); color: #34D399;
+    border: 1px solid rgba(52,211,153,.4); }
+  .d3 .wave i { background: rgba(52,211,153,.28); }
+  .d3 .wave i.on { background: #34D399; }
+  .d3 .tabbar {
+    background: rgba(255,255,255,.04); border-top: 1px solid rgba(255,255,255,.08);
+  }
+  .d3 .tab { color: #5E7368; }
+  .d3 .tab.on { color: #34D399; }
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <h1>Deen Saathi — Main screen ke 3 design</h1>
+  <p>Ek hi content, teen alag mood. Number batao (1 / 2 / 3) — mix bhi kar sakte ho
+  jaise “2 lekin rang 1 jaisa”.</p>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/><path d="M9.5 21v-6h5v6"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H12v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H12v16h5.5a2.5 2.5 0 0 1 2.5 2.5z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="4"/><path d="m10 9.5 5 2.5-5 2.5z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H4l2.2-3A8 8 0 1 1 21 12z"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 19a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  </defs>
+</svg>
+
+<div class="frames">
+
+  <!-- ================= ① NOOR ================= -->
+  <figure>
+    <div class="phone"><div class="screen d1">
+      <div class="statusbar"><span>11:22</span><span class="dots">●●● ⏻</span></div>
+      <div class="content scroll">
+        <div class="d1-top">
+          <div>
+            <p class="greet">Assalamu Alaikum</p>
+            <h2>Deen Saathi</h2>
+          </div>
+          <div class="date-pill">Mangal, 6 Oct</div>
+        </div>
+
+        <div class="alert">
+          <span class="tag">UPDATE</span>
+          <span style="flex:1">Namaz time badla — Asr ab <b>4:12 PM</b></span>
+          <svg class="ic" style="width:18px;height:18px"><use href="#i-bell"/></svg>
+        </div>
+
+        <div class="cd-card">
+          <div class="cd-over">AGLA NAMAZ · ZUHR · 12:45 PM</div>
+          <div class="cd-num">01:23:00</div>
+          <div class="cd-sub">baaki — 72% waqt guzar chuka hai</div>
+          <div class="cd-bar"><i></i></div>
+        </div>
+
+        <div class="sec-label">Aaj ke 5 waqt</div>
+        <div class="row-list">
+          <div class="namaz-row"><span class="n-name">Fajr</span><span class="n-time">5:10 AM</span></div>
+          <div class="namaz-row active"><span class="n-name"><span class="dot"></span>Zuhr</span><span class="n-time">12:45 PM</span></div>
+          <div class="namaz-row"><span class="n-name">Asr</span><span class="n-time">4:12 PM</span></div>
+          <div class="namaz-row"><span class="n-name">Maghrib</span><span class="n-time">6:40 PM</span></div>
+          <div class="namaz-row"><span class="n-name">Isha</span><span class="n-time">8:05 PM</span></div>
+        </div>
+
+        <div class="sec-label">Admin announcements</div>
+
+        <div class="post">
+          <div class="p-head"><span class="badge urgent">URGENT</span><span class="who">Admin · 10 min pehle</span></div>
+          <div class="p-text">Jumu’ah namaz aaj <b>1:15 PM</b> se hoga — masjid mein waqt se pahunchein.</div>
+        </div>
+
+        <div class="post">
+          <div class="p-head"><span class="badge">VOICE</span><span class="who">Imam sahab · 1 ghanta pehle</span></div>
+          <div class="voice">
+            <span class="v-play"><svg class="ic"><use href="#i-mic"/></svg></span>
+            <span class="wave">
+              <i style="height:8px"></i><i style="height:16px"></i><i class="on" style="height:24px"></i><i class="on" style="height:12px"></i><i class="on" style="height:26px"></i><i style="height:18px"></i><i style="height:10px"></i><i style="height:22px"></i><i style="height:14px"></i><i style="height:8px"></i><i style="height:18px"></i><i style="height:12px"></i><i style="height:20px"></i><i style="height:10px"></i>
+            </span>
+            <span class="v-time">0:47</span>
+          </div>
+          <div class="p-text" style="margin-top:8px;font-size:13px">Taqt e Rakht — after Fajr bayan</div>
+        </div>
+
+        <div class="post">
+          <div class="p-head"><span class="badge">PHOTO</span><span class="who">Admin · kal</span></div>
+          <div class="p-text">Milad un Nabi program — raat 8 baje, Masjid-e-Noor.</div>
+          <div class="media photo">
+            <svg class="ic" style="width:34px;height:34px;color:rgba(255,255,255,.85)"><use href="#i-bell"/></svg>
+            <span class="m-cap">Program poster</span>
+          </div>
+        </div>
+
+        <div class="post">
+          <div class="p-head"><span class="badge">VIDEO</span><span class="who">Admin · 2 din pehle</span></div>
+          <div class="media video">
+            <span class="dur">2:14</span>
+            <span class="play-badge" style="background:rgba(255,255,255,.2);color:#fff"><svg class="ic"><use href="#i-play"/></svg></span>
+            <span class="m-cap">Naat &amp; sufia soz — special</span>
+          </div>
+        </div>
+        <div style="height:8px"></div>
+      </div>
+      <nav class="tabbar">
+        <span class="tab on"><svg class="ic"><use href="#i-home"/></svg>Home</span>
+        <span class="tab"><svg class="ic"><use href="#i-book"/></svg>Quran</span>
+        <span class="tab"><svg class="ic"><use href="#i-play"/></svg>Videos</span>
+        <span class="tab"><svg class="ic"><use href="#i-chat"/></svg>Contact</span>
+        <span class="tab"><svg class="ic"><use href="#i-user"/></svg>You</span>
+      </nav>
+    </div></div>
+    <figcaption><span class="num">1</span><b>Noor</b>
+      <small>Sukoon — halki mint cards, subah jaisi calmness</small></figcaption>
+  </figure>
+
+  <!-- ================= ② AZAAN ================= -->
+  <figure>
+    <div class="phone"><div class="screen d2">
+      <div class="statusbar"><span>11:22</span><span class="dots">●●● ⏻</span></div>
+      <div class="d2-hero">
+        <div class="d2-top">
+          <h2>Deen Saathi</h2>
+          <span class="date">Mangal, 6 Oct</span>
+        </div>
+        <div class="cd-over">AGLA NAMAZ — ZUHR · 12:45 PM</div>
+        <div class="cd-num">01:23:00</div>
+        <div class="cd-sub">baaki · 72% waqt guzar chuka hai</div>
+      </div>
+      <div class="content scroll">
+        <div class="alert">
+          <span class="tag">NAYA</span>
+          <span>Namaz time badla — Asr ab 4:12 PM</span>
+        </div>
+
+        <div class="sec-label">Aaj ke 5 waqt</div>
+        <div class="row-list">
+          <div class="namaz-row"><span class="n-name">Fajr</span><span class="n-time">5:10 AM</span></div>
+          <div class="namaz-row"><span class="n-name">Zuhr</span><span class="n-time">12:45 PM</span></div>
+          <div class="namaz-row active"><span class="n-name">Zuhr → next: Asr</span><span class="n-time">4:12 PM</span></div>
+          <div class="namaz-row"><span class="n-name">Maghrib</span><span class="n-time">6:40 PM</span></div>
+          <div class="namaz-row"><span class="n-name">Isha</span><span class="n-time">8:05 PM</span></div>
+        </div>
+
+        <div class="sec-label">Admin announcements</div>
+
+        <div class="post">
+          <div class="p-head"><span class="badge urgent">URGENT</span><span class="who">Admin · 10 min</span></div>
+          <div class="p-text">Jumu’ah namaz aaj <b>1:15 PM</b> se hoga — masjid mein waqt se pahunchein.</div>
+        </div>
+
+        <div class="post">
+          <div class="p-head"><span class="badge">VOICE</span><span class="who">Imam sahab · 1 ghanta</span></div>
+          <div class="voice">
+            <span class="v-play"><svg class="ic"><use href="#i-play"/></svg></span>
+            <span class="wave">
+              <i style="height:8px"></i><i style="height:16px"></i><i class="on" style="height:24px"></i><i class="on" style="height:12px"></i><i class="on" style="height:26px"></i><i style="height:18px"></i><i style="height:10px"></i><i style="height:22px"></i><i style="height:14px"></i><i style="height:8px"></i><i style="height:18px"></i><i style="height:12px"></i><i style="height:20px"></i><i style="height:10px"></i>
+            </span>
+            <span class="v-time">0:47</span>
+          </div>
+          <div class="p-text" style="margin-top:8px;font-size:13px;font-weight:600">Taqt e Rakht — after Fajr bayan</div>
+        </div>
+
+        <div class="post">
+          <div class="p-head"><span class="badge">PHOTO</span><span class="who">Admin · kal</span></div>
+          <div class="p-text">Milad un Nabi program — raat 8 baje, Masjid-e-Noor.</div>
+          <div class="media photo">
+            <svg class="ic" style="width:34px;height:34px;color:#FFE24B"><use href="#i-bell"/></svg>
+            <span class="m-cap">Program poster</span>
+          </div>
+        </div>
+
+        <div class="post">
+          <div class="p-head"><span class="badge">VIDEO</span><span class="who">Admin · 2 din</span></div>
+          <div class="media video">
+            <span class="dur">2:14</span>
+            <span class="play-badge" style="background:#FFE24B;color:#171717"><svg class="ic"><use href="#i-play"/></svg></span>
+            <span class="m-cap">Naat &amp; sufia soz — special</span>
+          </div>
+        </div>
+        <div style="height:8px"></div>
+      </div>
+      <nav class="tabbar">
+        <span class="tab on"><svg class="ic"><use href="#i-home"/></svg>Home</span>
+        <span class="tab"><svg class="ic"><use href="#i-book"/></svg>Quran</span>
+        <span class="tab"><svg class="ic"><use href="#i-play"/></svg>Videos</span>
+        <span class="tab"><svg class="ic"><use href="#i-chat"/></svg>Contact</span>
+        <span class="tab"><svg class="ic"><use href="#i-user"/></svg>You</span>
+      </nav>
+    </div></div>
+    <figcaption><span class="num">2</span><b>Azaan</b>
+      <small>Bold — bade blocks, strong contrast, poster jaisi energy</small></figcaption>
+  </figure>
+
+  <!-- ================= ③ SAJDA ================= -->
+  <figure>
+    <div class="phone"><div class="screen d3">
+      <div class="statusbar"><span>11:22</span><span class="dots">●●● ⏻</span></div>
+      <div class="content scroll">
+        <div class="d3-top">
+          <div>
+            <p class="greet">Assalamu Alaikum</p>
+            <h2>Deen Saathi</h2>
+          </div>
+          <div class="date-pill">Mangal, 6 Oct</div>
+        </div>
+
+        <div class="alert">
+          <span class="tag">UPDATE</span>
+          <span style="flex:1">Namaz time badla — Asr ab <b>4:12 PM</b></span>
+          <svg class="ic" style="width:18px;height:18px"><use href="#i-bell"/></svg>
+        </div>
+
+        <div class="cd-card">
+          <div class="cd-ring"><span>72%</span></div>
+          <div>
+            <div class="cd-over">AGLA NAMAZ · ZUHR · 12:45 PM</div>
+            <div class="cd-num">01:23:00</div>
+            <div class="cd-sub">baaki</div>
+          </div>
+        </div>
+
+        <div class="sec-label">Aaj ke 5 waqt</div>
+        <div class="row-list">
+          <div class="namaz-row"><span class="n-name">Fajr</span><span class="n-time">5:10 AM</span></div>
+          <div class="namaz-row active"><span class="n-name"><span class="glow"></span>Zuhr</span><span class="n-time">12:45 PM</span></div>
+          <div class="namaz-row"><span class="n-name">Asr</span><span class="n-time">4:12 PM</span></div>
+          <div class="namaz-row"><span class="n-name">Maghrib</span><span class="n-time">6:40 PM</span></div>
+          <div class="namaz-row"><span class="n-name">Isha</span><span class="n-time">8:05 PM</span></div>
+        </div>
+
+        <div class="sec-label">Admin announcements</div>
+
+        <div class="post">
+          <div class="p-head"><span class="badge urgent">URGENT</span><span class="who">Admin · 10 min</span></div>
+          <div class="p-text">Jumu’ah namaz aaj <b>1:15 PM</b> se hoga — masjid mein waqt se pahunchein.</div>
+        </div>
+
+        <div class="post">
+          <div class="p-head"><span class="badge">VOICE</span><span class="who">Imam sahab · 1 ghanta</span></div>
+          <div class="voice">
+            <span class="v-play"><svg class="ic"><use href="#i-mic"/></svg></span>
+            <span class="wave">
+              <i style="height:8px"></i><i style="height:16px"></i><i class="on" style="height:24px"></i><i class="on" style="height:12px"></i><i class="on" style="height:26px"></i><i style="height:18px"></i><i style="height:10px"></i><i style="height:22px"></i><i style="height:14px"></i><i style="height:8px"></i><i style="height:18px"></i><i style="height:12px"></i><i style="height:20px"></i><i style="height:10px"></i>
+            </span>
+            <span class="v-time">0:47</span>
+          </div>
+          <div class="p-text" style="margin-top:8px;font-size:13px">Taqt e Rakht — after Fajr bayan</div>
+        </div>
+
+        <div class="post">
+          <div class="p-head"><span class="badge">PHOTO</span><span class="who">Admin · kal</span></div>
+          <div class="p-text">Milad un Nabi program — raat 8 baje, Masjid-e-Noor.</div>
+          <div class="media photo">
+            <svg class="ic" style="width:34px;height:34px;color:rgba(255,255,255,.9)"><use href="#i-bell"/></svg>
+            <span class="m-cap">Program poster</span>
+          </div>
+        </div>
+
+        <div class="post">
+          <div class="p-head"><span class="badge">VIDEO</span><span class="who">Admin · 2 din</span></div>
+          <div class="media video">
+            <span class="dur">2:14</span>
+            <span class="play-badge" style="background:rgba(52,211,153,.2);color:#34D399"><svg class="ic"><use href="#i-play"/></svg></span>
+            <span class="m-cap">Naat &amp; sufia soz — special</span>
+          </div>
+        </div>
+        <div style="height:8px"></div>
+      </div>
+      <nav class="tabbar">
+        <span class="tab on"><svg class="ic"><use href="#i-home"/></svg>Home</span>
+        <span class="tab"><svg class="ic"><use href="#i-book"/></svg>Quran</span>
+        <span class="tab"><svg class="ic"><use href="#i-play"/></svg>Videos</span>
+        <span class="tab"><svg class="ic"><use href="#i-chat"/></svg>Contact</span>
+        <span class="tab"><svg class="ic"><use href="#i-user"/></svg>You</span>
+      </nav>
+    </div></div>
+    <figcaption><span class="num">3</span><b>Sajda</b>
+      <small>Premium dark — glass cards, emerald glow, night mode native</small></figcaption>
+  </figure>
+
+</div>
+</body>
+</html>
