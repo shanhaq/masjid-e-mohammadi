@@ -2,16 +2,18 @@ package com.zyvo.masjidemohammadi;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.webkit.GeolocationPermissions;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-public class MainActivity extends Activity {
+/** In-app browser for external links (YouTube, WhatsApp, Maps) so the
+ *  main SPA WebView stays untouched. Back button closes it. */
+public class WebActivity extends Activity {
 
     private WebView web;
 
@@ -26,7 +28,6 @@ public class MainActivity extends Activity {
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);
         s.setMediaPlaybackRequiresUserGesture(false);
-        s.setGeolocationEnabled(true);
         s.setCacheMode(WebSettings.LOAD_DEFAULT);
 
         web.setWebViewClient(new WebViewClient() {
@@ -43,22 +44,23 @@ public class MainActivity extends Activity {
                     return true;
                 }
                 if ("http".equals(sc) || "https".equals(sc)) {
-                    // open in the in-app browser so the main app stays as-is
-                    Intent i = new Intent(MainActivity.this, WebActivity.class);
-                    i.putExtra("url", u.toString());
-                    startActivity(i);
-                    return true;
+                    return false; // load inside this browser page
                 }
-                return false; // stay inside the app
-            }
-
-            @Override
-            public void onGeolocationPermissionsShowPrompt(String origin,
-                                                           GeolocationPermissions.Callback cb) {
-                cb.invoke(origin, true, false);
+                // other schemes (whatsapp, intent, ...) → hand to the system
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, u));
+                } catch (ActivityNotFoundException ignored) {
+                }
+                return true;
             }
         });
-        web.loadUrl("file:///android_asset/index.html");
+
+        String url = getIntent().getStringExtra("url");
+        if (url == null || url.length() == 0) {
+            finish();
+            return;
+        }
+        web.loadUrl(url);
     }
 
     @Override
