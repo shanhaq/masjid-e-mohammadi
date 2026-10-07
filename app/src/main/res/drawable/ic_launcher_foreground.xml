@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Masjid e Mohammadi launcher mark: crescent + star, emerald on dark.
-     108x108 viewport, mark sits inside the middle 66dp safe zone. -->
+<!-- Masjid e Mohammadi launcher mark — ported from icon_masjid.svg:
+     gold mosque + crescent in outlined circle, on deep emerald.
+     Source space is 512 (group scales to the 66dp adaptive-icon safe zone). -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
-    <path
-        android:fillColor="#34D399"
-        android:fillType="evenOdd"
-        android:pathData="M56,30 a24,24 0 1 0 0,48 a24,24 0 1 0 0,-48 z M59,35 a19,19 0 1 1 0,38 a19,19 0 1 1 0,-38 z" />
-    <path
-        android:fillColor="#34D399"
-        android:pathData="M74,40 l2.2,5.8 5.8,2.2 -5.8,2.2 -2.2,5.8 -2.2,-5.8 -5.8,-2.2 5.8,-2.2 z" />
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+    <group
+        android:pivotX="256"
+        android:pivotY="256"
+        android:scaleX="0.798"
+        android:scaleY="0.798">
+        <path
+            android:pathData="M60,256a196,196 0 1,0 392,0a196,196 0 1,0 -392,0"
+            android:fillColor="#0b3026"
+            android:strokeColor="#e1bd68"
+            android:strokeWidth="14" />
+        <path
+            android:pathData="M256,120c-14,34 -58,52 -58,96c0,34 26,62 58,62s58,-28 58,-62c0,-44 -44,-62 -58,-96z"
+            android:fillColor="#e1bd68" />
+        <path
+            android:pathData="M248,278h16v58h-16z"
+            android:fillColor="#e1bd68" />
+        <path
+            android:pathData="M180,340h152v14h-152z"
+            android:fillColor="#e1bd68" />
+        <path
+            android:pathData="M330,150a70,70 0 1,0 0,116a56,56 0 1,1 0,-116z"
+            android:fillColor="#f1d995" />
+    </group>
 </vector>

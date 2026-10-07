@@ -1,0 +1,14 @@
+{
+  "name": "Masjid e Mohammadi",
+  "short_name": "Masjid",
+  "description": "Faith • Worship • Community — Prayer times, Quran, Duas, Qibla, Tasbeeh",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#031914",
+  "theme_color": "#031914",
+  "icons": [
+    { "src": "icon_masjid.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
