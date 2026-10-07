@@ -3,7 +3,9 @@ package com.zyvo.masjidemohammadi;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.webkit.GeolocationPermissions;
 import android.webkit.WebChromeClient;
@@ -22,6 +24,16 @@ public class MainActivity extends Activity {
         super.onCreate(b);
         web = new WebView(this);
         setContentView(web);
+
+        // runtime location permission (Android 6+) — without it WebView geolocation fails
+        if (Build.VERSION.SDK_INT >= 23) {
+            String[] perms = {"android.permission.ACCESS_FINE_LOCATION",
+                    "android.permission.ACCESS_COARSE_LOCATION"};
+            boolean need = false;
+            for (String p : perms)
+                if (checkSelfPermission(p) != PackageManager.PERMISSION_GRANTED) need = true;
+            if (need) requestPermissions(perms, 1);
+        }
 
         WebSettings s = web.getSettings();
         s.setJavaScriptEnabled(true);
