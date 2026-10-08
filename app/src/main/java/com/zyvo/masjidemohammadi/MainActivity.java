@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.webkit.GeolocationPermissions;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -79,7 +80,15 @@ public class MainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if (web.canGoBack()) web.goBack();
-        else super.onBackPressed();
+        // ask the page: '1' = on home/login → leave; '0' = go back one screen
+        web.evaluateJavascript(
+                "(typeof hwBack==='function')?hwBack():'1'",
+                new ValueCallback<String>() {
+                    @Override
+                    public void onReceiveValue(String v) {
+                        if ("\"1\"".equals(v) || "\"1\"\n".equals(v))
+                            MainActivity.super.onBackPressed();
+                    }
+                });
     }
 }

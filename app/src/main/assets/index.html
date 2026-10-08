@@ -202,11 +202,16 @@ body{
   backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);
   color:#F4F8FD;border:1px solid rgba(140,203,247,.4);
   box-shadow:0 30px 70px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.16)}
-.ayah{font-size:23px;line-height:2.15;font-family:serif;margin:6px 0}
+.ayah{font-size:23px;line-height:2.15;font-family:'Amiri Quran','Noto Naskh Arabic','Scheherazade New',serif;margin:6px 0}
 .translation{font-size:11.5px;line-height:1.65;color:#AFBFD2;margin-top:8px}
 .vnum{display:inline-block;background:linear-gradient(135deg,#CDE9FF,#7FC4F7);color:#0A1524;
   border-radius:50%;width:22px;height:22px;line-height:22px;font-size:11px;font-weight:700;margin-bottom:6px}
-.bism{font-size:20px;font-family:serif;color:#9FD3F4;margin:4px 0 2px;line-height:1.9}
+.bism{font-size:20px;font-family:'Amiri Quran','Noto Naskh Arabic','Scheherazade New',serif;color:#9FD3F4;margin:4px 0 2px;line-height:1.9;text-align:center}
+@font-face{font-family:'Amiri Quran';src:url(quran-font.ttf) format('truetype');font-display:swap}
+.arow{direction:rtl;text-align:right;padding:3px 2px;cursor:pointer;border-radius:10px}
+.arow.cur{background:rgba(140,203,247,.12);box-shadow:inset 0 0 0 1px rgba(140,203,247,.25)}
+.arow.cur .ayah{color:#CDE9FF}
+.arow .vnum{margin:0 6px;font-size:12px;opacity:.75;direction:ltr}
 
 /* ---------- compass & tasbeeh ---------- */
 .compass{width:200px;height:200px;border-radius:50%;margin:14px auto;
@@ -411,7 +416,7 @@ input[type=range]{width:100%;accent-color:#8CCBF7}
     <div class="quranbox" id="r-box"></div>
     <div class="chips"><div class="on">Arabic</div><div id="chip-tr" class="on" onclick="togTr()">Translation</div><div onclick="toast('Qari: Mishary Alafasy')">Qari</div></div>
     <div class="card"><div class="row"><span onclick="navVerse(-1)" style="cursor:pointer;font-size:18px">‹</span>
-      <b class="gold" onclick="playAyah()" style="cursor:pointer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M8 5.6v12.8L19.2 12 8 5.6Z"/></svg> &nbsp;Play</b>
+      <b class="gold" onclick="playAyah()" style="cursor:pointer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M8 5.6v12.8L19.2 12 8 5.6Z"/></svg> &nbsp;<span id="rp-lab">Play</span></b>
       <span onclick="navVerse(1)" style="cursor:pointer;font-size:18px">›</span></div></div>
     <div class="card"><div class="label">AUDIO QARI</div>
       <div class="row" style="margin-top:5px"><b>Mishary Alafasy</b><span class="gold">•••</span></div></div>
@@ -474,10 +479,6 @@ input[type=range]{width:100%;accent-color:#8CCBF7}
     <div class="moregrid" onclick="moreNav(event)">
       <div data-go="scr-prayer"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></b>Prayer Times</div>
       <div data-go="scr-azan"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M4 9.4h3.6L12 5.6v12.8L7.6 14.6H4a1 1 0 0 1-1-1v-3.2a1 1 0 0 1 1-1Z"/><path d="M15.4 9.2a4.2 4.2 0 0 1 0 5.6"/><path d="M18 6.6a7.8 7.8 0 0 1 0 10.8"/></svg></b>Azan &amp; Iqamat</div>
-      <div data-go="scr-qibla"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2.1 5-5 2.1 2.1-5 5-2.1Z"/></svg></b>Qibla</div>
-      <div data-go="scr-tasbeeh"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 12h.01" stroke-width="2.6"/></svg></b>Tasbeeh</div>
-      <div data-go="scr-youtube"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M8 5.6v12.8L19.2 12 8 5.6Z"/></svg></b>YouTube</div>
-      <div data-go="scr-contacts"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M6.6 3.5h3.1l1.5 4-2 1.4a12.2 12.2 0 0 0 5.9 5.9l1.4-2 4 1.5v3.1a2 2 0 0 1-2.2 2A17.2 17.2 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z"/></svg></b>Contacts</div>
       <div data-go="scr-notifications"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M18 8.5a6 6 0 1 0-12 0c0 5.8-2.4 6.9-2.4 6.9h16.8S18 14.3 18 8.5Z"/><path d="M10.3 19.3a2 2 0 0 0 3.4 0"/></svg></b>Notifications</div>
       <div data-go="scr-offline"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 4v11"/><path d="m7.5 11 4.5 4.5L16.5 11"/><path d="M5 20h14"/></svg></b>Offline</div>
       <div data-go="scr-settings"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg></b>Settings</div>
@@ -690,6 +691,7 @@ input[type=range]{width:100%;accent-color:#8CCBF7}
 <div class="toast" id="toast"></div>
 </div>
 
+<script src="quran.js"></script>
 <script>
 "use strict";
 /* ================= data ================= */
@@ -703,7 +705,7 @@ var PRAYERS=[
 ];
 var IQAMAT={Fajr:'05:50',Dhuhr:'12:50',Asr:'16:15',Maghrib:'18:35',Isha:'21:10'};
 var IQ_OFFSET={Fajr:38,Dhuhr:16,Asr:19,Maghrib:7,Isha:18}; // minutes after azan
-var GEO={lat:24.8607,lng:67.0011,city:'Karachi, Pakistan'}; // until GPS/IP says otherwise
+var GEO={lat:24.8607,lng:67.0011,city:'Karachi, Pakistan',ok:false}; // until GPS/IP says otherwise
 var qiblaDeg=292;
 
 var SURAHS=[
@@ -849,8 +851,13 @@ var state={
 var $=function(id){return document.getElementById(id)};
 var stack=[];
 function go(id){stack.push(current);show(id)}
-function back(){if(stack.length)show(stack.pop());else show('scr-home')}
+function back(){if(stack.length){show(stack.pop())}else{show('scr-home')}}
+function hwBack(){
+  if(current==='scr-home'||current==='scr-login')return '1';
+  back();return '0';
+}
 function show(id){
+  if(id!=='scr-reader')stopAyah();
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});
   var el=$(id);if(el)el.classList.add('active');
   current=id;el.scrollTop=0;renderTab(el);
@@ -920,7 +927,7 @@ function renderTab(scrEl){
     return '<div class="'+(t.id===tab?'on':'')+'" onclick="tabGo(\''+t.scr+'\')"><b>'+t.icon+'</b>'+t.label+'</div>';
   }).join('');
 }
-function tabGo(scr){stack=[current];show(scr)}
+function tabGo(scr){stack=[];show(scr)}
 function quickNav(e){var g=e.target.closest('[data-go]');if(g)go(g.getAttribute('data-go'))}
 function moreNav(e){var g=e.target.closest('[data-go]');if(g)go(g.getAttribute('data-go'))}
 function adminNav(e){var g=e.target.closest('[data-go]');if(g)go(g.getAttribute('data-go'))}
@@ -1040,39 +1047,69 @@ var QuranSDK={
       });
   }
 };
-var qAudio=null;
-function stopAyah(){if(qAudio){qAudio.pause();qAudio=null}}
-function playAyah(){
-  var s=reader.surah;if(!s||!s.au||!s.au[reader.ayah]){toast('Audio not ready — check internet');return}
-  stopAyah();
-  qAudio=new Audio(QuranSDK.cdn+s.au[reader.ayah]);
-  qAudio.play().then(function(){toast('Reciting — Mishary Alafasy')}).catch(function(){toast('Tap again to play')});
+var qAudio=null,qPlay=false;
+function stopAyah(){
+  if(qAudio){qAudio.pause();qAudio=null}
+  qPlay=false;
+  var l=$('rp-lab');if(l)l.textContent='Play';
 }
-
+function playAyah(from){
+  var s=reader.surah;if(!s||!s.ar)return;
+  if(typeof from==='number'){stopAyah();reader.ayah=from}
+  else if(qPlay){stopAyah();renderReader();return}
+  else if(reader.ayah>=s.ar.length){reader.ayah=0}
+  playCur();
+}
+function playCur(){
+  var s=reader.surah;if(!s||!s.ar)return;
+  var i=reader.ayah;
+  if(i<0||i>=s.ar.length){qPlay=false;toast('Surah complete — MashaAllah ✓');vib([40,60,40]);renderReader();return}
+  qPlay=true;
+  if(qAudio){qAudio.pause();qAudio=null}
+  qAudio=new Audio(s.au&&s.au[i]?s.au[i]:auURL(s.n,i+1));
+  qAudio.addEventListener('ended',function(){
+    if(!qPlay||reader.surah!==s)return;
+    if(reader.ayah+1<s.ar.length){reader.ayah++;renderReader();scrollAyah();playCur()}
+    else{stopAyah();reader.ayah=0;toast('Surah complete — MashaAllah ✓');vib([40,60,40]);renderReader()}
+  });
+  qAudio.play().then(function(){renderReader();scrollAyah()})
+    .catch(function(){qPlay=false;toast('Tap Play — needs internet');renderReader()});
+}
+function scrollAyah(){
+  var e=$('ay-'+reader.ayah);
+  if(e&&e.scrollIntoView)e.scrollIntoView({block:'center',behavior:'smooth'});
+}
 var reader={surah:null,ayah:0};
 var trOn=true;
 function togTr(){trOn=!trOn;$('chip-tr').classList.toggle('on',trOn);renderReader();toast(trOn?'Translation shown':'Translation hidden')}
+function auURL(n,a){
+  var p=function(x){return ('00'+x).slice(-3)};
+  return QuranSDK.cdn+'Alafasy/mp3/'+p(n)+p(a)+'.mp3';
+}
 function openSurah(n){
   var s=SURAHS.filter(function(x){return x.n===n})[0];
   if(!s)return;
   stopAyah();save('lastread',s.n);
   reader.surah=s;reader.ayah=0;
-  var inline=!!(s.ar&&s.ar.length);
-  if(qCache[n]){s.ar=qCache[n].ar;s.tr=qCache[n].tr;s.au=qCache[n].au;renderReader();go('scr-reader');renderContinue();return}
-  if(inline){renderReader();go('scr-reader')}
-  else{
-    go('scr-reader');
-    $('r-title').textContent=s.name;
-    $('r-count').textContent='… / '+s.v;
-    $('r-box').innerHTML='<div class="note" style="margin-top:44px">Loading '+(s.name||'')+' — Quran SDK…</div>';
+  if(!s.ar&&typeof QTEXT!=='undefined'&&QTEXT&&QTEXT[n]){
+    s.ar=QTEXT[n].map(function(v){return v[0]});
+    s.tr=QTEXT[n].map(function(v){return v[1]});
+    s.au=s.ar.map(function(_,i){return auURL(n,i+1)});
+    qCache[n]={ar:s.ar,tr:s.tr,au:s.au};
   }
+  if(qCache[n]){s.ar=qCache[n].ar;s.tr=qCache[n].tr;s.au=qCache[n].au}
+  if(s.ar&&s.ar.length){renderReader();go('scr-reader');renderContinue();return}
+  go('scr-reader');
+  $('r-title').textContent=s.name;
+  $('r-count').textContent='… / '+s.v;
+  $('r-box').innerHTML='<div class="note" style="margin-top:44px">Loading '+(s.name||'')+' — Quran SDK…</div>';
   renderContinue();
   QuranSDK.verses(n).then(function(d){
     s.ar=d.ar;s.tr=d.tr;s.au=d.au;qCache[n]=d;
     if(reader.surah===s)renderReader();
   }).catch(function(){
-    if(!inline){toast('Load failed — check internet');back()}
-    else if(reader.surah===s)renderReader();
+    toast('Load failed — check internet');
+    if(reader.surah===s)$('r-box').innerHTML='<div class="note" style="margin-top:44px">Surah text unavailable — check internet</div>';
   });
 }
 function renderContinue(){
@@ -1081,6 +1118,7 @@ function renderContinue(){
   if(a)a.textContent=cs.name;
   if(b)b.textContent='Surah '+cs.n+' • '+cs.v+' verses';
 }
+
 function continueReading(){
   var n=load('lastread',1);openSurah(n);
 }
@@ -1088,21 +1126,26 @@ function renderReader(){
   var s=reader.surah;if(!s||!s.ar)return;
   var a=reader.ayah;
   $('r-title').textContent=s.name;
-  $('r-count').textContent=(a+1)+' / '+s.v;
-  var bism=(s.n!==1&&s.n!==9&&a===0)?'<div class="bism">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>':'';
-  var tr=(trOn&&s.tr&&s.tr[a])?'<div class="translation">'+s.tr[a]+'</div>':'';
-  var play=(s.au&&s.au[a])?'<div class="btn" onclick="playAyah()" style="margin:12px 0 0"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px"><path d="M8 5.6v12.8L19.2 12 8 5.6Z"/></svg>Listen — Alafasy</div>':'';
-  $('r-box').innerHTML=bism+'<span class="vnum">'+(a+1)+'</span>'+
-    '<div class="ayah">'+s.ar[a]+'</div>'+tr+play;
+  $('r-count').textContent=s.v+' verses';
+  var h='';
+  if(s.n!==1&&s.n!==9){h+='<div class="bism">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>'}
+  for(var i=0;i<s.ar.length;i++){
+    h+='<div class="arow'+(i===a?' cur':'')+'" id="ay-'+i+'" onclick="playAyah('+i+')">'+
+       '<span class="ayah">'+s.ar[i]+'</span><span class="vnum">'+(i+1)+'</span></div>';
+    if(trOn&&s.tr&&s.tr[i])h+='<div class="translation">'+s.tr[i]+'</div>';
+  }
+  $('r-box').innerHTML=h;
+  var l=$('rp-lab');if(l)l.textContent=qPlay?'Stop':'Play';
 }
 function navVerse(d){
   var s=reader.surah;if(!s)return;
   stopAyah();
   var n=reader.ayah+d;
-  if(n<0||n>=s.ar.length){toast(n<0?'First verse':'Surah complete — MashaAllah ✓');return}
-  reader.ayah=n;renderReader();
-  $('scr-reader').scrollTop=0;
+  if(n<0){toast('First verse');return}
+  if(n>=s.ar.length){toast('Surah complete — MashaAllah ✓');return}
+  reader.ayah=n;renderReader();scrollAyah();
 }
+
 function renderDuas(cat){
   cat=cat||'all';
   document.querySelectorAll('#dua-chips div').forEach(function(c){
@@ -1136,8 +1179,8 @@ function renderSettings(){
   var s=state.settings;
   $('set-cards').innerHTML=
    sw('Notifications','notif',s.notif)+sw('Offline Support','offline',s.offline)+
-   '<div class="setting"><span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="4"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6"/></svg> Language</span><b>'+s.lang+' ›</b></div>'+
-   '<div class="setting"><span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18Z" fill="currentColor" stroke="none"/></svg> Theme</span><b>'+s.theme+' ›</b></div>'+
+   '<div class="setting"><span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="4"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6"/></svg> Language</span><b onclick="toast(\'English — more languages coming soon\')" style="cursor:pointer">'+s.lang+' ›</b></div>'+
+   '<div class="setting"><span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18Z" fill="currentColor" stroke="none"/></svg> Theme</span><b onclick="toast(\'Arctic Blue — the only theme for now\')" style="cursor:pointer">'+s.theme+' ›</b></div>'+
    '<div class="setting" onclick="go(\'scr-about\')" style="cursor:pointer"><span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="9"/><path d="M12 11.5v5"/><path d="M12 7.8h.01"/></svg> About App</span><b>›</b></div>'+
    '<div class="setting" onclick="go(\'scr-notifications\')" style="cursor:pointer"><span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M18 8.5a6 6 0 1 0-12 0c0 5.8-2.4 6.9-2.4 6.9h16.8S18 14.3 18 8.5Z"/><path d="M10.3 19.3a2 2 0 0 0 3.4 0"/></svg> Notification Settings</span><b>›</b></div>';
   function sw(l,k,on){return '<div class="setting"><span>'+l+'</span><span class="switch'+(on?' on':'')+'" onclick="togS(this,\''+k+'\')"></span></div>'}
@@ -1306,21 +1349,30 @@ function loadTimes(force){
      if(applyTimes(tm))refreshPrayerUI();
    }).catch(function(){/* offline — cached/default times stay */});
 }
-function locateDone(){updateQibla();loadTimes(true)}
+function locateDone(){updateQibla();loadTimes(true);
+  if(!GEO.ok)toast('Location not found — using default (Karachi)')}
 function ipFallback(){
-  fetch('https://ipapi.co/json/').then(function(r){return r.json()})
-   .then(function(d){
-     if(d&&d.latitude&&d.longitude){
-       GEO.lat=+d.latitude;GEO.lng=+d.longitude;
-       GEO.city=(d.city||GEO.city)+(d.country_name?', '+d.country_name:'');
-     }
-     locateDone();
-   }).catch(function(){locateDone()});
+  var providers=['https://ipwho.is/','https://ipapi.co/json/','https://freeipapi.com/api/json'];
+  function next(i){
+    if(i>=providers.length){locateDone();return}
+    fetch(providers[i]).then(function(r){if(!r.ok)throw 0;return r.json()})
+     .then(function(d){
+       var lat=(d&&(d.latitude!=null?d.latitude:d.lat)),
+           lng=(d&&(d.longitude!=null?d.longitude:d.lng));
+       if(lat==null||lng==null||(!lat&&!lng))throw 0;
+       GEO.lat=+lat;GEO.lng=+lng;GEO.ok=true;
+       var city=d.city||'',country=d.country||d.country_name||d.countryName||'';
+       if(city||country)GEO.city=(city||(GEO.city||'').split(',')[0])+(country?', '+country:'');
+       locateDone();
+     }).catch(function(){next(i+1)});
+  }
+  next(0);
 }
+
 function findLocation(){
   if(!navigator.geolocation){ipFallback();return}
   navigator.geolocation.getCurrentPosition(function(pos){
-    GEO.lat=pos.coords.latitude;GEO.lng=pos.coords.longitude;
+    GEO.lat=pos.coords.latitude;GEO.lng=pos.coords.longitude;GEO.ok=true;
     fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+GEO.lat+'&longitude='+GEO.lng+'&localityLanguage=en')
      .then(function(r){return r.json()})
      .then(function(d){
@@ -1341,8 +1393,8 @@ function updateQibla(){
   var dirs=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
   var a=$('q-deg');if(a)a.textContent=qiblaDeg+'\u00B0';
   var b=$('q-dir');if(b)b.textContent='('+dirs[Math.round(qiblaDeg/22.5)%16]+')';
-  var c=$('q-loc');if(c)c.textContent=GEO.city;
-  var e=$('p-loc');if(e)e.textContent=GEO.city;
+  var c=$('q-loc');if(c)c.textContent=GEO.ok?GEO.city:'Location unavailable — check GPS';
+  var e=$('p-loc');if(e)e.textContent=GEO.ok?GEO.city:'Location not set';
 }
 function updateRing(np){
   var arc=$('ring-arc');if(!arc)return;
@@ -1401,27 +1453,34 @@ var compassOn=false;
 function startCompass(){
   if(compassOn)return;compassOn=true;
   var needle=document.querySelector('#scr-qibla .needle');
+  var got=false;
   function onOrient(e){
     var h=null;
     if(e.webkitCompassHeading!=null)h=e.webkitCompassHeading;
-    else if(e.alpha!=null)h=360-e.alpha;
+    else if(e.absolute===true&&e.alpha!=null)h=360-e.alpha;
     if(h==null)return;
+    got=true;
     var ang=((qiblaDeg-h)%360+360)%360;
     needle.style.transform='rotate('+ang+'deg)';
   }
-  try{
-    if(typeof DeviceOrientationEvent!=typeof void 0&&
-       typeof DeviceOrientationEvent.requestPermission==='function'){
-      DeviceOrientationEvent.requestPermission().then(function(r){
-        if(r==='granted')attach();else toast('Compass permission denied — showing fixed Qibla');
-      }).catch(function(){});
-    }else attach();
-  }catch(err){}
   function attach(){
     window.addEventListener('deviceorientationabsolute',onOrient,true);
     window.addEventListener('deviceorientation',onOrient,true);
+    setTimeout(function(){
+      if(!got)toast('Compass unavailable — arrow stays fixed (Qibla '+qiblaDeg+'° from North)');
+    },2500);
   }
+  try{
+    if(typeof DeviceOrientationEvent!=='undefined'&&
+       typeof DeviceOrientationEvent.requestPermission==='function'){
+      DeviceOrientationEvent.requestPermission().then(function(r){
+        if(r==='granted')attach();
+        else toast('Compass permission denied — arrow stays fixed');
+      }).catch(function(){});
+    }else attach();
+  }catch(err){}
 }
+
 
 /* ================= dua chips ================= */
 document.getElementById('dua-chips').addEventListener('click',function(e){
