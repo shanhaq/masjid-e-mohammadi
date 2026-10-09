@@ -38,7 +38,7 @@ body{
   background:var(--bg);
   box-shadow:0 0 60px rgba(0,0,0,.6);overflow:hidden;display:flex;flex-direction:column}
 
-/* ---------- background: photo (Shan's calligraphy) + scrim + girih pattern ---------- */
+/* ---------- background: photo (Shan's calligraphy) + scrim ---------- */
 .bg-photo{position:absolute;inset:0;z-index:0;pointer-events:none;
   background:url("bg-calligraphy.jpg") center 30%/cover no-repeat,
              url("bg-mosque.jpg") center 30%/cover no-repeat}
@@ -47,11 +47,6 @@ body{
     radial-gradient(130% 75% at 50% -12%,rgba(74,168,240,.18),transparent 58%),
     linear-gradient(180deg,rgba(8,14,24,.46) 0%,rgba(7,12,20,.68) 45%,rgba(4,7,12,.93) 100%),
     linear-gradient(200deg,rgba(24,64,120,.30),rgba(8,20,40,.35))}
-.bg-pattern{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.05;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='74' height='74' viewBox='0 0 74 74'%3E%3Cg fill='none' stroke='%237FC4F7' stroke-width='1'%3E%3Crect x='17' y='17' width='40' height='40'/%3E%3Crect x='17' y='17' width='40' height='40' transform='rotate(45 37 37)'/%3E%3Ccircle cx='37' cy='37' r='3.5'/%3E%3C/g%3E%3C/svg%3E");
-  background-size:74px 74px;
-  -webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,.9),rgba(0,0,0,.25) 40%,rgba(0,0,0,.75));
-  mask-image:linear-gradient(180deg,rgba(0,0,0,.9),rgba(0,0,0,.25) 40%,rgba(0,0,0,.75))}
 
 /* ---------- screens ---------- */
 .screen{position:absolute;inset:0;display:none;flex-direction:column;overflow-y:auto;
@@ -334,7 +329,7 @@ input[type=range]{width:100%;accent-color:#8CCBF7}
 </head>
 <body>
 <div id="app">
-<div class="bg-photo"></div><div class="bg-scrim"></div><div class="bg-pattern"></div>
+<div class="bg-photo"></div><div class="bg-scrim"></div>
 
 <!-- ============ LOGIN ============ -->
 <section class="screen" id="scr-login">

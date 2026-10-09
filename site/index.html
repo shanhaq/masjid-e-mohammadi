@@ -30,8 +30,14 @@ body{background:var(--bg);color:var(--body);font-family:Inter,system-ui,-apple-s
   -webkit-font-smoothing:antialiased;line-height:1.65;overflow:hidden}
 h1,h2,h3{font-family:Fraunces,Georgia,serif}
 a{color:inherit}
-.girih{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.04;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='74' height='74' viewBox='0 0 74 74'%3E%3Cg fill='none' stroke='%237FC4F7' stroke-width='1'%3E%3Crect x='17' y='17' width='40' height='40'/%3E%3Crect x='17' y='17' width='40' height='40' transform='rotate(45 37 37)'/%3E%3Ccircle cx='37' cy='37' r='6'/%3E%3C/g%3E%3C/svg%3E")}
+/* ---------- page wallpaper (visible behind every panel) ---------- */
+.bgimg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:url("bg-calligraphy.jpg") center 28%/cover no-repeat,
+             url("bg-mosque.jpg") center 28%/cover no-repeat}
+.bgscrim{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(130% 78% at 70% -8%,rgba(74,168,240,.16),transparent 56%),
+    linear-gradient(180deg,rgba(6,11,19,.70) 0%,rgba(6,11,19,.80) 52%,rgba(6,11,19,.94) 100%)}
 
 /* ---------- floating dock nav ---------- */
 .dock{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:120;
@@ -65,7 +71,7 @@ a{color:inherit}
 .btn.w100{width:100%}
 
 /* ---------- main / panels ---------- */
-.main{margin-left:118px;position:relative;height:100svh;overflow:hidden}
+.main{margin-left:118px;position:relative;z-index:1;height:100svh;overflow:hidden}
 .panel{position:absolute;inset:0;display:none;overflow-y:auto;padding:clamp(34px,4.6vw,72px) clamp(26px,4.8vw,80px)}
 .panel.on{display:block}
 .panel::-webkit-scrollbar{width:10px}
@@ -238,7 +244,7 @@ a{color:inherit}
 </style>
 </head>
 <body>
-<div class="girih"></div>
+<div class="bgimg"></div><div class="bgscrim"></div>
 
 <aside class="dock" id="dock">
   <a class="brand" href="#" data-go="home" aria-label="Masjid e Mohammadi — Home">
