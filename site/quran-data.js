@@ -1,4 +1,4 @@
-/* Masjid e Mohammadi — website Quran data (surah meta, duas, qaris) */
+/* Masjid e Mohammadi — website Quran data (surah meta, duas, qaris, languages) */
 var CHMETA=[
 [1,"Al-Fatihah","The Opener",7,"Makkah","الفاتحة"],[2,"Al-Baqarah","The Cow",286,"Madinah","البقرة"],[3,"Ali 'Imran","Family of Imran",200,"Madinah","آل عمران"],
 [4,"An-Nisa","The Women",176,"Madinah","النساء"],[5,"Al-Ma'idah","The Table Spread",120,"Madinah","المائدة"],[6,"Al-An'am","The Cattle",165,"Makkah","الأنعام"],
@@ -84,4 +84,24 @@ var QARIS=[
  {n:'Abdul Basit',base:'https://audio.qurancdn.com/AbdulBaset/Murattal/mp3/'},
  {n:'Minshawi',base:'https://audio.qurancdn.com/Minshawi/Murattal/mp3/'},
  {n:'Husary',base:'https://mirrors.quranicaudio.com/everyayah/Husary_Muallim_128kbps/'}
+];
+var LANGS=[
+ {id:85,n:'English',q:'English',b:1},{id:234,n:'Urdu',q:'اردو'},
+ {id:122,n:'Hindi',q:'हिंदी'},{id:163,n:'Bengali',q:'বাংলা'},
+ {id:33,n:'Indonesian',q:'Indonesia'},{id:77,n:'Turkish',q:'Türkçe'},
+ {id:39,n:'Malay',q:'Melayu'},{id:29,n:'Persian',q:'فارسی'},
+ {id:31,n:'French',q:'Français'},{id:140,n:'Spanish',q:'Español'},
+ {id:27,n:'German',q:'Deutsch'},{id:78,n:'Russian',q:'Русский'},
+ {id:56,n:'Chinese',q:'中文'},{id:133,n:'Tamil',q:'தமிழ்'},
+ {id:227,n:'Telugu',q:'తెలుగు'},{id:211,n:'Tagalog',q:'Tagalog'},
+ {id:103,n:'Portuguese',q:'Português'},{id:153,n:'Italian',q:'Italiano'},
+ {id:35,n:'Japanese',q:'日本語'},{id:36,n:'Korean',q:'한국어'},
+ {id:51,n:'Thai',q:'ไทย'},{id:220,n:'Vietnamese',q:'Tiếng Việt'},
+ {id:49,n:'Swahili',q:'Kiswahili'},{id:32,n:'Hausa',q:'Hausa'},
+ {id:81,n:'Kurdish',q:'کوردی'},{id:118,n:'Pashto',q:'پښتو'},
+ {id:87,n:'Amharic',q:'አማርኛ'},{id:47,n:'Albanian',q:'Shqip'},
+ {id:25,n:'Bosnian',q:'Bosanski'},{id:217,n:'Ukrainian',q:'Українська'},
+ {id:42,n:'Polish',q:'Polski'},{id:144,n:'Dutch',q:'Nederlands'},
+ {id:44,n:'Romanian',q:'Română'},{id:26,n:'Czech',q:'Čeština'},
+ {id:125,n:'Yoruba',q:'Yorùbá'},{id:46,n:'Somali',q:'Soomaali'}
 ];

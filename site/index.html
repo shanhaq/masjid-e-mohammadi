@@ -309,6 +309,7 @@ a{color:inherit}
           <div class="rbar">
             <button class="back" id="qBack" aria-label="Back to surah list">&#8592;</button>
             <h2 id="rTitle">&mdash;</h2>
+            <select id="rLang" aria-label="Choose translation"></select>
             <select id="rQari" aria-label="Choose reciter"></select>
             <button class="rplayall" id="rPlay">Play Surah</button>
           </div>
@@ -516,23 +517,48 @@ renderSList();
 /* reader */
 var curS=null,curA=0,audio=null,playing=false;
 q$('rQari').innerHTML=QARIS.map(function(q,i){return '<option value="'+i+'">'+q.n+'</option>'}).join('');
+q$('rLang').innerHTML=LANGS.map(function(L){return '<option value="'+L.id+'">'+L.n+(L.b?' (bundled)':'')+'</option>'}).join('');
+q$('rLang').addEventListener('change',function(){trLang=+this.value;if(curS!=null)paintAyahs()});
 function auURL(n,a){return QARIS[qariIdx].base+fmtQ(n)+fmtQ(a)+'.mp3'}
 function openSurah(n){
   var c=CHMETA.filter(function(x){return x[0]===n})[0];if(!c)return;curS=n;
   q$('rTitle').textContent=c[0]+'. '+c[1]+' — '+c[2];
   q$('qListWrap').style.display='none';q$('qReader').style.display='block';
   q$('ayahs').innerHTML='<p class="psub">Quran load ho raha hai…</p>';
-  document.querySelector('.panel.on').scrollTop=0;
-  loadQuranText().then(function(){
-    var ays=(window.QTEXT&&QTEXT[n])||[];
-    if(!ays.length){q$('ayahs').innerHTML='<p class="psub">Is surah ka text load nahi hua — internet check karein.</p>';return}
-    q$('ayahs').innerHTML=ays.map(function(a,i){
-      var y=i+1;
-      return '<div class="ayah" data-a="'+y+'"><div class="top"><span class="medal">'+y+'</span>'+
-        '<button class="play" data-play="'+y+'" aria-label="Play ayah '+y+'">&#9654;</button></div>'+
-        '<div class="ar">'+a[0]+'</div><div class="tr">'+a[1]+'</div></div>';
-    }).join('');
-  }).catch(function(){q$('ayahs').innerHTML='<p class="psub">Quran load nahi ho saka — internet check karein.</p>'});
+  var pn=document.querySelector('.panel.on');if(pn)pn.scrollTop=0;
+  loadQuranText().then(paintAyahs).catch(function(){q$('ayahs').innerHTML='<p class="psub">Quran load nahi ho saka — internet check karein.</p>'});
+}
+/* translation: English bundled; other 35 languages fetched once from quran.com and cached */
+var trLang=85,trMem={};
+function paintAyahs(){
+  var ays=(window.QTEXT&&QTEXT[curS])||[];
+  if(!ays.length){q$('ayahs').innerHTML='<p class="psub">Is surah ka text load nahi hua — internet check karein.</p>';return}
+  q$('ayahs').innerHTML=ays.map(function(a,i){
+    var y=i+1;
+    return '<div class="ayah" data-a="'+y+'"><div class="top"><span class="medal">'+y+'</span>'+
+      '<button class="play" data-play="'+y+'" aria-label="Play ayah '+y+'">&#9654;</button></div>'+
+      '<div class="ar">'+a[0]+'</div><div class="tr">'+a[1]+'</div></div>';
+  }).join('');
+  if(trLang!==85)loadTr(curS);
+}
+function loadTr(n){
+  if(trLang===85||!n)return;
+  if(trMem[n]&&trMem[n][trLang]){applyTr(trMem[n][trLang]);return}
+  var key='masjid-tr'+trLang+'_'+n,ck=null;
+  try{ck=JSON.parse(localStorage.getItem(key)||'null')}catch(e){}
+  if(ck&&ck.length){trMem[n]=trMem[n]||{};trMem[n][trLang]=ck;applyTr(ck);return}
+  fetch('https://api.quran.com/api/v4/verses/by_chapter/'+n+'?fields=verse_key&translations='+trLang+'&per_page=300')
+   .then(function(r){if(!r.ok)throw 0;return r.json()})
+   .then(function(d){
+     var arr=(d.verses||[]).map(function(v){var t=v.translations&&v.translations[0];return t?t.text.replace(/<[^>]+>/g,'').trim():''});
+     if(!arr.length)throw 0;
+     trMem[n]=trMem[n]||{};trMem[n][trLang]=arr;
+     try{localStorage.setItem(key,JSON.stringify(arr))}catch(e){}
+     applyTr(arr);
+   }).catch(function(){});
+}
+function applyTr(arr){
+  document.querySelectorAll('.ayah .tr').forEach(function(el,i){if(arr[i])el.textContent=arr[i]});
 }
 q$('qBack').addEventListener('click',function(){stopAudio();q$('qReader').style.display='none';q$('qListWrap').style.display='block'});
 function markAyah(a){
