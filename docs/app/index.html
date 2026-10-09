@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#060B13">
+<link rel="manifest" href="masjid_manifest.webmanifest">
+<link rel="icon" href="icon_masjid.svg" type="image/svg+xml">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Masjid">
+<title>Masjid e Mohammadi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060B13; --bg2:#081019; --card:rgba(255,255,255,.07); --card2:rgba(255,255,255,.05);
+  --ink:#F0F5FB; --body:#A8B6C8; --cream:#EDF3FA; --muted:#7E8EA3;
+  --gold:#8CCBF7; --gold2:#8CCBF7; --gold-lite:#CDE9FF;
+  --green:#2E68B2; --green-deep:#16324F; --line:rgba(255,255,255,.13); --danger:#E86B62;
+  --glass:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
+  --glass-brd:rgba(255,255,255,.13);
+  --glass-sh:0 30px 70px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.18);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  margin:0;overflow:hidden;
+  background:linear-gradient(150deg,#0A1119,#060B13 55%,#081019);
+  color:var(--body);font-family:Outfit,system-ui,Arial,sans-serif;
+}
+#app{max-width:430px;height:100vh;height:100dvh;margin:auto;position:relative;
+  background:var(--bg);
+  box-shadow:0 0 60px rgba(0,0,0,.6);overflow:hidden;display:flex;flex-direction:column}
+
+/* ---------- background: photo (Shan's calligraphy) + scrim + girih pattern ---------- */
+.bg-photo{position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:url("bg-calligraphy.jpg") center 30%/cover no-repeat,
+             url("bg-mosque.jpg") center 30%/cover no-repeat}
+.bg-scrim{position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(130% 75% at 50% -12%,rgba(74,168,240,.18),transparent 58%),
+    linear-gradient(180deg,rgba(8,14,24,.46) 0%,rgba(7,12,20,.68) 45%,rgba(4,7,12,.93) 100%),
+    linear-gradient(200deg,rgba(24,64,120,.30),rgba(8,20,40,.35))}
+.bg-pattern{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='74' height='74' viewBox='0 0 74 74'%3E%3Cg fill='none' stroke='%237FC4F7' stroke-width='1'%3E%3Crect x='17' y='17' width='40' height='40'/%3E%3Crect x='17' y='17' width='40' height='40' transform='rotate(45 37 37)'/%3E%3Ccircle cx='37' cy='37' r='3.5'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:74px 74px;
+  -webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,.9),rgba(0,0,0,.25) 40%,rgba(0,0,0,.75));
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.9),rgba(0,0,0,.25) 40%,rgba(0,0,0,.75))}
+
+/* ---------- screens ---------- */
+.screen{position:absolute;inset:0;display:none;flex-direction:column;overflow-y:auto;
+  overflow-x:hidden;background:transparent;
+  animation:fade .25s ease}
+.screen::before{content:"";position:fixed;top:-60px;left:34%;width:200px;height:200px;
+  border-radius:50%;border:1px solid rgba(140,203,247,.3);pointer-events:none}
+.screen.active{display:flex}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.screen{padding-top:8px}
+.header{padding:12px 16px 10px;display:flex;align-items:center;
+  justify-content:space-between;flex:none}
+.header h2{font-size:19px;margin:0;font-weight:750;letter-spacing:-.01em;
+  color:var(--ink);display:flex;align-items:center;gap:8px}
+.hback{width:34px;height:34px;border-radius:11px;border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.08);color:var(--ink);font-size:17px;display:grid;
+  place-items:center;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.hicon{font-size:17px;color:var(--gold2)}
+.body{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:14px}
+
+/* ---------- cards & lists ---------- */
+.card{margin:10px 14px;padding:14px;border-radius:24px;position:relative;
+  background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
+  backdrop-filter:blur(24px) saturate(1.4);
+  -webkit-backdrop-filter:blur(24px) saturate(1.4);
+  border:1px solid rgba(255,255,255,.13);
+  box-shadow:0 30px 70px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.18)}
+.card::before{content:"";position:absolute;inset:0;border-radius:24px;pointer-events:none;
+  background:linear-gradient(120deg,rgba(255,255,255,.14),transparent 30%)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.label{font-size:11px;color:var(--muted)}
+.value{font-size:15px;color:var(--cream);font-weight:600}
+.gold{color:var(--gold2)}
+.big{font-size:26px;font-weight:800;color:var(--gold2);font-variant-numeric:tabular-nums}
+.btn{display:block;border:0;background:linear-gradient(160deg,#CDE9FF,#3E9BE8);color:#08131F;
+  padding:13px;border-radius:99px;text-align:center;font-weight:800;font-size:13px;
+  margin:8px 14px;cursor:pointer;transition:.15s;
+  box-shadow:0 10px 26px rgba(74,168,240,.35),inset 0 1px 0 rgba(255,255,255,.5)}
+.btn:active{transform:scale(.97)}
+.btn.dark{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  color:#DDE7F0;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.btn.red{background:transparent;border:1px solid var(--danger);color:var(--danger);
+  box-shadow:none}
+.hero{margin:8px 14px 12px;min-height:150px;border-radius:24px;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.5)),
+    radial-gradient(circle at 78% 18%,rgba(140,203,247,.3),transparent 42%),
+    linear-gradient(135deg,#12365C,#071527);
+  border:1px solid rgba(140,203,247,.35);
+  box-shadow:0 30px 70px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.14)}
+.hero::before{content:"";position:absolute;top:0;left:8%;right:8%;height:1px;z-index:2;
+  background:linear-gradient(90deg,transparent,rgba(140,203,247,.85),transparent)}
+.hero .text{position:absolute;left:18px;bottom:14px;right:18px}
+.hero .small{font-size:11px;color:#AFC6DC}
+.hero .hbig{font:750 26px Outfit,system-ui,sans-serif;color:#E4F0FC;margin:4px 0;letter-spacing:.3px}
+.hero-in{display:flex;gap:14px;padding:18px 16px 14px;align-items:center;position:relative;z-index:1}
+.h-left{flex:1;min-width:0}
+.h-label{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:#8FA6BE;font-weight:500}
+.h-name{font-size:30px;font-weight:600;letter-spacing:-.025em;margin-top:7px;line-height:1;color:var(--cream)}
+.h-count{display:inline-flex;align-items:center;gap:7px;margin-top:11px;
+  font-size:12px;font-weight:500;color:#BFE4FF;
+  border:1px solid rgba(140,203,247,.32);background:rgba(140,203,247,.1);
+  padding:5px 11px;border-radius:99px;font-variant-numeric:tabular-nums;max-width:100%}
+.live{width:6px;height:6px;border-radius:50%;background:#6EC1F5;flex:none}
+@media (prefers-reduced-motion:no-preference){.live{animation:pulse 1.8s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}}
+.ring{position:relative;width:104px;height:104px;flex:none}
+.ring .mid{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ring .mid b{font-size:17px;font-weight:600;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:#EAF4FC;display:block}
+.ring .mid span{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:#8FA6BE;margin-top:3px;display:block}
+.h-times{display:flex;justify-content:space-between;gap:4px;
+  padding:13px 10px 14px;border-top:1px solid rgba(255,255,255,.09);
+  background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.05))}
+.t{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:#8FA6BE;text-align:center;
+  flex:1;font-variant-numeric:tabular-nums}
+.t b{display:block;font-size:13.5px;font-weight:600;color:#DCE7F2;margin-top:3px;letter-spacing:0}
+.t.on{color:#9FD3F4}
+.t.on b{color:#8CCBF7}
+
+.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 14px}
+.quick div{padding:13px 4px;text-align:center;border-radius:16px;cursor:pointer;transition:.15s;
+  background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.13);
+  box-shadow:0 20px 45px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.14);
+  backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);
+  font-size:11px;color:var(--body)}
+.quick div:active{transform:scale(.95);border-color:rgba(140,203,247,.5)}
+.quick b{display:grid;place-items:center;width:40px;height:40px;margin:0 auto 8px;
+  border-radius:13px;font-size:15px;color:#BFE4FF;
+  background:linear-gradient(140deg,rgba(140,203,247,.26),rgba(74,168,240,.06));
+  border:1px solid rgba(140,203,247,.34);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.24)}
+
+.prayer{display:grid;gap:7px}
+.p{padding:11px 12px;border-radius:14px;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;
+  align-items:center;font-size:14px}
+.p.active{border-color:rgba(140,203,247,.5);
+  background:linear-gradient(120deg,rgba(140,203,247,.22),rgba(140,203,247,.07));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.p b{color:var(--gold2);font-variant-numeric:tabular-nums}
+
+.list{display:grid;gap:8px;margin:10px 14px}
+.item{padding:12px;border-radius:16px;cursor:pointer;transition:.15s;
+  background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 20px 45px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.13);
+  backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);
+  display:flex;align-items:center;gap:11px}
+.item:active{transform:scale(.98);border-color:rgba(140,203,247,.5)}
+.circle{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:none;
+  background:linear-gradient(160deg,#CDE9FF,#7FC4F7);color:#08131F;font-weight:bold;font-size:15px;
+  box-shadow:0 10px 24px rgba(74,168,240,.3),inset 0 1px 0 rgba(255,255,255,.5)}
+.circle.g{background:rgba(255,255,255,.08);color:var(--gold2);
+  border:1px solid rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 14px}
+.chips div{padding:13px 4px;text-align:center;border-radius:12px;cursor:pointer;font-size:11.5px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);transition:.15s}
+.chips div:active{transform:scale(.96)}
+.chips div.on{border-color:rgba(140,203,247,.5);color:var(--gold2);
+  background:linear-gradient(120deg,rgba(140,203,247,.2),rgba(140,203,247,.07))}
+.divider{border:0;border-top:1px solid var(--line);margin:9px 0}
+
+/* ---------- section head & ornament ---------- */
+.shead{display:flex;align-items:center;gap:12px;padding:4px 20px 0}
+.shead b{font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:#8FA6BE;font-weight:500}
+.shead span{height:1px;flex:1;background:linear-gradient(90deg,rgba(255,255,255,.14),transparent)}
+.shead a{font-size:11.5px;color:#8CCBF7;text-decoration:none;cursor:pointer;letter-spacing:.04em;font-weight:500}
+.orn{display:flex;align-items:center;gap:9px;padding:14px 20px 8px}
+.orn span{height:1px;flex:1;background:linear-gradient(90deg,transparent,rgba(140,203,247,.38))}
+.orn span:last-child{background:linear-gradient(90deg,rgba(140,203,247,.38),transparent)}
+.orn i{width:6px;height:6px;transform:rotate(45deg);border:1px solid rgba(140,203,247,.75);
+  background:rgba(140,203,247,.18);flex:none}
+.orn b{font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:#7FA6C4;font-weight:500}
+
+/* ---------- tabs ---------- */
+.tabs{height:66px;flex:none;z-index:5;
+  display:grid;grid-template-columns:repeat(5,1fr);
+  background:rgba(6,11,19,.86);backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-top:1px solid rgba(255,255,255,.12);
+  box-shadow:0 -14px 40px rgba(0,0,0,.5)}
+.tabs div{text-align:center;padding-top:10px;font-size:10px;color:#8A9BB0;cursor:pointer;transition:.2s}
+.tabs b{display:block;font-size:18px;margin-bottom:4px;color:#5D7189}
+.tabs div.on{color:var(--cream);font-weight:600}
+.tabs div.on b{color:var(--gold2)}
+
+/* ---------- quran reader ---------- */
+.quranbox{margin:12px 14px;padding:20px 15px;text-align:center;border-radius:18px;
+  background:linear-gradient(160deg,rgba(255,255,255,.11),rgba(255,255,255,.04));
+  backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);
+  color:#F4F8FD;border:1px solid rgba(140,203,247,.4);
+  box-shadow:0 30px 70px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.16)}
+.ayah{font-size:23px;line-height:2.15;font-family:'Amiri Quran','Noto Naskh Arabic','Scheherazade New',serif;margin:6px 0}
+.translation{font-size:13.5px;line-height:1.75;color:#BAC9DA;margin-top:9px}
+.vnum{display:inline-block;background:linear-gradient(135deg,#CDE9FF,#7FC4F7);color:#0A1524;
+  border-radius:50%;width:22px;height:22px;line-height:22px;font-size:11px;font-weight:700;margin-bottom:6px}
+.bism{font-size:20px;font-family:'Amiri Quran','Noto Naskh Arabic','Scheherazade New',serif;color:#9FD3F4;margin:4px 0 2px;line-height:1.9;text-align:center}
+@font-face{font-family:'Amiri Quran';src:url(quran-font.ttf) format('truetype');font-display:swap}
+.arow{direction:rtl;text-align:right;padding:3px 2px;cursor:pointer;border-radius:10px}
+.arow.cur{background:rgba(140,203,247,.12);box-shadow:inset 0 0 0 1px rgba(140,203,247,.25)}
+.arow.cur .ayah{color:#CDE9FF}
+.arow .vnum{display:inline-block;min-width:26px;height:26px;line-height:23px;text-align:center;border-radius:50%;border:1.5px solid rgba(140,203,247,.55);color:#8CCBF7;font-size:12px;margin:0 2px 0 8px;direction:ltr;background:rgba(140,203,247,.08);vertical-align:middle}
+.qchips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.qchips div{padding:11px 16px;border-radius:22px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);font-size:13.5px;cursor:pointer;color:#C9D8E2;transition:.15s}
+.qchips div:active{transform:scale(.95);border-color:rgba(140,203,247,.5)}
+.qchips div.on{background:linear-gradient(135deg,#CDE9FF,#3E9BE8);color:#08131D;border-color:transparent;font-weight:600}
+.ytcard{margin-bottom:18px;cursor:pointer}
+.ytthumb{position:relative;padding-top:56.25%;border-radius:12px;overflow:hidden;background:#0B1522}
+.ytthumb img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+.ytplay{position:absolute;right:9px;bottom:9px;background:rgba(0,0,0,.7);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.ytt{margin-top:9px;font-size:14.5px;line-height:1.45;color:#EAF6FF;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ytm{margin-top:3px;font-size:12px;color:#8FA6B4}
+.ytwrap{position:relative;padding-top:56.25%;border-radius:14px;overflow:hidden;background:#000}
+.ytwrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+.ytinfo{margin-top:12px;font-size:15px;font-weight:600;line-height:1.5;color:#EAF6FF}
+
+/* ---------- compass & tasbeeh ---------- */
+.compass{width:200px;height:200px;border-radius:50%;margin:14px auto;
+  border:8px solid #16324F;outline:2px solid var(--gold);
+  display:grid;place-items:center;position:relative;
+  background:radial-gradient(circle,#EAF3FB 0 28%,#7FC4F7 29% 31%,#0B2135 32% 100%);
+  color:#0E1B28;box-shadow:0 30px 70px rgba(0,0,0,.5)}
+.compass .kaaba{font-size:36px}
+.needle{position:absolute;inset:0;display:flex;justify-content:center;align-items:flex-start;
+  padding-top:6px;font-size:26px;color:#E86B62;transform-origin:50% 50%;
+  pointer-events:none;transition:transform .15s linear}
+.tasbeeh{width:200px;height:200px;border-radius:50%;margin:16px auto;cursor:pointer;
+  border:2px solid var(--gold);display:grid;place-items:center;user-select:none;
+  background:radial-gradient(circle,#0D2438,#04101C);
+  box-shadow:inset 0 0 35px rgba(0,0,0,.55),0 30px 70px rgba(0,0,0,.5);
+  transition:transform .1s}
+.tasbeeh:active{transform:scale(.94)}
+.count{font-size:46px;color:var(--gold2);font-weight:750;
+  font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.bar{height:8px;border-radius:8px;background:#06121F;border:1px solid var(--line);
+  overflow:hidden;margin:6px 14px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#4AA8F0,#CDE9FF);
+  width:0%;transition:width .2s}
+
+/* ---------- misc ---------- */
+.setting{display:flex;justify-content:space-between;align-items:center;
+  padding:12px 0;min-height:44px;border-bottom:1px solid rgba(255,255,255,.1);font-size:13px;gap:10px}
+.setting:last-child{border-bottom:0}
+.switch{width:38px;height:21px;border-radius:20px;background:#233A52;position:relative;
+  flex:none;cursor:pointer;transition:.2s;border:1px solid #31475F}
+.switch:after{content:"";position:absolute;width:15px;height:15px;border-radius:50%;
+  background:#93A6BB;left:3px;top:2px;transition:.2s}
+.switch.on{background:#1E7FD0;border-color:#3E9BE8}
+.switch.on:after{left:19px;background:#fff}
+input[type=text],input[type=email],input[type=password],input[type=date],select{
+  width:100%;background:#0A1826;border:1px solid var(--line);padding:12px;
+  border-radius:12px;margin:7px 0;color:var(--cream);font-size:13px;outline:none;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.35)}
+input:focus,select:focus{border-color:var(--gold2)}
+#q-search{padding-right:34px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238CCBF7' stroke-width='1.75' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='6.8'/%3E%3Cpath d='m15.8 15.8 4.7 4.7'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:16px}
+.note{text-align:center;color:#8FA6B4;font-size:10.5px;margin:10px 16px;line-height:1.6}
+.toast{position:absolute;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:rgba(8,20,34,.95);border:1px solid rgba(140,203,247,.5);color:var(--cream);
+  padding:10px 18px;border-radius:99px;font-size:12px;opacity:0;pointer-events:none;
+  transition:.3s;z-index:99;white-space:nowrap;
+  box-shadow:0 18px 45px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.15);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.ad{padding:13px;border-radius:18px;
+  background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.13);color:var(--body);margin:8px 14px;
+  box-shadow:0 24px 55px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.15);
+  backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4)}
+.ad b{font-size:13px;color:var(--ink)}.ad p{font-size:11px;color:var(--body);margin:6px 0 4px}
+.ad small{font-size:10px;color:var(--muted)}
+.avatar{width:80px;height:80px;border-radius:50%;margin:10px auto;display:grid;place-items:center;
+  font-size:32px;background:linear-gradient(150deg,#CDE9FF,#7FC4F7);color:#08131F;
+  border:2px solid rgba(255,255,255,.3);font-weight:800;
+  box-shadow:0 20px 45px rgba(74,168,240,.3),inset 0 1px 0 rgba(255,255,255,.55)}
+.center{text-align:center}
+.badge{display:inline-block;background:#122A44;border:1px solid #2E4E73;border-radius:99px;
+  padding:4px 10px;font-size:10px;color:#CFE0D6;margin:2px}
+.moregrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 14px}
+.moregrid div{padding:15px 4px;text-align:center;border-radius:16px;cursor:pointer;font-size:10.5px;
+  background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.13);
+  box-shadow:0 20px 45px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.14);
+  backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);
+  color:var(--body)}
+.moregrid div:active{transform:scale(.95);border-color:rgba(140,203,247,.5)}
+.moregrid b{display:grid;place-items:center;width:40px;height:40px;margin:0 auto 8px;
+  border-radius:13px;font-size:16px;color:#BFE4FF;
+  background:linear-gradient(140deg,rgba(140,203,247,.26),rgba(74,168,240,.06));
+  border:1px solid rgba(140,203,247,.34);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.24)}
+table.admin{width:calc(100% - 28px);margin:10px 14px;border-collapse:collapse;
+  border-radius:12px;overflow:hidden;font-size:11.5px;border:1px solid var(--line);
+  box-shadow:0 20px 45px rgba(0,0,0,.45)}
+table.admin th{background:#0B2135;color:#BFE4FF;padding:9px;font-size:10.5px;text-align:left}
+table.admin td{padding:8px 9px;border-top:1px solid #16324F;background:#081426;color:var(--body)}
+.statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:12px 14px}
+.statgrid div{background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.12);border-radius:13px;
+  padding:10px 2px;text-align:center;font-size:9.5px;color:var(--muted);
+  box-shadow:0 18px 40px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.13)}
+.statgrid b{display:block;font-size:17px;color:var(--gold2);margin-bottom:3px;
+  font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:#8CCBF7}
+.hline{padding:12px 16px 2px;font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.4px}
+
+/* ---------- entrance motion (hierarchy reveal) ---------- */
+@media (prefers-reduced-motion:no-preference){
+  .rise{animation:rise .55s cubic-bezier(.16,1,.3,1) both}
+  .d1{animation-delay:.05s}.d2{animation-delay:.14s}.d3{animation-delay:.23s}
+  .d4{animation-delay:.32s}.d5{animation-delay:.41s}
+  @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+}
+/* PWA: standalone safe areas (no-op inside the APK where env()==0) */
+@supports(padding:env(safe-area-inset-top)){
+  .header{padding-top:calc(12px + env(safe-area-inset-top))}
+  .tabs{height:calc(66px + env(safe-area-inset-bottom))}
+}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="bg-photo"></div><div class="bg-scrim"></div><div class="bg-pattern"></div>
+
+<!-- ============ LOGIN ============ -->
+<section class="screen" id="scr-login">
+  <div style="padding:44px 22px 20px;text-align:center;flex:1">
+    <div style="font-size:66px"><svg viewBox="0 0 24 24" width="60" height="60" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 3.2c3.1 2.4 4.7 4.8 4.7 7.2H7.3c0-2.4 1.6-4.8 4.7-7.2Z"/><path d="M6.5 10.4h11"/><path d="M7.8 10.4V20"/><path d="M16.2 10.4V20"/><path d="M5 20h14"/><path d="M10.2 20v-4a1.8 1.8 0 0 1 3.6 0v4"/></svg></div>
+    <h1 style="font-family:Outfit,system-ui,sans-serif;font-size:27px;margin:12px 0 6px;color:var(--gold2)">Masjid e Mohammadi</h1>
+    <div class="note" style="margin-bottom:26px">Faith • Worship • Community</div>
+    <div class="btn" onclick="doLogin('Continue with Google')">G &nbsp;Continue with Google</div>
+    <div class="btn dark" onclick="doLogin('Continue with Phone')"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M6.6 3.5h3.1l1.5 4-2 1.4a12.2 12.2 0 0 0 5.9 5.9l1.4-2 4 1.5v3.1a2 2 0 0 1-2.2 2A17.2 17.2 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z"/></svg> &nbsp;Continue with Phone</div>
+    <div class="label center" style="margin:16px">OR</div>
+    <div id="login-pw" style="display:none;margin-bottom:2px"><input type="password" id="lp-pw" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin('Email Login')"></div>
+    <div class="btn dark" onclick="doLogin('Email Login')"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="m4.5 7.8 7.5 5.2 7.5-5.2"/></svg> &nbsp;Login with Email</div>
+    <div class="note" style="margin-top:26px">By continuing, you agree to our<br>Terms &amp; Privacy Policy.</div>
+  </div>
+</section>
+
+<!-- ============ HOME ============ -->
+<section class="screen" id="scr-home">
+  <div class="header">
+    <h2><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 3.2c3.1 2.4 4.7 4.8 4.7 7.2H7.3c0-2.4 1.6-4.8 4.7-7.2Z"/><path d="M6.5 10.4h11"/><path d="M7.8 10.4V20"/><path d="M16.2 10.4V20"/><path d="M5 20h14"/><path d="M10.2 20v-4a1.8 1.8 0 0 1 3.6 0v4"/></svg> Masjid e Mohammadi</h2><span class="hicon" onclick="go('scr-notifications')"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M18 8.5a6 6 0 1 0-12 0c0 5.8-2.4 6.9-2.4 6.9h16.8S18 14.3 18 8.5Z"/><path d="M10.3 19.3a2 2 0 0 0 3.4 0"/></svg></span>
+  </div>
+  <div class="body">
+    <div class="rise d1" style="padding:0 16px 2px"><span class="label" id="greet">Assalamu Alaikum</span>
+      <div style="font-size:16px;font-weight:700" id="gname">Welcome</div></div>
+    <div class="orn rise d1"><span></span><i></i><b>Today</b><i></i><span></span></div>
+    <div class="hero rise d2">
+      <div class="hero-in">
+        <div class="h-left">
+          <div class="h-label">NEXT PRAYER</div>
+          <div class="h-name cd-name">Asr</div>
+          <div class="h-count"><span class="live"></span>in <b class="cd-count">--:--:--</b></div>
+        </div>
+        <div class="ring">
+          <svg width="104" height="104" viewBox="0 0 104 104">
+            <defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#CDE9FF"/><stop offset="1" stop-color="#3E9BE8"/>
+            </linearGradient></defs>
+            <circle cx="52" cy="52" r="45" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="7"/>
+            <circle id="ring-arc" cx="52" cy="52" r="45" fill="none" stroke="url(#rg)" stroke-width="7"
+              stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="141"
+              transform="rotate(-90 52 52)"/>
+          </svg>
+          <div class="mid"><b id="ring-time">--:--</b><span id="ring-ap">PM</span></div>
+        </div>
+      </div>
+      <div class="h-times" id="home-times"></div>
+    </div>
+    <div class="card rise d4">
+      <div class="row" style="margin-bottom:9px"><span class="label">TODAY'S PRAYER TIMES</span>
+        <span class="label" onclick="go('scr-prayer')" style="color:var(--gold2)">View all ›</span></div>
+      <div class="prayer" id="home-prayers"></div>
+    </div>
+    <div class="shead rise d4" style="margin-top:9px"><b>ALERTS</b><span></span><a onclick="go('scr-announcements')">See all</a></div>
+    <div id="home-alerts" class="rise d5"></div>
+  </div>
+  <nav class="tabs" data-tab="home"></nav>
+</section>
+
+<!-- ============ PRAYER TIMES ============ -->
+<section class="screen" id="scr-prayer">
+  <div class="header"><div class="hback" onclick="back()">‹</div><h2>Prayer Times</h2><span class="hicon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2.1 5-5 2.1 2.1-5 5-2.1Z"/></svg></span></div>
+  <div class="body">
+    <div class="card"><div class="label"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 21s-6.8-5.9-6.8-11.2a6.8 6.8 0 0 1 13.6 0C18.8 15.1 12 21 12 21Z"/><circle cx="12" cy="9.7" r="2.6"/></svg> <span id="p-loc">Karachi, Pakistan</span></div>
+      <div class="value" id="p-date">—</div></div>
+    <div class="card"><div class="prayer" id="p-list"></div></div>
+    <div class="card"><div class="label">TIME UNTIL NEXT PRAYER</div>
+      <div class="value gold" style="font-size:26px;letter-spacing:2px"><span class="cd-count">--:--:--</span></div>
+      <div class="label">Hours • Minutes • Seconds</div></div>
+    <div class="card"><div class="label">NEXT IQAMAT</div>
+      <div class="row" style="margin-top:5px"><b id="p-iq-name">Asr</b><b class="gold" id="p-iq-time">04:15 PM</b></div></div>
+  </div>
+  <nav class="tabs" data-tab="home"></nav>
+</section>
+
+<!-- ============ QURAN LIST ============ -->
+<section class="screen" id="scr-quran">
+  <div class="header"><h2><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Al-Quran</h2><span class="hicon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="11" cy="11" r="6.8"/><path d="m15.8 15.8 4.7 4.7"/></svg></span></div>
+  <div class="body">
+    <div style="margin:8px 14px 0"><input type="text" id="q-search" placeholder="Search Surah..." oninput="renderSurahs()"></div>
+    <div class="quick" style="margin:10px 14px 0;grid-template-columns:repeat(4,1fr)" onclick="quickNav(event)">
+      <div onclick="continueReading()"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></b>Quran</div>
+      <div data-go="scr-duas"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 20.5 12 12 20.5 3.5 12Z"/></svg></b>Duas</div>
+      <div data-go="scr-tasbeeh"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 12h.01" stroke-width="2.6"/></svg></b>Tasbeeh</div>
+      <div data-go="scr-qibla"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2.1 5-5 2.1 2.1-5 5-2.1Z"/></svg></b>Qibla</div>
+    </div>
+    <div class="card" onclick="continueReading()" style="cursor:pointer">
+      <div class="row"><span><span class="label">CONTINUE READING</span><br><b id="q-cont-name">Al-Fatihah</b><br>
+        <span class="label" id="q-cont-sub">Surah 1 • 7 verses</span></span><span class="gold">›</span></div>
+    </div>
+    <div class="list" id="q-list"></div>
+    <div class="note">Tap any surah to read • Full Quran — Quran SDK</div>
+  </div>
+  <nav class="tabs" data-tab="quran"></nav>
+</section>
+
+<!-- ============ QURAN READER ============ -->
+<section class="screen" id="scr-reader">
+  <div class="header"><div class="hback" onclick="back()">‹</div><h2 id="r-title">Al-Fatihah</h2><span class="hicon" id="r-count">1/7</span></div>
+  <div class="body">
+        <div class="card" style="padding:10px 14px"><div class="row">
+      <span onclick="navVerse(-1)" style="cursor:pointer;font-size:21px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:rgba(255,255,255,.05)">‹</span>
+      <b class="gold" onclick="playAyah()" style="cursor:pointer;flex:1;text-align:center;padding:15px 0;font-size:15px"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M8 5.6v12.8L19.2 12 8 5.6Z"/></svg> &nbsp;<span id="rp-lab">Play</span></b>
+      <span onclick="navVerse(1)" style="cursor:pointer;font-size:21px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:rgba(255,255,255,.05)">›</span>
+    </div></div>
+    <div class="chips"><div class="on">Arabic</div><div id="chip-tr" class="on" onclick="togTr()">Translation</div><div id="qari-chip" onclick="cycleQari()">Qari</div></div>
+    <div class="card"><div class="label">TRANSLATION</div>
+      <div class="qchips" id="lang-quick"></div>
+      <div class="setting" onclick="go('scr-lang')" style="cursor:pointer;margin-top:8px"><span>All languages</span><b id="tr-name">English ›</b></div>
+      <div class="label" style="margin-top:10px">QARI — RECITER</div>
+      <div class="qchips" id="qari-chips"></div></div>
+    <div class="quranbox" id="r-box"></div>
+  </div>
+  <nav class="tabs" data-tab="quran"></nav>
+</section>
+
+<!-- ============ DUAS ============ -->
+<section class="screen" id="scr-duas">
+  <div class="header"><h2><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21.2l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg> Duas</h2><span class="hicon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="11" cy="11" r="6.8"/><path d="m15.8 15.8 4.7 4.7"/></svg></span></div>
+  <div class="body">
+    <div class="chips" id="dua-chips">
+      <div class="on" data-c="all">All</div><div data-c="namaz">After Namaz</div><div data-c="masjid">Masjid</div>
+      <div data-c="daily">Daily</div><div data-c="sleep">Sleep</div><div data-c="food">Food</div>
+    </div>
+    <div class="list" id="dua-list"></div>
+  </div>
+  <nav class="tabs" data-tab="quran"></nav>
+</section>
+
+<!-- ============ DUA DETAIL ============ -->
+<section class="screen" id="scr-dua">
+  <div class="header"><div class="hback" onclick="back()">‹</div><h2 id="d-title">Dua</h2><span class="hicon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21.2l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg></span></div>
+  <div class="body">
+    <div class="quranbox"><div class="ayah" id="d-ar" style="font-size:26px"></div>
+      <hr class="divider" style="border-color:rgba(140,203,247,.35)"><div class="translation" id="d-tr"></div></div>
+    <div class="card"><div class="label">TRANSLITERATION</div>
+      <div class="value" id="d-tr2" style="font-style:italic;font-size:13px"></div></div>
+  </div>
+  <nav class="tabs" data-tab="quran"></nav>
+</section>
+
+<!-- ============ ANNOUNCEMENTS ============ -->
+<section class="screen" id="scr-announcements">
+  <div class="header"><h2><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M18 8.5a6 6 0 1 0-12 0c0 5.8-2.4 6.9-2.4 6.9h16.8S18 14.3 18 8.5Z"/><path d="M10.3 19.3a2 2 0 0 0 3.4 0"/></svg> Announcements</h2><span class="hicon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 3.5 20.5 12 12 20.5 3.5 12Z"/></svg></span></div>
+  <div class="body"><div id="ann-list"></div></div>
+  <nav class="tabs" data-tab="home"></nav>
+</section>
+
+<!-- ============ NOTIFICATIONS ============ -->
+<section class="screen" id="scr-notifications">
+  <div class="header"><div class="hback" onclick="back()">‹</div><h2>Notifications</h2><span class="hicon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M18 8.5a6 6 0 1 0-12 0c0 5.8-2.4 6.9-2.4 6.9h16.8S18 14.3 18 8.5Z"/><path d="M10.3 19.3a2 2 0 0 0 3.4 0"/></svg></span></div>
+  <div class="body">
+    <div class="card" id="notif-settings"></div>
+    <div class="hline">RECENT</div>
+    <div id="notif-recent"></div>
+  </div>
+  <nav class="tabs" data-tab="home"></nav>
+</section>
+
+<!-- ============ MORE ============ -->
+<section class="screen" id="scr-more">
+  <div class="header"><h2><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M4 7h16M4 12h16M4 17h16"/></svg> More</h2><span class="hicon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg></span></div>
+  <div class="body">
+    <div class="card" style="display:flex;gap:12px;align-items:center;cursor:pointer" onclick="go('scr-profile')">
+      <div class="avatar" style="width:52px;height:52px;font-size:21px;margin:0" id="m-avatar">S</div>
+      <div><b id="m-name">Shanmd Khan</b><br><span class="label" id="m-email">shanmdkhan@gmail.com</span></div>
+      <span class="gold" style="margin-left:auto">›</span>
+    </div>
+    <div class="moregrid" onclick="moreNav(event)">
+      <div data-go="scr-prayer"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></b>Prayer Times</div>
+      <div data-go="scr-azan"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M4 9.4h3.6L12 5.6v12.8L7.6 14.6H4a1 1 0 0 1-1-1v-3.2a1 1 0 0 1 1-1Z"/><path d="M15.4 9.2a4.2 4.2 0 0 1 0 5.6"/><path d="M18 6.6a7.8 7.8 0 0 1 0 10.8"/></svg></b>Azan &amp; Iqamat</div>
+      <div data-go="scr-notifications"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M18 8.5a6 6 0 1 0-12 0c0 5.8-2.4 6.9-2.4 6.9h16.8S18 14.3 18 8.5Z"/><path d="M10.3 19.3a2 2 0 0 0 3.4 0"/></svg></b>Notifications</div>
+      <div data-go="scr-offline"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 4v11"/><path d="m7.5 11 4.5 4.5L16.5 11"/><path d="M5 20h14"/></svg></b>Offline</div>
+      <div data-go="scr-settings"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg></b>Settings</div>
+      <div data-go="scr-admin"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 3 5 5.5v6.2c0 4.4 2.9 7.6 7 9.3 4.1-1.7 7-4.9 7-9.3V5.5L12 3Z"/></svg></b>Admin</div>
+      <div data-go="scr-about"><b><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="9"/><path d="M12 11.5v5"/><path d="M12 7.8h.01"/></svg></b>About</div>
+      <div onclick="logout()"><b style="color:var(--danger)"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M9.5 21H5.5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m15.5 16.5 4.5-4.5-4.5-4.5"/><path d="M20 12H9"/></svg></b>Logout</div>
+    </div>
+    <div class="note">Masjid e Mohammadi • v1.0.0</div>
+  </div>
+  <nav class="tabs" data-tab="more"></nav>
+</section>
+
+<!-- ============ AZAN ============ -->
+<section class="screen" id="scr-azan">
+  <div class="header"><div class="hback" onclick="back()">‹</div><h2>Azan &amp; Iqamat</h2><span class="hicon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M4 9.4h3.6L12 5.6v12.8L7.6 14.6H4a1 1 0 0 1-1-1v-3.2a1 1 0 0 1 1-1Z"/><path d="M15.4 9.2a4.2 4.2 0 0 1 0 5.6"/><path d="M18 6.6a7.8 7.8 0 0 1 0 10.8"/></svg></span></div>
+  <div class="body">
+    <div class="hero" style="min-height:210px">
+      <div class="text"><div class="small" id="az-label">NEXT AZAN • ASR</div>
+        <div class="hbig" style="font-size:34px" id="az-time">03:56 PM</div>
+        <div class="small">Iqamat • <span id="az-iq">04:15 PM</span></div></div>
+    </div>
+    <div class="card"><div class="row"><b>Azan Status</b><span class="gold" id="az-state">Idle — waiting</span></div>
+      <div class="btn dark" style="margin:12px 0 0" onclick="azan('pause')">Ⅱ &nbsp;Pause Azan</div>
+      <div class="btn dark" style="margin:10px 0 0" onclick="azan('play')"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M8 5.6v12.8L19.2 12 8 5.6Z"/></svg> &nbsp;Play Azan</div>
+      <div class="btn red" style="margin:10px 0 0" onclick="azan('stop')"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><rect x="6.5" y="6.5" width="11" height="11" rx="2"/></svg> &nbsp;Stop Azan</div></div>
+    <div class="card"><div class="label">AZAN VOLUME</div>
+      <input type="range" id="az-vol" min="0" max="100" value="80" oninput="azVol(this.value);document.getElementById('az-v').textContent=this.value+'%'">
+      <div class="label right" style="text-align:right"><span id="az-v">80%</span></div></div>
+    <div class="card"><div class="setting"><span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M18 8.5a6 6 0 1 0-12 0c0 5.8-2.4 6.9-2.4 6.9h16.8S18 14.3 18 8.5Z"/><path d="M10.3 19.3a2 2 0 0 0 3.4 0"/></svg> Azan Alerts</span><span class="switch on" onclick="tog(this,'azan')"></span></div>
+      <div class="setting"><span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg> Iqamat Reminder</span><span class="switch on" onclick="tog(this,'iqamat')"></span></div></div>
+  </div>
+  <nav class="tabs" data-tab="more"></nav>
+</section>
+
+<!-- ============ QIBLA ============ -->
+<section class="screen" id="scr-qibla">
+  <div class="header"><div class="hback" onclick="back()">‹</div><h2><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2.1 5-5 2.1 2.1-5 5-2.1Z"/></svg> Qibla</h2><span class="hicon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg></span></div>
+  <div class="body">
+    <div class="card"><div class="label">DIRECTION TO KAABA</div><div class="value">Automatic Mode</div></div>
+    <div class="compass"><div class="needle"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 4.5 15.5 16h-7L12 4.5Z"/></svg></div><div class="kaaba"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><rect x="4.5" y="8.5" width="15" height="13" rx="1.5"/><path d="M12 8.5 8.2 5.6A2 2 0 0 0 5.6 5h12.8a2 2 0 0 0-2.6.6L12 8.5Z"/><path d="M4.5 13.5h15"/></svg></div></div>
+    <div class="center"><b style="font-size:22px" class="gold" id="q-deg">292°</b><div class="label" id="q-dir">(NW)</div></div>
+    <div class="chips" style="grid-template-columns:1fr 1fr">
+      <div class="on">Auto Mode</div><div onclick="toast('Point phone to sky & move in ∞ to calibrate')">Manual Mode</div></div>
+    <div class="note">Calibrate your phone compass for best accuracy.<br>Kaaba: Makkah • 21.4225° N, 39.8262° E<br>Location: <span id="q-loc">Karachi, Pakistan</span></div>
+  </div>
+  <nav class="tabs" data-tab="quran"></nav>
+</section>
+
+<!-- ============ TASBEEH ============ -->
+<section class="screen" id="scr-tasbeeh">
+  <div class="header"><div class="hback" onclick="back()">‹</div><h2><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 12h.01" stroke-width="2.6"/></svg> Tasbeeh</h2><span class="hicon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg></span></div>
+  <div class="body">
+    <div class="card center"><div class="label">CURRENT DHIKR</div>
+      <div class="value gold" style="font-size:18px" id="t-dhikr">SubhanAllah</div></div>
+    <div class="tasbeeh" onclick="tapTasbeeh()">
+      <div class="center"><div class="count" id="t-count">0</div><div class="label" id="t-target">/ 100</div></div>
+    </div>
+    <div class="bar"><i id="t-bar"></i></div>
+    <div class="card"><div class="row"><span>Completed</span><b class="gold" id="t-pct">0%</b></div>
+      <div class="row" style="margin-top:8px"><span>Rounds done</span><b id="t-rounds">0</b></div></div>
+    <div class="chips" id="t-dhikrs">
+      <div data-d="SubhanAllah" class="on">SubhanAllah</div><div data-d="Alhamdulillah">Alhamdulillah</div><div data-d="Allahu Akbar">Allahu Akbar</div>
+    </div>
+    <div class="btn dark" onclick="resetTasbeeh()"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M4.5 12a7.5 7.5 0 1 0 2.4-5.5"/><path d="M4.5 4.5V9H9"/></svg> &nbsp;Reset Counter</div>
+    <div class="note">Tap the circle to count • Saved automatically</div>
+  </div>
+  <nav class="tabs" data-tab="quran"></nav>
+</section>
+
+<!-- ============ YOUTUBE ============ -->
+<section class="screen" id="scr-youtube">
+  <div class="header"><div class="hback" onclick="back()">‹</div><h2>YouTube</h2><span style="color:#ff4444;font-size:18px"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M8 5.6v12.8L19.2 12 8 5.6Z"/></svg></span></div>
+  <div class="body">
+    <div class="card"><div class="row"><div><b>Masjid e Mohammadi</b><br><span class="label">@masjidemohammadi • Official Channel</span></div>
+      <div class="btn" style="padding:8px 14px;margin:0" onclick="openYT()">Subscribe</div></div></div>
+    <div class="hline">LATEST VIDEOS</div>
+    <div class="list" id="yt-list"></div>
+  </div>
+  <nav class="tabs" data-tab="youtube"></nav>
+</section>
+
+<!-- ============ YOUTUBE PLAYER ============ -->
+<section class="screen" id="scr-ytplay">
+  <div class="header"><div class="hback" onclick="back()">‹</div><h2>Now Playing</h2><span class="hicon"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M8 5.6v12.8L19.2 12 8 5.6Z"/></svg></span></div>
+  <div class="body">
+    <div class="ytwrap"><iframe id="yt-frame" src="about:blank" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
+    <div class="ytinfo" id="yt-t"></div>
+    <div class="btn" style="margin-top:16px;text-align:center" onclick="openYT()">Open on YouTube</div>
+  </div>
+  <nav class="tabs" data-tab="youtube"></nav>
+</section>
+
+<!-- ============ TRANSLATION LANGUAGES ============ -->
+<section class="screen" id="scr-lang">
+  <div class="header"><div class="hback" onclick="back()">‹</div><h2>Translation Language</h2><span class="hicon" id="lang-count"></span></div>
+  <div class="body"><div class="list" id="lang-list"></div></div>
+  <nav class="tabs" data-tab="quran"></nav>
+</section>
+
+<!-- ============ CONTACTS ============ -->
+<section class="screen" id="scr-contacts">
+  <div class="header"><div class="hback" onclick="back()">‹</div><h2><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M6.6 3.5h3.1l1.5 4-2 1.4a12.2 12.2 0 0 0 5.9 5.9l1.4-2 4 1.5v3.1a2 2 0 0 1-2.2 2A17.2 17.2 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z"/></svg> Contacts</h2><span class="hicon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M6.6 3.5h3.1l1.5 4-2 1.4a12.2 12.2 0 0 0 5.9 5.9l1.4-2 4 1.5v3.1a2 2 0 0 1-2.2 2A17.2 17.2 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z"/></svg></span></div>
+  <div class="body">
+    <div class="list" id="ct-list"></div>
+    <div class="card" onclick="openMaps()" style="cursor:pointer">
+      <div class="label">MASJID ADDRESS</div><div class="value">Masjid e Mohammadi</div>
+      <div class="label" style="margin-top:3px;color:var(--gold2)">Tap for directions ›</div></div>
+  </div>
+  <nav class="tabs" data-tab="contacts"></nav>
+</section>
+
+<!-- ============ PROFILE ============ -->
+<section class="screen" id="scr-profile">
+  <div class="header"><div class="hback" onclick="back()">‹</div><h2>Profile</h2><span class="hicon" onclick="go('scr-editprofile')"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3Z"/></svg></span></div>
+  <div class="body">
+    <div class="center"><div class="avatar" id="pf-avatar">S</div>
+      <h3 id="pf-name" style="margin:8px 0 2px">Shanmd Khan</h3>
+      <div class="label" id="pf-email">shanmdkhan@gmail.com</div></div>
+    <div class="card" id="pf-cards"></div>
+    <div class="card">
+      <div class="setting" onclick="go('scr-editprofile')" style="cursor:pointer"><span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3Z"/></svg> Edit Profile</span><b>›</b></div>
+      <div class="setting" onclick="togglePwd()" style="cursor:pointer"><span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><rect x="5" y="10.5" width="14" height="9.5" rx="2.5"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg> Change Password</span><b>›</b></div>
+      <div class="setting" onclick="go('scr-notifications')" style="cursor:pointer"><span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M18 8.5a6 6 0 1 0-12 0c0 5.8-2.4 6.9-2.4 6.9h16.8S18 14.3 18 8.5Z"/><path d="M10.3 19.3a2 2 0 0 0 3.4 0"/></svg> Notification Settings</span><b>›</b></div>
+      <div class="setting" onclick="logout()" style="cursor:pointer;color:var(--danger)"><span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M9.5 21H5.5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m15.5 16.5 4.5-4.5-4.5-4.5"/><path d="M20 12H9"/></svg> Logout</span><b>›</b></div>
+    </div>
+    <div class="card" id="pwd-card" style="display:none">
+      <div class="label">CHANGE PASSWORD</div>
+      <input type="password" id="pw-cur" placeholder="Current password" autocomplete="current-password">
+      <input type="password" id="pw-new" placeholder="New password (min 4 characters)" autocomplete="new-password">
+      <input type="password" id="pw-conf" placeholder="Confirm new password" autocomplete="new-password">
+      <div class="btn" onclick="savePwd()">Update Password</div>
+      <div class="note" style="margin:2px 0 0">Password stays on this device only.</div>
+    </div>
+  </div>
+  <nav class="tabs" data-tab="more"></nav>
+</section>
+
+<!-- ============ EDIT PROFILE ============ -->
+<section class="screen" id="scr-editprofile">
+  <div class="header"><div class="hback" onclick="back()">‹</div><h2>Edit Profile</h2><span class="hicon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3Z"/></svg></span></div>
+  <div class="body">
+    <div class="card">
+      <div class="label" style="margin-bottom:4px">FULL NAME</div><input type="text" id="ep-name">
+      <div class="label" style="margin-bottom:4px">EMAIL</div><input type="email" id="ep-email">
+      <div class="label" style="margin-bottom:4px">DATE OF BIRTH</div><input type="date" id="ep-dob">
+      <div class="label" style="margin-bottom:4px">GENDER</div>
+      <select id="ep-gender"><option>Not selected</option><option>Male</option><option>Female</option></select>
+    </div>
+    <div class="btn" onclick="saveProfile()"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M5 4.5h11.5L19.5 8v11.5a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1v-14a1 1 0 0 1 1-1Z"/><path d="M8.5 4.5v5h7v-5"/><path d="M8 13.5h8v6H8z"/></svg> Save Changes</div>
+  </div>
+  <nav class="tabs" data-tab="more"></nav>
+</section>
+
+<!-- ============ SETTINGS ============ -->
+<section class="screen" id="scr-settings">
+  <div class="header"><div class="hback" onclick="back()">‹</div><h2><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg> Settings</h2><span class="hicon"></span></div>
+  <div class="body">
+    <div class="card" id="set-cards"></div>
+    <div class="card"><div class="label">APP VERSION</div><div class="value">1.0.0</div></div>
+    <div class="btn red" onclick="logout()"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M9.5 21H5.5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m15.5 16.5 4.5-4.5-4.5-4.5"/><path d="M20 12H9"/></svg> Logout</div>
+    <div class="note">Masjid e Mohammadi • Faith • Worship • Community</div>
+  </div>
+  <nav class="tabs" data-tab="more"></nav>
+</section>
+
+<!-- ============ OFFLINE ============ -->
+<section class="screen" id="scr-offline">
+  <div class="header"><div class="hback" onclick="back()">‹</div><h2><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 4v11"/><path d="m7.5 11 4.5 4.5L16.5 11"/><path d="M5 20h14"/></svg> Offline Support</h2><span class="hicon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M7 18.5a4.7 4.7 0 0 1-.4-9.4 6.2 6.2 0 0 1 11.7 1.6A4.1 4.1 0 0 1 17.6 18.5H7Z"/></svg></span></div>
+  <div class="body">
+    <div class="hero" style="min-height:190px;display:grid;place-items:center">
+      <div class="center" style="position:relative;z-index:1"><div style="font-size:52px"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M7 18.5a4.7 4.7 0 0 1-.4-9.4 6.2 6.2 0 0 1 11.7 1.6A4.1 4.1 0 0 1 17.6 18.5H7Z"/></svg></div>
+        <div class="hbig" style="font-size:20px">Offline Mode</div>
+        <div class="small">Quran • Duas • Timings</div></div>
+    </div>
+    <div class="card">
+      <div class="label" style="margin-bottom:6px">AVAILABLE OFFLINE</div>
+      <div class="setting"><span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Quran (short surahs)</span><b class="gold">Downloaded</b></div>
+      <div class="setting"><span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21.2l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg> Duas</span><b class="gold">Downloaded</b></div>
+      <div class="setting"><span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg> Prayer Times</span><b class="gold">Available</b></div>
+    </div>
+    <div class="btn" onclick="checkNet()"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 4v11"/><path d="m7.5 11 4.5 4.5L16.5 11"/><path d="M5 20h14"/></svg> Download / Update Content</div>
+    <div class="note">Essential content works without internet.</div>
+  </div>
+  <nav class="tabs" data-tab="more"></nav>
+</section>
+
+<!-- ============ ADMIN ============ -->
+<section class="screen" id="scr-admin">
+  <div class="header"><div class="hback" onclick="back()">‹</div><h2><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 3 5 5.5v6.2c0 4.4 2.9 7.6 7 9.3 4.1-1.7 7-4.9 7-9.3V5.5L12 3Z"/></svg> Dashboard</h2><span class="hicon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg></span></div>
+  <div class="body">
+    <div class="statgrid">
+      <div><b id="st-users">0</b>Users</div><div><b id="st-active">0</b>Active</div><div><b id="st-anns">0</b>Announcements</div><div><b id="st-videos">0</b>Updates</div>
+    </div>
+    <table class="admin" id="admin-table"></table>
+    <div class="card">
+      <div class="row" style="margin-bottom:6px"><b>Recent Announcements</b><span class="gold" onclick="go('scr-announcements')" style="cursor:pointer">View all ›</span></div>
+      <div id="admin-recent"></div>
+    </div>
+    <div class="quick" onclick="adminNav(event)" style="grid-template-columns:repeat(3,1fr)">
+      <div data-go="scr-prayer"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg> Prayer Times</div><div data-go="scr-announcements"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M4 10v4a1.5 1.5 0 0 0 1.5 1.5H8l7 4V4.5L8 8.5H5.5A1.5 1.5 0 0 0 4 10Z"/><path d="M18 9.5a4 4 0 0 1 0 5"/></svg> Announcements</div>
+      <div data-go="scr-quran"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Quran</div><div data-go="scr-duas"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21.2l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg> Duas</div>
+      <div data-go="scr-profile"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="9" cy="8.5" r="3.5"/><path d="M2.8 19.5a6.2 6.2 0 0 1 12.4 0"/><path d="M16.2 5.4a3.5 3.5 0 0 1 0 6.4"/><path d="M17.6 14.3a6.2 6.2 0 0 1 3.6 5.2"/></svg> Users</div><div data-go="scr-settings"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg> Settings</div>
+    </div>
+    <div class="note">Read-only dashboard • content managed by masjid admin</div>
+  </div>
+  <nav class="tabs" data-tab="more"></nav>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="screen" id="scr-about">
+  <div class="header"><div class="hback" onclick="back()">‹</div><h2><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="9"/><path d="M12 11.5v5"/><path d="M12 7.8h.01"/></svg> About</h2><span></span></div>
+  <div class="body">
+    <div class="center" style="padding:30px 20px 10px"><div style="font-size:58px"><svg viewBox="0 0 24 24" width="52" height="52" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 3.2c3.1 2.4 4.7 4.8 4.7 7.2H7.3c0-2.4 1.6-4.8 4.7-7.2Z"/><path d="M6.5 10.4h11"/><path d="M7.8 10.4V20"/><path d="M16.2 10.4V20"/><path d="M5 20h14"/><path d="M10.2 20v-4a1.8 1.8 0 0 1 3.6 0v4"/></svg></div>
+      <h2 style="font-family:Outfit,system-ui,sans-serif;font-weight:750;color:var(--gold2);margin:10px 0 4px">Masjid e Mohammadi</h2>
+      <div class="label">Faith • Worship • Community</div>
+      <span class="badge" style="margin-top:10px">Version 1.0.0</span></div>
+    <div class="card">
+      <p class="label" style="line-height:1.8;font-size:12px">
+        A complete masjid companion app — prayer times with live countdown, azan &amp; iqamat alerts,
+        Al-Quran reader, centralized duas, qibla direction, tasbeeh counter, masjid announcements,
+        YouTube bayans and contacts — all in one place, with offline support.</p>
+    </div>
+    <div class="note">Made with <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21.2l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg> for the ummah.<br>© 2026 Masjid e Mohammadi</div>
+  </div>
+  <nav class="tabs" data-tab="more"></nav>
+</section>
+
+<div class="toast" id="toast"></div>
+</div>
+
+<script src="quran.js"></script>
+<script>
+"use strict";
+/* ================= data ================= */
+var PRAYERS=[
+  {name:'Fajr',time:'05:12'},
+  {name:'Sunrise',time:'06:33'},
+  {name:'Dhuhr',time:'12:34'},
+  {name:'Asr',time:'15:56'},
+  {name:'Maghrib',time:'18:28'},
+  {name:'Isha',time:'20:52'}
+];
+var IQAMAT={Fajr:'05:50',Dhuhr:'12:50',Asr:'16:15',Maghrib:'18:35',Isha:'21:10'};
+var IQ_OFFSET={Fajr:38,Dhuhr:16,Asr:19,Maghrib:7,Isha:18}; // minutes after azan
+var GEO={lat:24.8607,lng:67.0011,city:'Karachi, Pakistan',ok:false}; // until GPS/IP says otherwise
+var qiblaDeg=292;
+
+var SURAHS=[
+ {n:2,name:'Al-Baqarah',en:'The Cow',v:286,type:'Madani'},
+ {n:3,name:'Aal-e-Imran',en:'Family of Imran',v:200,type:'Madani'},
+ {n:18,name:'Al-Kahf',en:'The Cave',v:110,type:'Makki'},
+ {n:36,name:'Yaseen',en:'Ya Seen',v:83,type:'Makki'},
+ {n:1,name:'Al-Fatihah',en:'The Opening',v:7,type:'Makki',ar:[
+  'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ','الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ','الرَّحْمَٰنِ الرَّحِيمِ',
+  'مَالِكِ يَوْمِ الدِّينِ','إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ','اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ',
+  'صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ'],
+  tr:['In the name of Allah, the Most Merciful, the Most Compassionate.',
+  'All praise is for Allah, Lord of the worlds.','The Most Merciful, the Most Compassionate.',
+  'Master of the Day of Judgment.','You alone we worship, and You alone we ask for help.',
+  'Guide us to the straight path.','The path of those You have blessed — not of those who earned anger, nor of those who went astray.']},
+ {n:103,name:'Al-Asr',en:'The Declining Day',v:3,type:'Makki',ar:[
+  'وَالْعَصْرِ','إِنَّ الْإِنْسَانَ لَفِي خُسْرٍ',
+  'إِلَّا الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ وَتَوَاصَوْا بِالْحَقِّ وَتَوَاصَوْا بِالصَّبْرِ'],
+  tr:['By time.','Indeed, mankind is in loss,',
+  'Except those who believe, do righteous deeds, advise each other to truth, and advise each other to patience.']},
+ {n:105,name:'Al-Fil',en:'The Elephant',v:5,type:'Makki',ar:[
+  'أَلَمْ تَرَ كَيْفَ فَعَلَ رَبُّكَ بِأَصْحَابِ الْفِيلِ','أَلَمْ يَجْعَلْ كَيْدَهُمْ فِي تَضْلِيلٍ',
+  'وَأَرْسَلَ عَلَيْهِمْ طَيْرًا أَبَابِيلَ','تَرْمِيهِمْ بِحِجَارَةٍ مِنْ سِجِّيلٍ','فَجَعَلَهُمْ كَعَصْفٍ مَأْكُولٍ'],
+  tr:['Have you not seen how your Lord dealt with the companions of the elephant?',
+  'Did He not make their plan go astray?','And He sent against them birds in flocks,',
+  'Striking them with stones of baked clay,','And He made them like chewed straw.']},
+ {n:106,name:'Quraysh',en:'Quraysh',v:4,type:'Makki',ar:[
+  'لِإِيلَافِ قُرَيْشٍ','إِيلَافِهِمْ رِحْلَةَ الشِّتَاءِ وَالصَّيْفِ',
+  'فَلْيَعْبُدُوا رَبَّ هَٰذَا الْبَيْتِ','الَّذِي أَطْعَمَهُمْ مِنْ جُوعٍ وَآمَنَهُمْ مِنْ خَوْفٍ'],
+  tr:['For the security of Quraysh,','Their security in the journey of winter and summer,',
+  'Let them worship the Lord of this House,','Who fed them against hunger and made them safe from fear.']},
+ {n:108,name:'Al-Kawthar',en:'The Abundance',v:3,type:'Makki',ar:[
+  'إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ','فَصَلِّ لِرَبِّكَ وَانْحَرْ','إِنَّ شَانِئَكَ هُوَ الْأَبْتَرُ'],
+  tr:['Indeed, We have granted you al-Kawthar (abundance).','So pray to your Lord and sacrifice.',
+  'Indeed, your enemy is the one cut off.']},
+ {n:109,name:'Al-Kafirun',en:'The Disbelievers',v:6,type:'Makki',ar:[
+  'قُلْ يَا أَيُّهَا الْكَافِرُونَ','لَا أَعْبُدُ مَا تَعْبُدُونَ','وَلَا أَنْتُمْ عَابِدُونَ مَا أَعْبُدُ',
+  'وَلَا أَنَا عَابِدٌ مَا عَبَدْتُمْ','وَلَا أَنْتُمْ عَابِدُونَ مَا أَعْبُدُ','لَكُمْ دِينُكُمْ وَلِيَ دِينِ'],
+  tr:['Say: O disbelievers,','I do not worship what you worship,','Nor are you worshippers of what I worship,',
+  'Nor will I be a worshipper of what you worship,','Nor will you be worshippers of what I worship.',
+  'For you is your religion, and for me is my religion.']},
+ {n:110,name:'An-Nasr',en:'The Divine Support',v:3,type:'Madani',ar:[
+  'إِذَا جَاءَ نَصْرُ اللَّهِ وَالْفَتْحُ','وَرَأَيْتَ النَّاسَ يَدْخُلُونَ فِي دِينِ اللَّهِ أَفْوَاجًا',
+  'فَسَبِّحْ بِحَمْدِ رَبِّكَ وَاسْتَغْفِرْهُ ۚ إِنَّهُ كَانَ تَوَّابًا'],
+  tr:['When the victory of Allah has come, and the conquest,',
+  'And you see people entering the religion of Allah in crowds,',
+  'Then glorify the praises of your Lord and ask His forgiveness. Indeed, He accepts repentance.']},
+ {n:112,name:'Al-Ikhlas',en:'Sincerity',v:4,type:'Makki',ar:[
+  'قُلْ هُوَ اللَّهُ أَحَدٌ','اللَّهُ الصَّمَدُ','لَمْ يَلِدْ وَلَمْ يُولَدْ','وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ'],
+  tr:['Say: He is Allah, the One.','Allah, the Eternal Refuge.','He neither begets nor is born,',
+  'Nor is there to Him any equivalent.']},
+ {n:113,name:'Al-Falaq',en:'The Daybreak',v:5,type:'Makki',ar:[
+  'قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ','مِنْ شَرِّ مَا خَلَقَ','وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ',
+  'وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ','وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ'],
+  tr:['Say: I seek refuge in the Lord of daybreak,','From the evil of what He created,',
+  'And from the evil of darkness when it settles,','And from the evil of those who blow on knots,',
+  'And from the evil of an envier when he envies.']},
+ {n:114,name:'An-Nas',en:'Mankind',v:6,type:'Makki',ar:[
+  'قُلْ أَعُوذُ بِرَبِّ النَّاسِ','مَلِكِ النَّاسِ','إِلَٰهِ النَّاسِ',
+  'مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ','الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ','مِنَ الْجِنَّةِ وَالنَّاسِ'],
+  tr:['Say: I seek refuge in the Lord of mankind,','The King of mankind,','The God of mankind,',
+  'From the evil of the sneaking whisperer,','Who whispers in the chests of mankind,',
+  'From among jinn and mankind.']}
+];
+
+var DUAS=[
+ {c:'namaz',name:'Dua e Masura',desc:'After every Namaz',
+  ar:'اللَّهُمَّ إِنِّي ظَلَمْتُ نَفْسِي ظُلْمًا كَثِيرًا وَلَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ فَاغْفِرْ لِي مَغْفِرَةً مِنْ عِنْدِكَ وَارْحَمْنِي إِنَّكَ أَنْتَ الْغَفُورُ الرَّحِيمُ',
+  tr2:'Allahumma inni zalamtu nafsi zulman kathira...',
+  tr:'O Allah, I have wronged myself greatly, and none forgives sins except You. So forgive me with Your forgiveness and have mercy on me. Indeed You are the Most Forgiving, Most Merciful.'},
+ {c:'namaz',name:'Dua e Qunoot',desc:'During Witr prayer',
+  ar:'اللَّهُمَّ إِنَّا نَسْتَعِينُكَ وَنَسْتَغْفِرُكَ وَنُؤْمِنُ بِكَ وَنَتْوَكَّلُ عَلَيْكَ وَنُثْنِي عَلَيْكَ الْخَيْرَ',
+  tr2:'Allahumma inna nasta-eenuka wa nastaghfiruka...',
+  tr:'O Allah, we seek Your help and Your forgiveness, we believe in You, we rely on You, and we praise You with all good.'},
+ {c:'masjid',name:'Entering Masjid',desc:'When entering the masjid',
+  ar:'اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ',tr2:'Allahumma-ftah li abwaba rahmatik',
+  tr:'O Allah, open for me the gates of Your mercy.'},
+ {c:'masjid',name:'Leaving Masjid',desc:'When leaving the masjid',
+  ar:'اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ',tr2:'Allahumma inni as-aluka min fadlik',
+  tr:'O Allah, I ask You from Your bounty.'},
+ {c:'sleep',name:'Before Sleeping',desc:'Night dua',
+  ar:'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا',tr2:'Bismika Allahumma amootu wa ahya',
+  tr:'In Your name, O Allah, I die and I live.'},
+ {c:'sleep',name:'After Waking',desc:'Morning dua',
+  ar:'الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ',
+  tr2:'Alhamdulillahil-lazi ahyana ba\'da ma amatana...',
+  tr:'All praise is for Allah who gave us life after death, and to Him is the return.'},
+ {c:'food',name:'Before Eating',desc:'Dua before meals',
+  ar:'بِسْمِ اللَّهِ وَعَلَى بَرَكَةِ اللَّهِ',tr2:'Bismillahi wa ala barakatillah',
+  tr:'In the name of Allah and with the blessings of Allah.'},
+ {c:'food',name:'After Eating',desc:'Dua after meals',
+  ar:'الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مُسْلِمِينَ',
+  tr2:'Alhamdulillahil-lazi at-amana wa saqana...',
+  tr:'All praise is for Allah who fed us, gave us drink, and made us Muslims.'},
+ {c:'daily',name:'Istighfar (Sayyidul Istighfar)',desc:'Seeking forgiveness',
+  ar:'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ',
+  tr2:'Allahumma anta Rabbi la ilaha illa anta...',
+  tr:'O Allah, You are my Lord, there is no god but You. You created me and I am Your servant.'},
+ {c:'daily',name:'Dua for Rizq',desc:'For sustenance',
+  ar:'اللَّهُمَّ اكْفِنِي بِحَلَالِكَ عَنْ حَرَامِكَ وَأَغْنِنِي بِفَضْلِكَ عَمَّنْ سِوَاكَ',
+  tr2:'Allahumma-kfinee bihalalika an haramik...',
+  tr:'O Allah, suffice me with what is lawful, keep me from what is unlawful, and enrich me by Your bounty from all besides You.'}
+];
+
+var ANNS=[
+ {t:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M4 10v4a1.5 1.5 0 0 0 1.5 1.5H8l7 4V4.5L8 8.5H5.5A1.5 1.5 0 0 0 4 10Z"/><path d="M18 9.5a4 4 0 0 1 0 5"/></svg> Prayer Timing Changed',d:'Due to seasonal changes, Fajr timing will be updated from tomorrow.',s:'14 Nov 2025 • 10:00 AM'},
+ {t:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 3.2c3.1 2.4 4.7 4.8 4.7 7.2H7.3c0-2.4 1.6-4.8 4.7-7.2Z"/><path d="M6.5 10.4h11"/><path d="M7.8 10.4V20"/><path d="M16.2 10.4V20"/><path d="M5 20h14"/><path d="M10.2 20v-4a1.8 1.8 0 0 1 3.6 0v4"/></svg> Masjid Cleanliness Drive',d:'Join us for masjid cleaning after Asr today.',s:'14 Nov 2025 • 09:30 AM'},
+ {t:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Special Bayan',d:'Renowned scholar will deliver a special bayan after Isha.',s:'13 Nov 2025 • 06:45 PM'},
+ {t:'<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M20 15.2A8.5 8.5 0 0 1 9.1 4.3 9 9 0 1 0 20 15.2Z"/></svg> Ramadan Preparation',d:'Get ready for the blessed month with special programs.',s:'12 Nov 2025 • 06:45 PM'}
+];
+
+var YT_CHANNEL='https://www.youtube.com/@masjidemohammadi';
+var VIDEOS=[
+ {t:'Are You Truly Fulfilling the Rights of Your Children? | 3 Essential Duties of Every Parent in Islam.',d:'12 Jul 2026',id:'uTyu_zGmThc'},
+ {t:'A Daughter is a Precious Gift from Allah. By: Hazrat Hafiz Niyaz Ahmad Sahib DB.',d:'4 Jul 2026',id:'CI9pxqyhWtY'},
+ {t:'Daughters: Allah\u2019s Mercy & A Promise of Paradise for Parents',d:'27 Jun 2026',id:'dZ_rJW9VvMM'},
+ {t:'The Character (Seerah) of the Prophet\u2019s Grandson.',d:'12 Jun 2026',id:'dN1d_YT-ZZA'},
+ {t:'From Guidance to Misguidance: The Impact of Bad Company',d:'6 Jun 2026',id:'e4qotnjBPvQ'},
+ {t:'The Virtues and Blessings of Bismillah-ir-Rahman-ir-Raheem',d:'29 May 2026',id:'1nX0sND3dmo'},
+ {t:'Qurbani is only for Allah SWT.',d:'29 May 2026',id:'RRwAhX73lLs'}
+];
+
+var CONTACTS=[
+ {i:'I',n:'Imam Sahab',d:'Religious guidance',p:'+919767543210'},
+ {i:'M',n:'Muazzin',d:'Azan & masjid duties',p:'+918765432101'},
+ {i:'O',n:'Masjid Office',d:'General enquiries',p:'+918765432109'},
+ {i:'C',n:'Committee',d:'Management committee',p:'+917654321098'},
+ {i:'!',n:'Emergency',d:'Urgent contact',p:'+919999999999',danger:true}
+];
+
+/* ================= storage ================= */
+function load(k,d){try{var v=localStorage.getItem('mm_'+k);return v?JSON.parse(v):d}catch(e){return d}}
+function save(k,v){try{localStorage.setItem('mm_'+k,JSON.stringify(v))}catch(e){}}
+
+var state={
+  user:load('user',null),
+  tasbeeh:load('tasbeeh',{dhikr:'SubhanAllah',count:0,target:100,rounds:0}),
+  settings:load('settings',{notif:true,azan:true,ann:true,general:true,offline:true,lang:'English',theme:'Dark'}),
+  notif:load('notifset',{azan:true,iqamat:true,prayer:true,ann:true,general:true,time:'10 min before'})
+};
+
+/* ================= helpers ================= */
+var $=function(id){return document.getElementById(id)};
+var stack=[];
+function go(id){stack.push(current);show(id)}
+function back(){if(stack.length){show(stack.pop())}else{show('scr-home')}}
+function hwBack(){
+  if(current==='scr-home'||current==='scr-login')return '1';
+  back();return '0';
+}
+function show(id){
+  if(id!=='scr-reader')stopAyah();
+  if(current==='scr-ytplay'&&id!=='scr-ytplay'){var yf=$('yt-frame');if(yf)yf.src='about:blank'}
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});
+  var el=$(id);if(el)el.classList.add('active');
+  current=id;el.scrollTop=0;renderTab(el);
+  if(id==='scr-editprofile')openEdit();
+  if(id==='scr-qibla')startCompass();
+  if(id==='scr-lang')renderLangs();
+}
+var current='scr-login';
+
+function toast(m){var t=$('toast');t.textContent=m;t.classList.add('show');
+  clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('show')},1800)}
+function vib(ms){try{if(navigator.vibrate)navigator.vibrate(ms)}catch(e){}}
+function fmt12(hhmm){var p=hhmm.split(':'),h=+p[0],m=p[1],ap=h>=12?'PM':'AM';
+  h=h%12||12;return (h<10?'0':'')+h+':'+m+' '+ap}
+function parseT(hhmm){var p=hhmm.split(':'),d=new Date();d.setHours(+p[0],+p[1],0,0);return d}
+
+function nextPrayer(){
+  var now=new Date(),list=PRAYERS.filter(function(p){return p.name!=='Sunrise'});
+  for(var i=0;i<list.length;i++){
+    var t=parseT(list[i].time);
+    if(t>now)return {name:list[i].name,at:t,tomorrow:false};
+  }
+  var f=parseT(list[0].time);f.setDate(f.getDate()+1);
+  return {name:'Fajr',at:f,tomorrow:true};
+}
+function cdText(target){
+  var s=Math.max(0,Math.floor((target-new Date())/1000));
+  var h=Math.floor(s/3600),m=Math.floor(s%3600/60),sec=s%60;
+  return (h<10?'0':'')+h+' : '+(m<10?'0':'')+m+' : '+(sec<10?'0':'')+sec;
+}
+
+/* ================= login ================= */
+function doLogin(how){
+  if(how==='Email Login'){
+    var sp=load('pwd',null);
+    if(sp){
+      var box=$('login-pw');
+      if(box.style.display==='none'){
+        box.style.display='block';
+        toast('Enter your password to login');
+        return;
+      }
+      if(pwdHash($('lp-pw').value)!==sp){toast('Wrong password');return}
+      $('lp-pw').value='';
+    }
+  }
+  state.user=state.user||{name:'Shanmd Khan',email:'shanmdkhan@gmail.com',dob:'2002-05-14',gender:'Male'};
+  save('user',state.user);
+  toast('Welcome! ('+how+')');renderUser();show('scr-home');stack=[];
+}
+function logout(){
+  state.user=null;save('user',null);stack=[];show('scr-login');
+  toast('Logged out');
+}
+
+/* ================= tabs ================= */
+var TABS=[
+  {id:'home',icon:'<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="m3.5 10.5 8.5-6.5 8.5 6.5v9a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5v-9Z"/><path d="M9.5 21v-6h5v6"/></svg>',label:'Home',scr:'scr-home'},
+  {id:'quran',icon:'<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',label:'Quran',scr:'scr-quran'},
+  {id:'youtube',icon:'<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10.2 9.3v5.4l4.8-2.7Z"/></svg>',label:'YouTube',scr:'scr-youtube'},
+  {id:'contacts',icon:'<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M6.6 3.5h3.1l1.5 4-2 1.4a12.2 12.2 0 0 0 5.9 5.9l1.4-2 4 1.5v3.1a2 2 0 0 1-2.2 2A17.2 17.2 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z"/></svg>',label:'Contacts',scr:'scr-contacts'},
+  {id:'more',icon:'<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/></svg>',label:'User',scr:'scr-more'}
+];
+function renderTab(scrEl){
+  var nav=scrEl.querySelector('.tabs');if(!nav)return;
+  var tab=nav.getAttribute('data-tab');
+  nav.innerHTML=TABS.map(function(t){
+    return '<div class="'+(t.id===tab?'on':'')+'" onclick="tabGo(\''+t.scr+'\')"><b>'+t.icon+'</b>'+t.label+'</div>';
+  }).join('');
+}
+function tabGo(scr){stack=[];show(scr)}
+function quickNav(e){var g=e.target.closest('[data-go]');if(g)go(g.getAttribute('data-go'))}
+function moreNav(e){var g=e.target.closest('[data-go]');if(g)go(g.getAttribute('data-go'))}
+function adminNav(e){var g=e.target.closest('[data-go]');if(g)go(g.getAttribute('data-go'))}
+
+/* ================= renderers ================= */
+function renderUser(){
+  var u=state.user;if(!u)return;
+  var initial=(u.name||'U').trim().charAt(0).toUpperCase();
+  ['pf-avatar','m-avatar'].forEach(function(id){var e=$(id);if(e)e.textContent=initial});
+  $('pf-name').textContent=u.name;$('m-name').textContent=u.name;
+  $('pf-email').textContent=u.email;$('m-email').textContent=u.email;
+  $('gname').textContent=u.name.split(' ')[0];
+}
+function renderGreeting(){
+  var h=new Date().getHours();
+  $('greet').textContent='Assalamu Alaikum,';
+  $('greet').textContent+=h<12?' Good Morning':h<17?' Good Afternoon':' Good Evening';
+  var d=new Date(),hi='';
+  try{hi=new Intl.DateTimeFormat('en-u-ca-islamic-umalqura',{day:'numeric',month:'long',year:'numeric'}).format(d)}catch(e){}
+  $('p-date').textContent=(hi?hi+' • ':'')+d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'short',year:'numeric'});
+}
+function renderHomePrayers(){
+  var np=nextPrayer().name;
+  $('home-prayers').innerHTML=PRAYERS.filter(function(p){return p.name!=='Sunrise'})
+   .map(function(p){return '<div class="p'+(p.name===np?' active':'')+'"><span>'+p.name+'</span><b>'+fmt12(p.time)+'</b></div>'}).join('');
+  renderHomeAlerts();
+}
+function renderHomeAlerts(){
+  var el=$('home-alerts');if(!el)return;
+  el.innerHTML=ANNS.map(function(a){
+    return '<div class="ad" onclick="go(\'scr-announcements\')" style="cursor:pointer"><b>'+a.t+'</b><p>'+a.d+'</p><small>'+a.s+'</small></div>';
+  }).join('');
+}
+function renderPrayerScreen(){
+  var np=nextPrayer();
+  $('p-list').innerHTML=PRAYERS.map(function(p){
+    return '<div class="p'+(p.name===np.name?' active':'')+'"><span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg> '+p.name+'</span><b>'+fmt12(p.time)+'</b></div>'}).join('');
+  $('p-iq-name').textContent=np.name;
+  $('p-iq-time').textContent=fmt12(IQAMAT[np.name]);
+}
+function renderSurahs(){
+  var q=($('q-search').value||'').toLowerCase();
+  $('q-list').innerHTML=SURAHS.filter(function(s){
+    return !q||s.name.toLowerCase().indexOf(q)>=0||(s.en||'').toLowerCase().indexOf(q)>=0;
+  }).map(function(s){
+    var read=!!(s.ar&&s.ar.length);
+    return '<div class="item" onclick="openSurah('+s.n+')"><div class="circle'+(read?'':' g')+'">'+s.n+'</div>'+
+    '<div style="flex:1"><b>'+s.name+'</b><br><span class="label">'+s.v+' verses • '+s.type+'</span></div>'+
+    (s.arabic?'<span style="font-size:15px;color:var(--gold2)">'+s.arabic+'</span>':'')+
+    '<span class="gold">›</span></div>';
+  }).join('');
+}
+/* Quran metadata: all 114 surahs (Quran.com API snapshot — same data al-quran-sdk serves) */
+var OFF={};SURAHS.forEach(function(s){if(s.ar)OFF[s.n]={ar:s.ar,tr:s.tr}});
+var CHMETA=[
+[1,"Al-Fatihah","The Opener",7,"Makkah","الفاتحة"],[2,"Al-Baqarah","The Cow",286,"Madinah","البقرة"],[3,"Ali 'Imran","Family of Imran",200,"Madinah","آل عمران"],
+[4,"An-Nisa","The Women",176,"Madinah","النساء"],[5,"Al-Ma'idah","The Table Spread",120,"Madinah","المائدة"],[6,"Al-An'am","The Cattle",165,"Makkah","الأنعام"],
+[7,"Al-A'raf","The Heights",206,"Makkah","الأعراف"],[8,"Al-Anfal","The Spoils of War",75,"Madinah","الأنفال"],[9,"At-Tawbah","The Repentance",129,"Madinah","التوبة"],
+[10,"Yunus","Jonah",109,"Makkah","يونس"],[11,"Hud","Hud",123,"Makkah","هود"],[12,"Yusuf","Joseph",111,"Makkah","يوسف"],
+[13,"Ar-Ra'd","The Thunder",43,"Madinah","الرعد"],[14,"Ibrahim","Abraham",52,"Makkah","ابراهيم"],[15,"Al-Hijr","The Rocky Tract",99,"Makkah","الحجر"],
+[16,"An-Nahl","The Bee",128,"Makkah","النحل"],[17,"Al-Isra","The Night Journey",111,"Makkah","الإسراء"],[18,"Al-Kahf","The Cave",110,"Makkah","الكهف"],
+[19,"Maryam","Mary",98,"Makkah","مريم"],[20,"Taha","Ta-Ha",135,"Makkah","طه"],[21,"Al-Anbya","The Prophets",112,"Makkah","الأنبياء"],
+[22,"Al-Hajj","The Pilgrimage",78,"Madinah","الحج"],[23,"Al-Mu'minun","The Believers",118,"Makkah","المؤمنون"],[24,"An-Nur","The Light",64,"Madinah","النور"],
+[25,"Al-Furqan","The Criterion",77,"Makkah","الفرقان"],[26,"Ash-Shu'ara","The Poets",227,"Makkah","الشعراء"],[27,"An-Naml","The Ant",93,"Makkah","النمل"],
+[28,"Al-Qasas","The Stories",88,"Makkah","القصص"],[29,"Al-'Ankabut","The Spider",69,"Makkah","العنكبوت"],[30,"Ar-Rum","The Romans",60,"Makkah","الروم"],
+[31,"Luqman","Luqman",34,"Makkah","لقمان"],[32,"As-Sajdah","The Prostration",30,"Makkah","السجدة"],[33,"Al-Ahzab","The Combined Forces",73,"Madinah","الأحزاب"],
+[34,"Saba","Sheba",54,"Makkah","سبإ"],[35,"Fatir","Originator",45,"Makkah","فاطر"],[36,"Ya-Sin","Ya Sin",83,"Makkah","يس"],
+[37,"As-Saffat","Those who set the Ranks",182,"Makkah","الصافات"],[38,"Sad","The Letter \"Saad\"",88,"Makkah","ص"],[39,"Az-Zumar","The Troops",75,"Makkah","الزمر"],
+[40,"Ghafir","The Forgiver",85,"Makkah","غافر"],[41,"Fussilat","Explained in Detail",54,"Makkah","فصلت"],[42,"Ash-Shuraa","The Consultation",53,"Makkah","الشورى"],
+[43,"Az-Zukhruf","The Ornaments of Gold",89,"Makkah","الزخرف"],[44,"Ad-Dukhan","The Smoke",59,"Makkah","الدخان"],[45,"Al-Jathiyah","The Crouching",37,"Makkah","الجاثية"],
+[46,"Al-Ahqaf","The Wind-Curved Sandhills",35,"Makkah","الأحقاف"],[47,"Muhammad","Muhammad",38,"Madinah","محمد"],[48,"Al-Fath","The Victory",29,"Madinah","الفتح"],
+[49,"Al-Hujurat","The Rooms",18,"Madinah","الحجرات"],[50,"Qaf","The Letter \"Qaf\"",45,"Makkah","ق"],[51,"Adh-Dhariyat","The Winnowing Winds",60,"Makkah","الذاريات"],
+[52,"At-Tur","The Mount",49,"Makkah","الطور"],[53,"An-Najm","The Star",62,"Makkah","النجم"],[54,"Al-Qamar","The Moon",55,"Makkah","القمر"],
+[55,"Ar-Rahman","The Beneficent",78,"Madinah","الرحمن"],[56,"Al-Waqi'ah","The Inevitable",96,"Makkah","الواقعة"],[57,"Al-Hadid","The Iron",29,"Madinah","الحديد"],
+[58,"Al-Mujadila","The Pleading Woman",22,"Madinah","المجادلة"],[59,"Al-Hashr","The Exile",24,"Madinah","الحشر"],[60,"Al-Mumtahanah","She that is to be examined",13,"Madinah","الممتحنة"],
+[61,"As-Saf","The Ranks",14,"Madinah","الصف"],[62,"Al-Jumu'ah","The Congregation, Friday",11,"Madinah","الجمعة"],[63,"Al-Munafiqun","The Hypocrites",11,"Madinah","المنافقون"],
+[64,"At-Taghabun","The Mutual Disillusion",18,"Madinah","التغابن"],[65,"At-Talaq","The Divorce",12,"Madinah","الطلاق"],[66,"At-Tahrim","The Prohibition",12,"Madinah","التحريم"],
+[67,"Al-Mulk","The Sovereignty",30,"Makkah","الملك"],[68,"Al-Qalam","The Pen",52,"Makkah","القلم"],[69,"Al-Haqqah","The Reality",52,"Makkah","الحاقة"],
+[70,"Al-Ma'arij","The Ascending Stairways",44,"Makkah","المعارج"],[71,"Nuh","Noah",28,"Makkah","نوح"],[72,"Al-Jinn","The Jinn",28,"Makkah","الجن"],
+[73,"Al-Muzzammil","The Enshrouded One",20,"Makkah","المزمل"],[74,"Al-Muddaththir","The Cloaked One",56,"Makkah","المدثر"],[75,"Al-Qiyamah","The Resurrection",40,"Makkah","القيامة"],
+[76,"Al-Insan","The Man",31,"Madinah","الانسان"],[77,"Al-Mursalat","The Emissaries",50,"Makkah","المرسلات"],[78,"An-Naba","The Tidings",40,"Makkah","النبإ"],
+[79,"An-Nazi'at","Those who drag forth",46,"Makkah","النازعات"],[80,"'Abasa","He Frowned",42,"Makkah","عبس"],[81,"At-Takwir","The Overthrowing",29,"Makkah","التكوير"],
+[82,"Al-Infitar","The Cleaving",19,"Makkah","الإنفطار"],[83,"Al-Mutaffifin","The Defrauding",36,"Makkah","المطففين"],[84,"Al-Inshiqaq","The Sundering",25,"Makkah","الإنشقاق"],
+[85,"Al-Buruj","The Mansions of the Stars",22,"Makkah","البروج"],[86,"At-Tariq","The Nightcommer",17,"Makkah","الطارق"],[87,"Al-A'la","The Most High",19,"Makkah","الأعلى"],
+[88,"Al-Ghashiyah","The Overwhelming",26,"Makkah","الغاشية"],[89,"Al-Fajr","The Dawn",30,"Makkah","الفجر"],[90,"Al-Balad","The City",20,"Makkah","البلد"],
+[91,"Ash-Shams","The Sun",15,"Makkah","الشمس"],[92,"Al-Layl","The Night",21,"Makkah","الليل"],[93,"Ad-Duhaa","The Morning Hours",11,"Makkah","الضحى"],
+[94,"Ash-Sharh","The Relief",8,"Makkah","الشرح"],[95,"At-Tin","The Fig",8,"Makkah","التين"],[96,"Al-'Alaq","The Clot",19,"Makkah","العلق"],
+[97,"Al-Qadr","The Power",5,"Makkah","القدر"],[98,"Al-Bayyinah","The Clear Proof",8,"Madinah","البينة"],[99,"Az-Zalzalah","The Earthquake",8,"Madinah","الزلزلة"],
+[100,"Al-'Adiyat","The Courser",11,"Makkah","العاديات"],[101,"Al-Qari'ah","The Calamity",11,"Makkah","القارعة"],[102,"At-Takathur","The Rivalry in world increase",8,"Makkah","التكاثر"],
+[103,"Al-'Asr","The Declining Day",3,"Makkah","العصر"],[104,"Al-Humazah","The Traducer",9,"Makkah","الهمزة"],[105,"Al-Fil","The Elephant",5,"Makkah","الفيل"],
+[106,"Quraysh","Quraysh",4,"Makkah","قريش"],[107,"Al-Ma'un","The Small kindnesses",7,"Makkah","الماعون"],[108,"Al-Kawthar","The Abundance",3,"Makkah","الكوثر"],
+[109,"Al-Kafirun","The Disbelievers",6,"Makkah","الكافرون"],[110,"An-Nasr","The Divine Support",3,"Madinah","النصر"],[111,"Al-Masad","The Palm Fiber",5,"Makkah","المسد"],
+[112,"Al-Ikhlas","The Sincerity",4,"Makkah","الإخلاص"],[113,"Al-Falaq","The Daybreak",5,"Makkah","الفلق"],[114,"An-Nas","Mankind",6,"Makkah","الناس"]
+];
+SURAHS=CHMETA.map(function(c){
+  var s={n:c[0],name:c[1],en:c[2],v:c[3],type:c[4]==='Makkah'?'Makki':'Madani',arabic:c[5]};
+  if(OFF[s.n]){s.ar=OFF[s.n].ar;s.tr=OFF[s.n].tr}
+  return s;
+});
+var qCache={};
+var QuranSDK={
+  base:'https://api.quran.com/api/v4',
+  cdn:'https://audio.qurancdn.com/',
+  verses:function(n){
+    return fetch(this.base+'/verses/by_chapter/'+n+'?fields=text_uthmani&translations=85&audio=7&per_page=300')
+      .then(function(r){if(!r.ok)throw 0;return r.json()})
+      .then(function(d){
+        var ar=[],tr=[],au=[];
+        (d.verses||[]).forEach(function(v){
+          var i=v.verse_number-1;
+          ar[i]=(v.text_uthmani||'').trim();
+          tr[i]=v.translations&&v.translations[0]?v.translations[0].text.replace(/<[^>]+>/g,'').trim():'';
+          au[i]=v.audio?v.audio.url:'';
+        });
+        if(!ar.length)throw 0;
+        return {ar:ar,tr:tr,au:au};
+      });
+  }
+};
+var qAudio=null,qPlay=false;
+function stopAyah(){
+  if(qAudio){qAudio.pause();qAudio=null}
+  qPlay=false;
+  var l=$('rp-lab');if(l)l.textContent='Play';
+}
+function playAyah(from){
+  var s=reader.surah;if(!s||!s.ar)return;
+  if(typeof from==='number'){
+    if(qPlay&&from===reader.ayah){stopAyah();renderReader();return}
+    stopAyah();reader.ayah=from;
+  }
+  else if(qPlay){stopAyah();renderReader();return}
+  else if(reader.ayah>=s.ar.length){reader.ayah=0}
+  playCur();
+}
+
+function playCur(){
+  var s=reader.surah;if(!s||!s.ar)return;
+  var i=reader.ayah;
+  if(i<0||i>=s.ar.length){qPlay=false;toast('Surah complete — MashaAllah ✓');vib([40,60,40]);renderReader();return}
+  qPlay=true;
+  if(qAudio){qAudio.pause();qAudio=null}
+  qAudio=new Audio(s.au&&s.au[i]?s.au[i]:auURL(s.n,i+1));
+  qAudio.addEventListener('ended',function(){
+    if(!qPlay||reader.surah!==s)return;
+    if(reader.ayah+1<s.ar.length){reader.ayah++;renderReader();scrollAyah();playCur()}
+    else{stopAyah();reader.ayah=0;toast('Surah complete — MashaAllah ✓');vib([40,60,40]);renderReader()}
+  });
+  qAudio.play().then(function(){renderReader();scrollAyah()})
+    .catch(function(){qPlay=false;toast('Tap Play — needs internet');renderReader()});
+}
+function scrollAyah(){
+  var e=$('ay-'+reader.ayah);
+  if(e&&e.scrollIntoView)e.scrollIntoView({block:'center',behavior:'smooth'});
+}
+var reader={surah:null,ayah:0};
+var trOn=true;
+function togTr(){trOn=!trOn;$('chip-tr').classList.toggle('on',trOn);renderReader();toast(trOn?'Translation shown':'Translation hidden')}
+var QARIS=[
+ {n:'Alafasy',base:'https://audio.qurancdn.com/Alafasy/mp3/'},
+ {n:'Sudais',base:'https://audio.qurancdn.com/Sudais/mp3/'},
+ {n:'Shuraim',base:'https://audio.qurancdn.com/Shuraym/mp3/'},
+ {n:'Abdul Basit',base:'https://audio.qurancdn.com/AbdulBaset/Murattal/mp3/'},
+ {n:'Minshawi',base:'https://audio.qurancdn.com/Minshawi/Murattal/mp3/'},
+ {n:'Husary',base:'https://mirrors.quranicaudio.com/everyayah/Husary_Muallim_128kbps/'}
+];
+var qariIdx=load('qari',0);
+function auURL(n,a){
+  var p=function(x){return ('00'+x).slice(-3)};
+  return QARIS[qariIdx].base+p(n)+p(a)+'.mp3';
+}
+
+function openSurah(n){
+  var s=SURAHS.filter(function(x){return x.n===n})[0];
+  if(!s)return;
+  stopAyah();save('lastread',s.n);
+  reader.surah=s;reader.ayah=0;
+  if(trLang!==85)loadTr(s);
+  if(!s.ar&&typeof QTEXT!=='undefined'&&QTEXT&&QTEXT[n]){
+    s.ar=QTEXT[n].map(function(v){return v[0]});
+    s.tr=QTEXT[n].map(function(v){return v[1]});
+    s.au=buildAu(s);
+    qCache[n]={ar:s.ar,tr:s.tr,au:s.au};
+  }
+  if(qCache[n]){s.ar=qCache[n].ar;s.tr=qCache[n].tr}
+  if(s.ar&&s.ar.length)s.au=buildAu(s);
+  if(s.ar&&s.ar.length){renderReader();go('scr-reader');renderContinue();return}
+  go('scr-reader');
+  $('r-title').textContent=s.name;
+  $('r-count').textContent='… / '+s.v;
+  $('r-box').innerHTML='<div class="note" style="margin-top:44px">Loading '+(s.name||'')+' — Quran SDK…</div>';
+  renderContinue();
+  QuranSDK.verses(n).then(function(d){
+    s.ar=d.ar;s.tr=d.tr;s.au=d.au;qCache[n]=d;
+    if(reader.surah===s)renderReader();
+  }).catch(function(){
+    toast('Load failed — check internet');
+    if(reader.surah===s)$('r-box').innerHTML='<div class="note" style="margin-top:44px">Surah text unavailable — check internet</div>';
+  });
+}
+function renderContinue(){
+  var cn=load('lastread',1),cs=SURAHS.filter(function(x){return x.n===cn})[0]||SURAHS[0];
+  var a=$('q-cont-name'),b=$('q-cont-sub');
+  if(a)a.textContent=cs.name;
+  if(b)b.textContent='Surah '+cs.n+' • '+cs.v+' verses';
+}
+
+function continueReading(){
+  var n=load('lastread',1);openSurah(n);
+}
+function renderReader(){
+  var s=reader.surah;if(!s||!s.ar)return;
+  var a=reader.ayah;
+  $('r-title').textContent=s.name;
+  $('r-count').textContent=(a+1)+' / '+s.v;
+  var trArr=s.tr;
+  if(trLang!==85&&s.trs&&s.trs[trLang])trArr=s.trs[trLang];
+  var h='';
+  if(s.n!==1&&s.n!==9){h+='<div class="bism">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>'}
+  for(var i=0;i<s.ar.length;i++){
+    h+='<div class="arow'+(i===a?' cur':'')+'" id="ay-'+i+'" onclick="playAyah('+i+')">'+
+       '<span class="ayah">'+s.ar[i]+'</span><span class="vnum">'+(i+1)+'</span></div>';
+    if(trOn&&trArr&&trArr[i])h+='<div class="translation">'+trArr[i]+'</div>';
+  }
+  $('r-box').innerHTML=h;
+  var l=$('rp-lab');if(l)l.textContent=qPlay?'Stop':'Play';
+  renderTrChips();renderQariChips();
+}
+
+function navVerse(d){
+  var s=reader.surah;if(!s)return;
+  stopAyah();
+  var n=reader.ayah+d;
+  if(n<0){toast('First verse');return}
+  if(n>=s.ar.length){toast('Surah complete — MashaAllah ✓');return}
+  reader.ayah=n;renderReader();scrollAyah();
+}
+
+var LANGS=[
+ {id:85,n:'English',q:'English',b:1},{id:234,n:'Urdu',q:'اردو'},
+ {id:122,n:'Hindi',q:'हिंदी'},{id:163,n:'Bengali',q:'বাংলা'},
+ {id:33,n:'Indonesian',q:'Indonesia'},{id:77,n:'Turkish',q:'Türkçe'},
+ {id:39,n:'Malay',q:'Melayu'},{id:29,n:'Persian',q:'فارسی'},
+ {id:31,n:'French',q:'Français'},{id:140,n:'Spanish',q:'Español'},
+ {id:27,n:'German',q:'Deutsch'},{id:78,n:'Russian',q:'Русский'},
+ {id:56,n:'Chinese',q:'中文'},{id:133,n:'Tamil',q:'தமிழ்'},
+ {id:227,n:'Telugu',q:'తెలుగు'},{id:211,n:'Tagalog',q:'Tagalog'},
+ {id:103,n:'Portuguese',q:'Português'},{id:153,n:'Italian',q:'Italiano'},
+ {id:35,n:'Japanese',q:'日本語'},{id:36,n:'Korean',q:'한국어'},
+ {id:51,n:'Thai',q:'ไทย'},{id:220,n:'Vietnamese',q:'Tiếng Việt'},
+ {id:49,n:'Swahili',q:'Kiswahili'},{id:32,n:'Hausa',q:'Hausa'},
+ {id:81,n:'Kurdish',q:'کوردی'},{id:118,n:'Pashto',q:'پښتو'},
+ {id:87,n:'Amharic',q:'አማርኛ'},{id:47,n:'Albanian',q:'Shqip'},
+ {id:25,n:'Bosnian',q:'Bosanski'},{id:217,n:'Ukrainian',q:'Українська'},
+ {id:42,n:'Polish',q:'Polski'},{id:144,n:'Dutch',q:'Nederlands'},
+ {id:44,n:'Romanian',q:'Română'},{id:26,n:'Czech',q:'Čeština'},
+ {id:125,n:'Yoruba',q:'Yorùbá'},{id:46,n:'Somali',q:'Soomaali'}
+];
+var trLang=load('trlang',85);
+function langName(){var L=LANGS.filter(function(x){return x.id===trLang})[0];return L?L.n:'English'}
+function buildAu(s){var a=[];for(var i=1;i<=s.v;i++)a[i-1]=auURL(s.n,i);return a}
+function setQari(k){
+  qariIdx=k;save('qari',k);
+  var s=reader.surah,was=qPlay;
+  stopAyah();
+  if(s&&s.ar&&s.ar.length){
+    s.au=buildAu(s);
+    if(qCache[s.n])qCache[s.n].au=s.au;
+    renderReader();
+  }
+  toast('Qari: '+QARIS[k].n);
+  if(was&&s)playCur();
+}
+function cycleQari(){setQari((qariIdx+1)%QARIS.length)}
+function renderQariChips(){
+  var el=$('qari-chips');
+  if(el)el.innerHTML=QARIS.map(function(Q,k){
+    return '<div class="'+(k===qariIdx?'on':'')+'" onclick="setQari('+k+')">'+Q.n+'</div>';
+  }).join('');
+  var c=$('qari-chip');if(c)c.textContent=QARIS[qariIdx].n;
+}
+function renderTrChips(){
+  var el=$('lang-quick');
+  if(el){
+    var quick=[85,234,122,163];
+    el.innerHTML=quick.map(function(id){
+      var L=LANGS.filter(function(x){return x.id===id})[0];
+      return L?'<div class="'+(trLang===id?'on':'')+'" onclick="setLang('+id+')">'+L.q+'</div>':'';
+    }).join('')+'';
+  }
+  var tn=$('tr-name');
+  if(tn){var cur=LANGS.filter(function(x){return x.id===trLang})[0];
+    tn.textContent=(cur?cur.n:'English')+' ›'}
+}
+function renderLangs(){
+  var el=$('lang-list');if(!el)return;
+  var c=$('lang-count');if(c)c.textContent=LANGS.length+' languages';
+  el.innerHTML=LANGS.map(function(L){
+    var on=(trLang===L.id);
+    return '<div class="item" onclick="setLang('+L.id+')"><div class="circle'+(on?' g':'')+'">'+(on?'✓':(L.q||L.n).slice(0,2))+'</div>'+
+      '<div style="flex:1"><b>'+L.n+'</b>'+(L.b?' <span class="label">• offline</span>':'')+'<br><span style="font-size:15px">'+L.q+'</span></div>'+
+      '<span class="gold">'+(on?'●':'›')+'</span></div>';
+  }).join('');
+}
+function setLang(id){
+  trLang=id;save('trlang',id);
+  if(reader.surah&&id!==85)loadTr(reader.surah);
+  renderReader();
+  if(current==='scr-lang')back();
+}
+function loadTr(s){
+  if(!s||trLang===85)return;
+  s.trs=s.trs||{};
+  var id=trLang;
+  if(s.trs[id])return;
+  var ck=load('tr'+id+'_'+s.n,null);
+  if(ck&&ck.length){s.trs[id]=ck;if(reader.surah===s)renderReader();return}
+  fetch('https://api.quran.com/api/v4/verses/by_chapter/'+s.n+'?fields=verse_key&translations='+id+'&per_page=300')
+   .then(function(r){if(!r.ok)throw 0;return r.json()})
+   .then(function(d){
+     var arr=(d.verses||[]).map(function(v){
+       var t=v.translations&&v.translations[0];
+       return t?t.text.replace(/<[^>]+>/g,'').trim():''});
+     if(!arr.length)throw 0;
+     s.trs[id]=arr;save('tr'+id+'_'+s.n,arr);
+     if(reader.surah===s)renderReader();
+   }).catch(function(){toast('Translation download failed — English shown (needs internet once)')});
+}
+function renderDuas(cat){
+  cat=cat||'all';
+  document.querySelectorAll('#dua-chips div').forEach(function(c){
+    c.classList.toggle('on',c.getAttribute('data-c')===cat)});
+  $('dua-list').innerHTML=DUAS.filter(function(d){return cat==='all'||d.c===cat})
+   .map(function(d,i){
+    var idx=DUAS.indexOf(d);
+    return '<div class="item" onclick="openDua('+idx+')"><div class="circle g"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M12 21.5c-3-3-4.8-6.7-4.8-10.7 0-2.3.8-4.3 2.3-5.8"/><path d="M12 21.5c3-3 4.8-6.7 4.8-10.7 0-2.3-.8-4.3-2.3-5.8"/><path d="M9.5 5c.7-1.3 1.6-2.2 2.5-3.2.9 1 1.8 1.9 2.5 3.2"/><path d="M9.9 13.4c1.4.9 2.8.9 4.2 0"/></svg></div>'+
+    '<div style="flex:1"><b>'+d.name+'</b><br><span class="label">'+d.desc+'</span></div><span class="gold">›</span></div>';
+  }).join('');
+}
+function openDua(i){
+  var d=DUAS[i];if(!d)return;
+  $('d-title').textContent=d.name;$('d-ar').textContent=d.ar;
+  $('d-tr').textContent=d.tr;$('d-tr2').textContent=d.tr2;
+  go('scr-dua');
+}
+function renderAnn(){
+  $('ann-list').innerHTML=ANNS.map(function(a){
+    return '<div class="ad"><b>'+a.t+'</b><p>'+a.d+'</p><small>'+a.s+'</small></div>'}).join('');
+}
+function renderNotifSettings(){
+  var n=state.notif;
+  $('notif-settings').innerHTML=
+   row('Prayer Reminder','prayer',n.prayer)+row('Azan Alerts','azan',n.azan)+
+   row('Announcements','ann',n.ann)+row('General Updates','general',n.general)+
+   '<div class="setting" onclick="cycleNTime()" style="cursor:pointer"><span>Notification Time</span><b>'+n.time+' ›</b></div>';
+  function row(l,k,on){return '<div class="setting"><span>'+l+'</span><span class="switch'+(on?' on':'')+'" onclick="togN(this,\''+k+'\')"></span></div>'}
+}
+function renderSettings(){
+  var s=state.settings;
+  $('set-cards').innerHTML=
+   sw('Notifications','notif',s.notif)+sw('Offline Support','offline',s.offline)+
+   '<div class="setting"><span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="4"/><path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6"/></svg> Language</span><b onclick="go(\'scr-lang\')" style="cursor:pointer">'+langName()+' ›</b></div>'+
+   '<div class="setting"><span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18Z" fill="currentColor" stroke="none"/></svg> Theme</span><b onclick="toast(\'Arctic Blue — the only theme for now\')" style="cursor:pointer">Arctic Blue ›</b></div>'+
+   '<div class="setting" onclick="go(\'scr-about\')" style="cursor:pointer"><span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="12" r="9"/><path d="M12 11.5v5"/><path d="M12 7.8h.01"/></svg> About App</span><b>›</b></div>'+
+   '<div class="setting" onclick="go(\'scr-notifications\')" style="cursor:pointer"><span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M18 8.5a6 6 0 1 0-12 0c0 5.8-2.4 6.9-2.4 6.9h16.8S18 14.3 18 8.5Z"/><path d="M10.3 19.3a2 2 0 0 0 3.4 0"/></svg> Notification Settings</span><b>›</b></div>';
+  function sw(l,k,on){return '<div class="setting"><span>'+l+'</span><span class="switch'+(on?' on':'')+'" onclick="togS(this,\''+k+'\')"></span></div>'}
+}
+function renderVideos(){
+  $('yt-list').innerHTML=VIDEOS.map(function(v){
+    return '<div class="ytcard" onclick="openVideo(\''+v.id+'\')">'+
+      '<div class="ytthumb"><img src="https://i.ytimg.com/vi/'+v.id+'/mqdefault.jpg" alt="" onerror="this.style.display=\'none\'">'+
+      '<span class="ytplay"><svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M8 5.6v12.8L19.2 12 8 5.6Z"/></svg></span></div>'+
+      '<div class="ytt">'+esc(v.t)+'</div>'+
+      '<div class="ytm">'+v.d+' • Masjid e Mohammadi</div></div>';
+  }).join('');
+}
+function openVideo(id){
+  vib(15);
+  var v=VIDEOS.filter(function(x){return x.id===id})[0];
+  var f=$('yt-frame');if(f)f.src='https://www.youtube-nocookie.com/embed/'+id+'?rel=0&autoplay=1';
+  var t=$('yt-t');if(t)t.textContent=v?v.t:'';
+  go('scr-ytplay');
+}
+function openYT(q){
+  vib(15);
+  window.location.href=q?'https://www.youtube.com/results?search_query='+encodeURIComponent(q):YT_CHANNEL;
+}
+
+function renderContacts(){
+  $('ct-list').innerHTML=CONTACTS.map(function(c){
+    return '<div class="item" onclick="call(\''+c.p+'\')"><div class="circle'+(c.danger?'':' g')+'"'+
+    (c.danger?' style="background:#5a2622;color:#e86b62"':'')+'>'+c.i+'</div>'+
+    '<div style="flex:1"><b>'+c.n+'</b><br><span class="label">'+c.d+' • '+c.p.replace('+91 ','+91 ')+'</span></div>'+
+    '<span style="margin-left:auto;color:'+(c.danger?'var(--danger)':'var(--gold2)')+'"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M6.6 3.5h3.1l1.5 4-2 1.4a12.2 12.2 0 0 0 5.9 5.9l1.4-2 4 1.5v3.1a2 2 0 0 1-2.2 2A17.2 17.2 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z"/></svg></span></div>'}).join('');
+}
+function call(p){vib(30);window.location.href='tel:'+String(p).replace(/\s+/g,'')}
+function openMaps(){
+  vib(20);
+  window.location.href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('Masjid e Mohammadi '+GEO.city);
+}
+function renderAdmin(){
+  var rows=PRAYERS.filter(function(p){return p.name!=='Sunrise'}).map(function(p){
+    return '<tr><td>'+p.name+'</td><td>'+fmt12(p.time)+'</td><td>'+fmt12(IQAMAT[p.name])+'</td><td class="gold">Active</td></tr>';
+  }).join('');
+  $('admin-table').innerHTML='<tr><th>Prayer</th><th>Time</th><th>Iqamat</th><th>Status</th></tr>'+rows;
+  $('st-anns').textContent=ANNS.length;
+  $('st-videos').textContent=VIDEOS.length;
+  $('st-users').textContent='—';
+  $('st-active').textContent='—';
+  $('admin-recent').innerHTML=ANNS.slice(0,4).map(function(a){
+    return '<div class="setting">'+a.t.replace(/<svg[\s\S]*?<\/svg>\s*/,'')+'<b>'+esc(a.s.split(' ')[0])+'</b></div>';
+  }).join('');
+}
+
+/* ================= tasbeeh ================= */
+function renderTasbeeh(){
+  var t=state.tasbeeh;
+  $('t-dhikr').textContent=t.dhikr;$('t-count').textContent=t.count;
+  $('t-target').textContent='/ '+t.target;$('t-rounds').textContent=t.rounds;
+  $('t-pct').textContent=Math.round(t.count/t.target*100)+'%';
+  $('t-bar').style.width=(t.count/t.target*100)+'%';
+  document.querySelectorAll('#t-dhikrs div').forEach(function(d){
+    d.classList.toggle('on',d.getAttribute('data-d')===t.dhikr)});
+}
+function tapTasbeeh(){
+  var t=state.tasbeeh;t.count++;vib(10);
+  if(t.count>=t.target){t.rounds++;t.count=0;toast('Round complete — MashaAllah!');vib([30,50,30])}
+  save('tasbeeh',t);renderTasbeeh();
+}
+function resetTasbeeh(){
+  var t=state.tasbeeh;t.count=0;save('tasbeeh',t);renderTasbeeh();toast('Counter reset ✓');
+}
+
+/* ================= toggles ================= */
+function togS(el,k){state.settings[k]=!state.settings[k];el.classList.toggle('on',state.settings[k]);save('settings',state.settings)}
+function togN(el,k){state.notif[k]=!state.notif[k];el.classList.toggle('on',state.notif[k]);save('notifset',state.notif)}
+function tog(el,k){state.notif[k]=!state.notif[k];el.classList.toggle('on',state.notif[k]);save('notifset',state.notif)}
+
+/* ================= azan screen ================= */
+var azanState='idle',azanAudio=null,azVolV=80;
+function azVol(v){azVolV=Math.max(0,Math.min(100,+v||0));if(azanAudio)azanAudio.volume=azVolV/100}
+function azan(mode){
+  if(!azanAudio){azanAudio=new Audio('azan.mp3');azanAudio.volume=azVolV/100}
+  if(mode==='play'){
+    azanState='play';
+    azanAudio.play().catch(function(){toast('Tap Play again to start')});
+    toast('Azan playing');
+  }else if(mode==='pause'){
+    azanState='pause';azanAudio.pause();toast('Azan paused');
+  }else{
+    azanState='stop';azanAudio.pause();
+    try{azanAudio.currentTime=0}catch(e){}
+    toast('Azan stopped');
+  }
+  $('az-state').textContent=azanState==='play'?'Playing…':azanState==='pause'?'Ⅱ Paused':'Stopped';
+}
+
+/* ================= profile edit ================= */
+function openEdit(){
+  var u=state.user||{};
+  $('ep-name').value=u.name||'';$('ep-email').value=u.email||'';
+  $('ep-dob').value=u.dob||'';$('ep-gender').value=u.gender||'Not selected';
+}
+function saveProfile(){
+  state.user={name:$('ep-name').value.trim()||'User',email:$('ep-email').value.trim(),
+    dob:$('ep-dob').value,gender:$('ep-gender').value};
+  save('user',state.user);renderUser();renderProfileCards();toast('Profile saved ✓');back();
+}
+function renderProfileCards(){
+  var u=state.user||{};
+  var dob=u.dob?u.dob.split('-').reverse().join('-'):'—';
+  $('pf-cards').innerHTML=
+   '<div class="setting"><span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/></svg> Name</span><b>'+esc(u.name||'—')+'</b></div>'+
+   '<div class="setting"><span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg> Date of Birth</span><b>'+esc(dob)+'</b></div>'+
+   '<div class="setting"><span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3Z"/></svg> Gender</span><b>'+esc(u.gender||'Not selected')+'</b></div>'+
+   '<div class="setting"><span><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="m4.5 7.8 7.5 5.2 7.5-5.2"/></svg> Email</span><b style="font-size:11px">'+esc(u.email||'—')+'</b></div>';
+}
+
+function pwdHash(s){var h=5381;for(var i=0;i<s.length;i++)h=(((h<<5)+h)+s.charCodeAt(i))>>>0;return String(h)}
+function togglePwd(){
+  var c=$('pwd-card'),open=(!c.style.display||c.style.display==='none');
+  c.style.display=open?'block':'none';
+  if(open)$('pw-cur').focus();
+}
+function savePwd(){
+  var cur=$('pw-cur').value,nw=$('pw-new').value,cf=$('pw-conf').value,stored=load('pwd',null);
+  if(stored&&pwdHash(cur)!==stored){toast('Current password is wrong');return}
+  if(nw.length<4){toast('New password needs 4+ characters');return}
+  if(nw!==cf){toast('Passwords do not match');return}
+  save('pwd',pwdHash(nw));
+  $('pw-cur').value='';$('pw-new').value='';$('pw-conf').value='';
+  togglePwd();toast('Password updated ✓');
+}
+function checkNet(){
+  toast('Checking connection…');
+  fetch('https://api.aladhan.com/v1/timingsByCity?city=Karachi&country=Pakistan&method=1')
+   .then(function(r){if(!r.ok)throw 0;return r.json()})
+   .then(function(){toast('Connected — content is up to date ✓');loadTimes(true)})
+   .catch(function(){toast('Offline — showing saved content ✓')});
+}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+
+/* ================= ticker ================= */
+/* ================= real prayer engine ================= */
+function z(n){return (n<10?'0':'')+n}
+function addMinutes(hhmm,min){
+  var p=hhmm.split(':'),t=((+p[0])*60+(+p[1])+min)%1440;
+  return z(Math.floor(t/60))+':'+z(t%60);
+}
+function applyTimes(tm){
+  var order=['Fajr','Sunrise','Dhuhr','Asr','Maghrib','Isha'],got=0;
+  for(var i=0;i<order.length;i++){
+    var m=tm[order[i]]&&String(tm[order[i]]).match(/(\d{1,2}):(\d{2})/);
+    if(m){PRAYERS[i].time=(m[1].length<2?'0':'')+m[1]+':'+m[2];got++}
+  }
+  if(got<4)return false;
+  Object.keys(IQ_OFFSET).forEach(function(k){
+    for(var j=0;j<PRAYERS.length;j++){
+      if(PRAYERS[j].name===k){IQAMAT[k]=addMinutes(PRAYERS[j].time,IQ_OFFSET[k]);break}
+    }
+  });
+  return true;
+}
+function refreshPrayerUI(){
+  renderHomePrayers();renderPrayerScreen();renderHomeTimes();
+  renderNotifRecent();renderAdmin();
+  lastNP=nextPrayer().name;
+  updateRing(nextPrayer());
+}
+function loadTimes(force){
+  var n2=new Date(),ck=n2.getFullYear()+'-'+z(n2.getMonth()+1)+'-'+z(n2.getDate());
+  var cache=load('ptimes',null);
+  if(!force&&cache&&cache.date===ck&&applyTimes(cache.tm)){refreshPrayerUI();return}
+  fetch('https://api.aladhan.com/v1/timingsByCoordinates?latitude='+GEO.lat+'&longitude='+GEO.lng+'&method=1')
+   .then(function(r){if(!r.ok)throw 0;return r.json()})
+   .then(function(d){
+     var tm=d&&d.data&&d.data.timings;if(!tm)throw 0;
+     save('ptimes',{date:ck,tm:tm});
+     if(applyTimes(tm))refreshPrayerUI();
+   }).catch(function(){/* offline — cached/default times stay */});
+}
+function locateDone(){updateQibla();loadTimes(true);
+  if(!GEO.ok)toast('Location not found — using default (Karachi)')}
+function ipFallback(){
+  var providers=['https://ipwho.is/','https://ipapi.co/json/','https://freeipapi.com/api/json'];
+  function next(i){
+    if(i>=providers.length){locateDone();return}
+    fetch(providers[i]).then(function(r){if(!r.ok)throw 0;return r.json()})
+     .then(function(d){
+       var lat=(d&&(d.latitude!=null?d.latitude:d.lat)),
+           lng=(d&&(d.longitude!=null?d.longitude:d.lng));
+       if(lat==null||lng==null||(!lat&&!lng))throw 0;
+       GEO.lat=+lat;GEO.lng=+lng;GEO.ok=true;
+       var city=d.city||'',country=d.country||d.country_name||d.countryName||'';
+       if(city||country)GEO.city=(city||(GEO.city||'').split(',')[0])+(country?', '+country:'');
+       locateDone();
+     }).catch(function(){next(i+1)});
+  }
+  next(0);
+}
+
+function findLocation(){
+  if(!navigator.geolocation){ipFallback();return}
+  navigator.geolocation.getCurrentPosition(function(pos){
+    GEO.lat=pos.coords.latitude;GEO.lng=pos.coords.longitude;GEO.ok=true;
+    fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+GEO.lat+'&longitude='+GEO.lng+'&localityLanguage=en')
+     .then(function(r){return r.json()})
+     .then(function(d){
+       var c=(d&&(d.city||d.locality))||'';
+       if(c)GEO.city=c+(d&&d.countryName?', '+d.countryName:'');
+       locateDone();
+     }).catch(function(){locateDone()});
+  },function(){ipFallback()},{timeout:8000,maximumAge:600000});
+}
+function qiblaBearing(lat,lng){
+  var f1=lat*Math.PI/180,f2=21.4225*Math.PI/180,dl=(39.8262-lng)*Math.PI/180;
+  var y=Math.sin(dl)*Math.cos(f2),
+      x=Math.cos(f1)*Math.sin(f2)-Math.sin(f1)*Math.cos(f2)*Math.cos(dl);
+  return (Math.atan2(y,x)*180/Math.PI+360)%360;
+}
+function updateQibla(){
+  qiblaDeg=Math.round(qiblaBearing(GEO.lat,GEO.lng));
+  var dirs=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW'];
+  var a=$('q-deg');if(a)a.textContent=qiblaDeg+'\u00B0';
+  var b=$('q-dir');if(b)b.textContent='('+dirs[Math.round(qiblaDeg/22.5)%16]+')';
+  var c=$('q-loc');if(c)c.textContent=GEO.ok?GEO.city:'Location unavailable — check GPS';
+  var e=$('p-loc');if(e)e.textContent=GEO.ok?GEO.city:'Location not set';
+}
+function updateRing(np){
+  var arc=$('ring-arc');if(!arc)return;
+  var now=Date.now(),prev=null,list=PRAYERS.filter(function(p){return p.name!=='Sunrise'});
+  for(var i=0;i<list.length;i++){var t=parseT(list[i].time).getTime();if(t<now)prev=t}
+  if(prev==null)prev=new Date().setHours(0,0,0,0);
+  var end=np.at.getTime(),frac=end>prev?Math.max(0,Math.min(1,(now-prev)/(end-prev))):0;
+  arc.setAttribute('stroke-dashoffset',String(Math.round(283*(1-frac))));
+  var pr=PRAYERS.filter(function(p){return p.name===np.name})[0];
+  if(pr){var s=fmt12(pr.time).split(' '),rt=$('ring-time'),ra=$('ring-ap');
+    if(rt)rt.textContent=s[0];if(ra)ra.textContent=s[1]}
+}
+function renderHomeTimes(){
+  var el=$('home-times');if(!el)return;
+  var np=nextPrayer().name;
+  el.innerHTML=PRAYERS.filter(function(p){return p.name!=='Sunrise'})
+   .map(function(p){var s=fmt12(p.time).split(' ');
+     return '<div class="t'+(p.name===np?' on':'')+'">'+p.name+'<b>'+s[0]+' '+s[1]+'</b></div>'}).join('');
+}
+function renderNotifRecent(){
+  var el=$('notif-recent');if(!el)return;
+  var np=nextPrayer(),pr=PRAYERS.filter(function(p){return p.name===np.name})[0];
+  var h='<div class="ad"><b>Next prayer — '+np.name+'</b><p>Azan at '+fmt12(pr.time)+
+    ' • Iqamat at '+fmt12(IQAMAT[np.name])+'</p><small>Today</small></div>';
+  h+=ANNS.slice(0,3).map(function(a){
+    return '<div class="ad"><b>'+a.t+'</b><p>'+a.d+'</p><small>'+a.s+'</small></div>'}).join('');
+  el.innerHTML=h;
+}
+function cycleNTime(){
+  var opts=['5 min before','10 min before','15 min before','30 min before'];
+  var i=(opts.indexOf(state.notif.time)+1)%opts.length;
+  state.notif.time=opts[i];save('notifset',state.notif);renderNotifSettings();
+}
+var lastNP='';
+function tick(){
+  var t=new Date(),hm=t.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  document.querySelectorAll('.st-clock').forEach(function(e){e.textContent=hm});
+  var np=nextPrayer(),cd=cdText(np.at);
+  document.querySelectorAll('.cd-count').forEach(function(e){e.textContent=cd});
+  document.querySelectorAll('.cd-name').forEach(function(e){e.textContent=np.name});
+  document.querySelectorAll('.cd-time').forEach(function(e){e.textContent=fmt12(PRAYERS.filter(function(p){return p.name===np.name})[0].time)});
+  $('az-label').textContent='NEXT AZAN • '+np.name.toUpperCase();
+  $('az-time').textContent=fmt12(PRAYERS.filter(function(p){return p.name===np.name})[0].time);
+  $('az-iq').textContent=fmt12(IQAMAT[np.name]);
+  updateRing(np);
+  if(np.name!==lastNP){
+    lastNP=np.name;
+    renderHomePrayers();renderPrayerScreen();renderHomeTimes();renderNotifRecent();
+    toast(np.name+' azan time has arrived');vib([80,60,80]);
+    if(state.notif.azan)azan('play');
+  }
+}
+
+/* ================= qibla compass ================= */
+var compassOn=false;
+function startCompass(){
+  if(compassOn)return;compassOn=true;
+  var needle=document.querySelector('#scr-qibla .needle');
+  var got=false;
+  function onOrient(e){
+    var h=null;
+    if(e.webkitCompassHeading!=null)h=e.webkitCompassHeading;
+    else if(e.absolute===true&&e.alpha!=null)h=360-e.alpha;
+    if(h==null)return;
+    got=true;
+    var ang=((qiblaDeg-h)%360+360)%360;
+    needle.style.transform='rotate('+ang+'deg)';
+  }
+  function attach(){
+    window.addEventListener('deviceorientationabsolute',onOrient,true);
+    window.addEventListener('deviceorientation',onOrient,true);
+    setTimeout(function(){
+      if(!got)toast('Compass unavailable — arrow stays fixed (Qibla '+qiblaDeg+'° from North)');
+    },2500);
+  }
+  try{
+    if(typeof DeviceOrientationEvent!=='undefined'&&
+       typeof DeviceOrientationEvent.requestPermission==='function'){
+      DeviceOrientationEvent.requestPermission().then(function(r){
+        if(r==='granted')attach();
+        else toast('Compass permission denied — arrow stays fixed');
+      }).catch(function(){});
+    }else attach();
+  }catch(err){}
+}
+
+
+/* ================= dua chips ================= */
+document.getElementById('dua-chips').addEventListener('click',function(e){
+  var c=e.target.closest('[data-c]');if(c)renderDuas(c.getAttribute('data-c'));
+});
+document.getElementById('t-dhikrs').addEventListener('click',function(e){
+  var d=e.target.closest('[data-d]');if(!d)return;
+  state.tasbeeh.dhikr=d.getAttribute('data-d');state.tasbeeh.count=0;
+  save('tasbeeh',state.tasbeeh);renderTasbeeh();
+});
+
+/* ================= init ================= */
+function init(){
+  renderUser();renderGreeting();renderHomePrayers();renderPrayerScreen();
+  renderSurahs();renderDuas('all');renderAnn();renderNotifSettings();
+  renderSettings();renderVideos();renderContacts();renderTasbeeh();
+  renderAdmin();renderProfileCards();openEdit();
+  lastNP=nextPrayer().name;
+  renderHomeTimes();renderNotifRecent();renderContinue();updateQibla();updateRing(nextPrayer());
+  var av=$('az-vol');if(av)azVol(av.value);
+  if(state.user){show('scr-home')}else{show('scr-login')}
+  tick();setInterval(tick,1000);
+  findLocation();loadTimes();
+}
+init();
+</script>
+<script>
+/* PWA: register service worker only on https (GitHub Pages). Skipped inside the APK (file://). */
+if('serviceWorker' in navigator && location.protocol==='https:'){
+  window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});
+}
+</script>
+</body>
+</html>

@@ -1,15 +1,27 @@
 #!/usr/bin/env bash
-# Sync the shared app source into docs/ for GitHub Pages (web/PWA target).
-# One source of truth: app/src/main/assets  →  docs/
+# Build docs/ (GitHub Pages deploy target) from site/ (website) + app assets.
+# Website = docs/ root.  Full-screen app = docs/app/.
 set -e
 ROOT="$(cd "$(dirname "$0")" && pwd)"
-SRC="$ROOT/app/src/main/assets"
+APP="$ROOT/app/src/main/assets"
+SITE="$ROOT/site"
 DST="$ROOT/docs"
-mkdir -p "$DST"
+
+rm -rf "$DST"
+mkdir -p "$DST/app"
+
+# ---- website (front page) ----
+cp "$SITE/index.html" "$SITE/manifest.webmanifest" "$SITE/sw.js" "$DST/"
+cp "$APP/bg-calligraphy.jpg" "$APP/bg-mosque.jpg" "$DST/"
+cp "$APP/icon_masjid.svg" "$APP/icon-192.png" "$APP/icon-512.png" \
+   "$APP/icon-maskable-512.png" "$APP/apple-touch-icon.png" "$DST/"
+
+# ---- app (full screen, installable PWA) ----
 for f in index.html quran.js quran-font.ttf azan.mp3 bg-calligraphy.jpg bg-mosque.jpg \
          icon_masjid.svg icon-192.png icon-512.png icon-maskable-512.png \
          apple-touch-icon.png masjid_manifest.webmanifest sw.js; do
-  cp "$SRC/$f" "$DST/$f"
+  cp "$APP/$f" "$DST/app/$f"
 done
+
 : > "$DST/.nojekyll"
-echo "synced $(ls "$DST" | wc -l) files to docs/"
+echo "synced $(find "$DST" -type f | wc -l) files to docs/ (site at /, app at /app/)"
