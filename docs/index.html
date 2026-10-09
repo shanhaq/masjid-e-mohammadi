@@ -122,12 +122,70 @@ a{color:inherit}
 .info .row .v{color:#E3ECF6;font-size:17px}
 .info a{color:var(--accent);text-decoration:none}
 
-/* quran panel */
-.qfeat{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:840px;margin-top:8px}
-@media(max-width:720px){.qfeat{grid-template-columns:1fr}}
-.qf{background:var(--glass);border:1px solid var(--line);border-radius:20px;padding:26px}
-.qf h3{font-family:Inter;font-size:18.5px;color:#fff;font-weight:600;margin-bottom:10px}
-.qf p{font-size:16.5px;color:var(--body);line-height:1.65}
+/* ---------- quran / duas / tasbeeh / qibla ---------- */
+@font-face{font-family:'Amiri';src:url('quran-font.ttf') format('truetype');font-display:swap;font-weight:400}
+.qtabs{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 30px}
+.qtabs button{border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--body);font-family:inherit;
+  font-size:16px;font-weight:600;padding:11px 20px;border-radius:999px;cursor:pointer;transition:.2s}
+.qtabs button:hover{color:#fff;background:rgba(255,255,255,.1)}
+.qtabs button.on{background:var(--accent);color:#06131F;border-color:transparent;box-shadow:0 12px 26px rgba(140,203,247,.35)}
+.qview{display:none}
+.qview.on{display:block}
+.qsearch{width:100%;max-width:520px;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px;
+  color:#EAF3FC;font-family:inherit;font-size:16.5px;padding:14px 18px;margin-bottom:24px;outline:none}
+.qsearch:focus{border-color:var(--accent)}
+.slist{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;max-width:1080px}
+.srow{display:flex;align-items:center;gap:16px;background:var(--glass);border:1px solid var(--line);border-radius:16px;
+  padding:14px 18px;cursor:pointer;text-align:left;color:inherit;font-family:inherit;transition:transform .25s,border-color .25s}
+.srow:hover{transform:translateY(-3px);border-color:rgba(140,203,247,.5)}
+.srow .num{width:44px;height:44px;flex:none;border-radius:12px;display:grid;place-items:center;font-family:Fraunces;
+  font-size:17px;color:#06131F;background:linear-gradient(150deg,var(--accent),var(--accent2))}
+.srow .nm{color:#EAF3FC;font-weight:600;font-size:17px}
+.srow .mt{font-size:13.5px;color:var(--muted)}
+.srow .arn{margin-left:auto;font-family:'Amiri',serif;font-size:22px;color:#B4C3D6}
+.rbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:24px}
+.rbar .back{width:46px;height:46px;flex:none;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.06);
+  color:#fff;cursor:pointer;display:grid;place-items:center;font-size:20px}
+.rbar h2{font-size:clamp(1.5rem,2.8vw,2.2rem);color:#fff;font-weight:600;margin-right:auto}
+.rbar select{background:rgba(10,15,24,.92);border:1px solid var(--line);color:#EAF3FC;font-family:inherit;font-size:15.5px;padding:12px 16px;border-radius:12px;cursor:pointer}
+.rplayall{background:var(--accent);color:#06131F;border:none;font-family:inherit;font-weight:600;font-size:15.5px;padding:13px 20px;border-radius:12px;cursor:pointer}
+.rplayall.stop{background:rgba(240,90,90,.92);color:#fff}
+.ayah{background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:22px 24px;margin-bottom:14px;max-width:900px;transition:border-color .25s,box-shadow .25s}
+.ayah.cur{border-color:var(--accent);box-shadow:0 16px 40px rgba(62,155,232,.22)}
+.ayah .top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.ayah .medal{width:36px;height:36px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:600;color:#06131F;background:var(--accent)}
+.ayah .play{width:36px;height:36px;flex:none;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--accent);cursor:pointer;display:grid;place-items:center;font-size:13px}
+.ayah .ar{font-family:'Amiri',serif;font-size:31px;line-height:2.05;color:#F2F7FD;direction:rtl;text-align:right}
+.ayah .tr{margin-top:14px;font-size:16.5px;color:var(--body);line-height:1.7}
+.dchips{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px}
+.dchips button{border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--body);font-family:inherit;font-size:14.5px;font-weight:600;padding:9px 17px;border-radius:999px;cursor:pointer;text-transform:capitalize}
+.dchips button.on{background:var(--accent);color:#06131F;border-color:transparent}
+.dua{background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:24px;margin-bottom:14px;max-width:820px}
+.dua h3{font-family:Inter;font-size:17.5px;color:#fff;font-weight:600}
+.dua .desc{font-size:14.5px;color:var(--muted);margin-top:4px}
+.dua .ar{font-family:'Amiri',serif;font-size:26px;line-height:2;color:#EAF3FC;direction:rtl;text-align:right;margin:16px 0}
+.dua .tr2{font-style:italic;color:#9FB2C6;font-size:15.5px}
+.dua .tr{margin-top:8px;font-size:16px;color:var(--body)}
+.tasb{max-width:400px;text-align:center;margin-top:8px}
+.tasb .ring{width:230px;height:230px;margin:0 auto 24px;border-radius:50%;display:grid;place-items:center;cursor:pointer;
+  background:radial-gradient(circle at 50% 30%,rgba(140,203,247,.22),rgba(255,255,255,.03));border:1px solid var(--line);
+  box-shadow:var(--sh);transition:transform .12s;user-select:none}
+.tasb .ring:active{transform:scale(.96)}
+.tasb .count{font-family:Fraunces;font-size:64px;color:#fff;line-height:1;font-weight:600}
+.tasb .sub{font-size:14.5px;color:var(--muted);margin-top:8px}
+.tasb .row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.tasb .row button{border:1px solid var(--line);background:rgba(255,255,255,.06);color:#EAF3FC;font-family:inherit;font-size:15.5px;font-weight:600;padding:12px 20px;border-radius:12px;cursor:pointer}
+.tasb .row button.on{background:var(--accent);color:#06131F;border-color:transparent}
+.qib{max-width:430px;text-align:center}
+.qib .dial{width:260px;height:260px;margin:0 auto 24px;border-radius:50%;position:relative;border:1px solid var(--line);
+  background:radial-gradient(circle at 50% 30%,rgba(140,203,247,.16),rgba(255,255,255,.02));box-shadow:var(--sh)}
+.qib .dial .kaaba{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:26px;height:26px;color:var(--accent)}
+.qib .dial .needle{position:absolute;left:50%;top:50%;width:0;height:0;transform-origin:center;transition:transform .3s ease}
+.qib .dial .needle::before{content:'';position:absolute;left:-9px;top:-106px;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:106px solid var(--accent)}
+.qib .dial .hub{position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--accent)}
+.qib .deg{font-family:Fraunces;font-size:38px;color:#fff;font-weight:600}
+.qib .note{font-size:15px;color:var(--muted);margin-top:12px;line-height:1.6}
+
 
 /* videos */
 .vids{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1000px}
@@ -233,14 +291,61 @@ a{color:inherit}
 
     <!-- QURAN -->
     <section class="panel" id="p-quran" data-p="quran">
-      <div class="blocktitle rv"><span class="eyebrow">Al-Quran</span><h2 class="ptitle">Poora Quran, aapki zubaan me</h2>
-        <p class="psub">114 surahs, 36 zabanon me tarjuma, 6 mashhoor qari aur offline reading — sab app ke andar.</p></div>
-      <div class="qfeat rv">
-        <div class="qf"><h3>36 Languages</h3><p>Urdu, Hindi, English, Bengali aur 32 aur — har surah ke saath tarjuma.</p></div>
-        <div class="qf"><h3>6 Qaris</h3><p>Alafasy, Sudais, Shuraim, Abdul Basit, Minshawi, Husary — complete surah audio.</p></div>
-        <div class="qf"><h3>Offline</h3><p>Poora Quran aur reading — internet ke bina bhi kaam karta hai.</p></div>
+      <div class="blocktitle rv"><span class="eyebrow">Al-Quran</span><h2 class="ptitle">Quran, Dua, Tasbeeh &amp; Qibla</h2>
+        <p class="psub">Poora Quran — 114 surah, tarjuma, 6 mashhoor qari. Saath hi roz ki duaen, tasbeeh counter aur qibla. Sab kuch isi page par.</p></div>
+      <div class="qtabs rv">
+        <button data-qt="quran" class="on">Quran</button>
+        <button data-qt="duas">Duas</button>
+        <button data-qt="tasbeeh">Tasbeeh</button>
+        <button data-qt="qibla">Qibla</button>
       </div>
-      <div class="hero-btns rv" style="margin-top:34px"><a class="btn primary" href="./app/">Open Quran in App</a></div>
+
+      <div class="qview on" data-qv="quran">
+        <div id="qListWrap">
+          <input class="qsearch" id="qSearch" placeholder="Surah dhoondein… (naam ya number)" aria-label="Search surah">
+          <div class="slist" id="slist"></div>
+        </div>
+        <div id="qReader" style="display:none">
+          <div class="rbar">
+            <button class="back" id="qBack" aria-label="Back to surah list">&#8592;</button>
+            <h2 id="rTitle">&mdash;</h2>
+            <select id="rQari" aria-label="Choose reciter"></select>
+            <button class="rplayall" id="rPlay">Play Surah</button>
+          </div>
+          <div id="ayahs"></div>
+        </div>
+      </div>
+
+      <div class="qview" data-qv="duas">
+        <div class="dchips" id="dchips"></div>
+        <div id="dlist"></div>
+      </div>
+
+      <div class="qview" data-qv="tasbeeh">
+        <div class="tasb">
+          <div class="ring" id="tRing" role="button" tabindex="0" aria-label="Count">
+            <div><div class="count" id="tCount">0</div><div class="sub" id="tSub">Tap to count</div></div>
+          </div>
+          <div class="row">
+            <button data-tg="33" class="on">33</button>
+            <button data-tg="99">99</button>
+            <button data-tg="0">Free</button>
+            <button id="tReset">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="qview" data-qv="qibla">
+        <div class="qib">
+          <div class="dial">
+            <svg class="kaaba" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 21 7v10l-9 4.5L3 17V7z"/><path d="M3 7l9 4.5 9-4.5M12 11.5v10"/></svg>
+            <div class="needle" id="qNeedle"></div>
+            <div class="hub"></div>
+          </div>
+          <div class="deg" id="qDeg">&mdash;</div>
+          <div class="note" id="qNote">Location allow karein to qibla direction nikal aayegi.</div>
+        </div>
+      </div>
     </section>
 
     <!-- VIDEOS -->
@@ -288,6 +393,7 @@ a{color:inherit}
   <div class="box"><iframe id="frame" title="YouTube video" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
 </div>
 
+<script src="quran-data.js"></script>
 <script>
 /* ---------- data ---------- */
 var VIDEOS=[
@@ -372,6 +478,154 @@ function ipLoc(){
 if(navigator.geolocation){
   navigator.geolocation.getCurrentPosition(function(p){aladhan(p.coords.latitude,p.coords.longitude,null,null)},function(){ipLoc()},{timeout:8000,maximumAge:600000});
 }else{ipLoc()}
+
+/* ---------- Quran / Duas / Tasbeeh / Qibla ---------- */
+function q$(id){return document.getElementById(id)}
+function fmtQ(x){return ('00'+x).slice(-3)}
+var qariIdx=0;
+
+/* tabs */
+function showQV(v){
+  document.querySelectorAll('.qview').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-qv')===v)});
+  document.querySelectorAll('.qtabs button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-qt')===v)});
+  if(v==='quran')loadQuranText();
+}
+document.addEventListener('click',function(e){var b=e.target.closest('[data-qt]');if(b)showQV(b.getAttribute('data-qt'))});
+
+/* surah list + lazy text load */
+var QTLOAD=null;
+function loadQuranText(){
+  if(window.QTEXT)return Promise.resolve();
+  if(QTLOAD)return QTLOAD;
+  QTLOAD=new Promise(function(res,rej){var s=document.createElement('script');s.src='quran.js';s.onload=res;s.onerror=rej;document.body.appendChild(s)});
+  return QTLOAD;
+}
+function renderSList(){
+  var q=(q$('qSearch').value||'').toLowerCase();
+  q$('slist').innerHTML=CHMETA.filter(function(c){
+    return !q||(c[1]||'').toLowerCase().indexOf(q)>=0||(c[2]||'').toLowerCase().indexOf(q)>=0||(''+c[0])===q;
+  }).map(function(c){
+    return '<button class="srow" data-s="'+c[0]+'"><span class="num">'+c[0]+'</span>'+
+      '<span><span class="nm">'+c[1]+'</span><br><span class="mt">'+c[2]+' &middot; '+c[3]+' ayat &middot; '+c[4]+'</span></span>'+
+      '<span class="arn">'+(c[5]||'')+'</span></button>';
+  }).join('');
+}
+q$('qSearch').addEventListener('input',renderSList);
+renderSList();
+
+/* reader */
+var curS=null,curA=0,audio=null,playing=false;
+q$('rQari').innerHTML=QARIS.map(function(q,i){return '<option value="'+i+'">'+q.n+'</option>'}).join('');
+function auURL(n,a){return QARIS[qariIdx].base+fmtQ(n)+fmtQ(a)+'.mp3'}
+function openSurah(n){
+  var c=CHMETA.filter(function(x){return x[0]===n})[0];if(!c)return;curS=n;
+  q$('rTitle').textContent=c[0]+'. '+c[1]+' — '+c[2];
+  q$('qListWrap').style.display='none';q$('qReader').style.display='block';
+  q$('ayahs').innerHTML='<p class="psub">Quran load ho raha hai…</p>';
+  document.querySelector('.panel.on').scrollTop=0;
+  loadQuranText().then(function(){
+    var ays=(window.QTEXT&&QTEXT[n])||[];
+    if(!ays.length){q$('ayahs').innerHTML='<p class="psub">Is surah ka text load nahi hua — internet check karein.</p>';return}
+    q$('ayahs').innerHTML=ays.map(function(a,i){
+      var y=i+1;
+      return '<div class="ayah" data-a="'+y+'"><div class="top"><span class="medal">'+y+'</span>'+
+        '<button class="play" data-play="'+y+'" aria-label="Play ayah '+y+'">&#9654;</button></div>'+
+        '<div class="ar">'+a[0]+'</div><div class="tr">'+a[1]+'</div></div>';
+    }).join('');
+  }).catch(function(){q$('ayahs').innerHTML='<p class="psub">Quran load nahi ho saka — internet check karein.</p>'});
+}
+q$('qBack').addEventListener('click',function(){stopAudio();q$('qReader').style.display='none';q$('qListWrap').style.display='block'});
+function markAyah(a){
+  document.querySelectorAll('.ayah').forEach(function(x){x.classList.toggle('cur',+x.getAttribute('data-a')===a)});
+  var el=document.querySelector('.ayah[data-a="'+a+'"]');if(el&&playing)el.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function stopAudio(){
+  if(audio){audio.onended=null;try{audio.pause()}catch(e){}audio=null}
+  playing=false;q$('rPlay').textContent='Play Surah';q$('rPlay').classList.remove('stop');
+}
+function playAyah(a){
+  if(!window.QTEXT)return;
+  stopAudio();
+  curA=a;playing=true;
+  audio=new Audio(auURL(curS,a));audio.play().catch(function(){});
+  markAyah(a);
+  q$('rPlay').textContent='Stop';q$('rPlay').classList.add('stop');
+  audio.onended=function(){
+    var total=(QTEXT[curS]||[]).length;
+    if(curA<total)playAyah(curA+1);else stopAudio();
+  };
+}
+q$('rPlay').addEventListener('click',function(){if(playing)stopAudio();else playAyah(1)});
+q$('rQari').addEventListener('change',function(){qariIdx=+this.value;if(playing)playAyah(curA)});
+q$('ayahs').addEventListener('click',function(e){
+  var b=e.target.closest('[data-play]');if(!b)return;var a=+b.getAttribute('data-play');
+  if(playing&&curA===a){stopAudio()}else playAyah(a);
+});
+q$('slist').addEventListener('click',function(e){var b=e.target.closest('[data-s]');if(b)openSurah(+b.getAttribute('data-s'))});
+
+/* duas */
+function renderDuas(cat){
+  q$('dlist').innerHTML=DUAS.filter(function(d){return !cat||d.c===cat}).map(function(d){
+    return '<div class="dua"><h3>'+d.name+'</h3><div class="desc">'+(d.desc||'')+'</div>'+
+      '<div class="ar">'+d.ar+'</div>'+(d.tr2?'<div class="tr2">'+d.tr2+'</div>':'')+'<div class="tr">'+(d.tr||'')+'</div></div>';
+  }).join('');
+}
+(function(){
+  var cats=[];DUAS.forEach(function(d){if(cats.indexOf(d.c)<0)cats.push(d.c)});
+  q$('dchips').innerHTML='<button class="on" data-dc="">All</button>'+cats.map(function(c){return '<button data-dc="'+c+'">'+c+'</button>'}).join('');
+  q$('dchips').addEventListener('click',function(e){
+    var b=e.target.closest('[data-dc]');if(!b)return;
+    document.querySelectorAll('#dchips button').forEach(function(x){x.classList.toggle('on',x===b)});
+    renderDuas(b.getAttribute('data-dc'));
+  });
+  renderDuas('');
+})();
+
+/* tasbeeh */
+var tCount=parseInt(localStorage.getItem('masjid-tasbeeh')||'0',10)||0,tGoal=33;
+function tRender(){
+  q$('tCount').textContent=tCount;
+  q$('tSub').textContent=tGoal?(tCount>=tGoal?'Complete — MashaAllah!':'Target '+tGoal):'Free count';
+}
+tRender();
+function tTick(){tCount++;if(navigator.vibrate)navigator.vibrate(12);try{localStorage.setItem('masjid-tasbeeh',''+tCount)}catch(e){}tRender()}
+q$('tRing').addEventListener('click',tTick);
+q$('tRing').addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter'){e.preventDefault();tTick()}});
+document.querySelectorAll('[data-tg]').forEach(function(b){b.addEventListener('click',function(){
+  tGoal=+b.getAttribute('data-tg');
+  document.querySelectorAll('[data-tg]').forEach(function(x){x.classList.toggle('on',x===b)});
+  tRender();
+})});
+q$('tReset').addEventListener('click',function(){tCount=0;try{localStorage.setItem('masjid-tasbeeh','0')}catch(e){}tRender()});
+
+/* qibla */
+function qiblaBearing(lat,lng){
+  var p1=lat*Math.PI/180,p2=21.4225*Math.PI/180,l1=lng*Math.PI/180,l2=39.8262*Math.PI/180,d=l2-l1;
+  var y=Math.sin(d),x=Math.cos(p1)*Math.tan(p2)-Math.sin(p1)*Math.cos(d);
+  return (Math.atan2(y,x)*180/Math.PI+360)%360;
+}
+var qibla=null,heading=null;
+function drawQibla(){
+  if(qibla==null)return;
+  q$('qDeg').textContent=Math.round(qibla)+'°';
+  q$('qNeedle').style.transform='rotate('+((heading!=null)?(qibla-heading):qibla)+'deg)';
+  q$('qNote').textContent=heading!=null?'Phone ko flat rakhein — needle Kaaba ki taraf hai.'
+    :'Qibla North se '+Math.round(qibla)+'° par. Live compass ke liye phone par allow karein.';
+}
+function setQibla(lat,lng){qibla=qiblaBearing(lat,lng);drawQibla()}
+function hQ(e){
+  var h=(e.webkitCompassHeading!=null)?e.webkitCompassHeading:(e.alpha!=null?(360-e.alpha):null);
+  if(h!=null){heading=h;drawQibla()}
+}
+if(navigator.geolocation){
+  navigator.geolocation.getCurrentPosition(function(p){setQibla(p.coords.latitude,p.coords.longitude)},
+    function(){fetch('https://ipwho.is/').then(function(r){return r.json()}).then(function(j){if(j&&j.latitude!=null)setQibla(j.latitude,j.longitude)}).catch(function(){})},
+    {timeout:8000,maximumAge:600000});
+}else{
+  fetch('https://ipwho.is/').then(function(r){return r.json()}).then(function(j){if(j&&j.latitude!=null)setQibla(j.latitude,j.longitude)}).catch(function(){});
+}
+addEventListener('deviceorientationabsolute',hQ,true);
+addEventListener('deviceorientation',hQ,true);
 
 /* ---------- PWA ---------- */
 if('serviceWorker' in navigator && location.protocol==='https:'){

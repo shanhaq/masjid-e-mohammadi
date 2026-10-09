@@ -1,8 +1,8 @@
-const CACHE = 'masjid-site-v5';
+const CACHE = 'masjid-site-v6';
 const ASSETS = [
   './', './index.html', './bg-calligraphy.jpg', './bg-mosque.jpg',
   './icon_masjid.svg', './icon-192.png', './icon-512.png',
-  './apple-touch-icon.png', './manifest.webmanifest'
+  './apple-touch-icon.png', './manifest.webmanifest', './quran-data.js'
 ];
 
 self.addEventListener('install', e => {

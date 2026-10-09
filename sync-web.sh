@@ -11,10 +11,12 @@ rm -rf "$DST"
 mkdir -p "$DST/app"
 
 # ---- website (front page) ----
-cp "$SITE/index.html" "$SITE/manifest.webmanifest" "$SITE/sw.js" "$DST/"
+cp "$SITE/index.html" "$SITE/manifest.webmanifest" "$SITE/sw.js" "$SITE/quran-data.js" "$DST/"
 cp "$APP/bg-calligraphy.jpg" "$APP/bg-mosque.jpg" "$DST/"
 cp "$APP/icon_masjid.svg" "$APP/icon-192.png" "$APP/icon-512.png" \
    "$APP/icon-maskable-512.png" "$APP/apple-touch-icon.png" "$DST/"
+# offline Quran text + Amiri font for the website's in-page reader
+cp "$APP/quran.js" "$APP/quran-font.ttf" "$DST/"
 
 # ---- app (full screen, installable PWA) ----
 for f in index.html quran.js quran-font.ttf azan.mp3 bg-calligraphy.jpg bg-mosque.jpg \
