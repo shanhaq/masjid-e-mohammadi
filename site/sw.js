@@ -1,4 +1,4 @@
-const CACHE = 'masjid-site-v4';
+const CACHE = 'masjid-site-v5';
 const ASSETS = [
   './', './index.html', './bg-calligraphy.jpg', './bg-mosque.jpg',
   './icon_masjid.svg', './icon-192.png', './icon-512.png',
@@ -23,6 +23,19 @@ self.addEventListener('fetch', e => {
   const u = new URL(r.url);
   if (u.origin !== location.origin) return;      // fonts / aladhan / youtube -> network
   if (u.pathname.indexOf('/app/') > -1) return;  // app manages its own cache
+
+  // HTML / navigations -> NETWORK FIRST (so updates always show); fall back to cache offline
+  if (r.mode === 'navigate' || r.destination === 'document') {
+    e.respondWith(
+      fetch(r).then(res => {
+        if (res && res.ok) { const cp = res.clone(); caches.open(CACHE).then(c => c.put(r, cp)); }
+        return res;
+      }).catch(() => caches.match(r).then(hit => hit || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  // static assets -> cache first
   e.respondWith(
     caches.match(r).then(hit => hit || fetch(r).then(res => {
       if (res && res.ok && res.type === 'basic') {
