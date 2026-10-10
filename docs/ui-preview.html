@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Masjid e Mohammadi — 3 Design Directions</title>
+<meta name="theme-color" content="#0B1220">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@500;600&family=Source+Sans+3:wght@400;600&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#070B14;color:#E8F0FA;font-family:Manrope,system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:1240px;margin:0 auto;padding:48px 22px 90px}
+.top h1{font-size:clamp(1.6rem,4vw,2.6rem);font-weight:600;letter-spacing:-.02em}
+.top p{color:#96A7BE;max-width:640px;margin-top:8px;font-size:.98rem}
+.top b{color:#8CCBF7}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chips span{font-size:.78rem;padding:5px 11px;border:1px solid rgba(140,203,247,.28);border-radius:999px;color:#BFD6EF}
+
+/* ---------------- shared component skeleton ---------------- */
+.dir{border-radius:26px;overflow:hidden;margin-top:64px;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.dir-head{padding:30px 34px 0;display:flex;flex-wrap:wrap;align-items:baseline;gap:14px}
+.badge{font-size:.72rem;font-weight:700;padding:4px 11px;border-radius:999px;letter-spacing:.06em}
+.mood{margin-left:auto;font-size:.95rem;opacity:.82}
+.frame{padding:30px 34px 36px}
+.win{position:relative;border-radius:20px;overflow:hidden;box-shadow:inset 0 0 0 1px var(--winline),0 24px 60px rgba(0,0,0,.42)}
+.topbar{display:flex;align-items:center;gap:11px;padding:14px 20px}
+.topbar svg{width:24px;height:24px;flex:none}
+.topbar b{font-size:.96rem;letter-spacing:.01em}
+.topbar .greet{margin-left:auto;font-size:.82rem;opacity:.85}
+.winbody{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:18px 20px 0}
+@media(max-width:760px){.winbody{grid-template-columns:1fr}}
+.card{border-radius:16px;padding:18px}
+.card h3{font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;opacity:.6;margin-bottom:12px;font-weight:600}
+.field{border-radius:10px;padding:11px 13px;font-size:.9rem;margin-bottom:10px;outline:none;width:100%}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:12px;padding:12px 20px;font-size:.92rem;font-weight:600;cursor:pointer;width:100%;
+  transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s cubic-bezier(.22,1,.36,1),filter .25s ease}
+.btn:hover{transform:translateY(-5px);filter:brightness(1.05)}
+.btn:active{transform:translateY(-1px) scale(.98);transition-duration:.1s}
+.savepop{border-radius:14px;padding:12px 14px;margin-top:12px;font-size:.82rem}
+.savepop .row{display:flex;gap:8px;margin-top:9px}
+.savepop button{border:none;border-radius:9px;padding:7px 14px;font-size:.8rem;font-weight:600;cursor:pointer}
+.pray{border-radius:14px;padding:6px 8px}
+.rowline{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;font-size:.9rem}
+.rowline .t{opacity:.55;font-size:.78rem;letter-spacing:.05em}
+.live{display:inline-flex;align-items:center;gap:6px}
+.live i{width:7px;height:7px;border-radius:50%;background:#4ADE80;animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.5)}50%{box-shadow:0 0 0 5px rgba(74,222,128,0)}}
+.alert{font-size:.8rem;padding:9px 12px;border-radius:10px;margin-top:10px;opacity:.92}
+
+/* dock */
+.dock{position:relative;display:flex;justify-content:center;gap:6px;margin:20px 20px 0;padding:10px 12px;border-radius:18px}
+.dock .tile{position:relative;width:52px;height:52px;border-radius:15px;display:grid;place-items:center;cursor:pointer;border:none;background:transparent;
+  transition:transform var(--dockease),background .25s,box-shadow .25s}
+.tile svg{width:22px;height:22px}
+.tile:hover{transform:translateY(-9px) scale(1.06)}
+.tile.on{background:var(--acctile)}
+.tile .tt{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(4px);font-size:.72rem;font-weight:600;padding:3px 9px;border-radius:7px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s}
+.tile:hover .tt{opacity:1;transform:translateX(-50%) translateY(0)}
+.sb{position:absolute;height:5px;width:32px;border-radius:99px;left:calc(50% - 3px);bottom:-13px;transform:translateX(-50%);opacity:.85}
+.docknote{text-align:center;font-size:.74rem;opacity:.55;margin-top:22px}
+.dir{opacity:0;transform:translateY(36px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.dir.show{opacity:1;transform:none}
+.end{margin-top:72px;text-align:center;font-size:1.04rem;color:#AFC3DC}
+.end b{color:#8CCBF7}
+@keyframes drift{to{transform:translate(50px,30px)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1>Masjid e Mohammadi — website ke <b>3 design</b></h1>
+    <p>Sab me same features: <b>login + "Save login?" popup</b> · <b>profile setup</b>
+      (name/gender/DOB/language, image optional) · <b>Home me koi countdown nahi</b> ·
+      <b>Qibla auto | manual</b> · <b>Language = sab options</b> · <b>bottom dock</b>
+      (hover pe naam, click pe tab). Bas look alag hai. Kaunsa number?</p>
+    <div class="chips">
+      <span>① Dark arctic glass</span><span>② Light cream editorial</span><span>③ Dark liquid premium</span>
+    </div>
+  </div>
+
+<!-- ================= ① ARCTIC GLASS ================= -->
+<section class="dir" id="d1" style="--winline:rgba(140,203,247,.22);--dockease:cubic-bezier(.34,1.4,.64,1)">
+  <div class="dir-head">
+    <span class="badge" style="background:#8CCBF7;color:#06121F">①</span>
+    <h2 style="font-family:Fraunces,serif;font-size:1.7rem;font-weight:600">Arctic Glass</h2>
+    <span class="mood">spiritual · calm · premium</span>
+  </div>
+  <div class="frame" style="background:linear-gradient(180deg,#0A1422,#071018)">
+    <div class="win" style="background:url('bg-calligraphy.jpg') center 30%/cover no-repeat;--winline:rgba(255,255,255,.14)">
+      <div style="background:linear-gradient(180deg,rgba(7,16,28,.72),rgba(7,16,28,.9))">
+        <div class="topbar" style="border-bottom:1px solid rgba(140,203,247,.16)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#8CCBF7" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-2.6 3.2-6 2-6 6.6V20h12v-10.4C18 5 14.6 6.2 12 3Z"/><path d="M9.6 20v-4.2a2.4 2.4 0 0 1 4.8 0V20"/></svg>
+          <b>Masjid e Mohammadi</b><span class="greet">Assalamu alaikum, Farhan</span>
+        </div>
+        <div class="winbody">
+          <div>
+            <div class="card" style="background:rgba(14,26,42,.72);backdrop-filter:blur(20px) saturate(150%);border:1px solid rgba(140,203,247,.25);box-shadow:inset 0 1px 0 rgba(255,255,255,.15)">
+              <h3>Login</h3>
+              <div class="field" style="background:rgba(5,12,22,.72);border:1px solid rgba(140,203,247,.3);color:#EAF4FF">••••••••</div>
+              <button class="btn" style="background:linear-gradient(135deg,#A8D9FF,#5CA8F0);color:#04121F;box-shadow:0 10px 26px rgba(92,168,240,.35),inset 0 1px 0 rgba(255,255,255,.5)">Unlock</button>
+              <div class="savepop" style="background:rgba(255,255,255,.08);border:1px solid rgba(140,203,247,.3)">
+                <b style="font-size:.82rem">Save login?</b>
+                <p style="opacity:.7;font-size:.74rem;margin-top:2px">Agli baar seedha khulega</p>
+                <div class="row">
+                  <button style="background:linear-gradient(135deg,#A8D9FF,#5CA8F0);color:#04121F">Save</button>
+                  <button style="background:rgba(255,255,255,.12);color:#EAF4FF">Not now</button>
+                </div>
+              </div>
+            </div>
+            <div class="alert" style="background:rgba(140,203,247,.12);border:1px solid rgba(140,203,247,.3)">📢 Jummah baya 12:45 — masjid me aaiye</div>
+          </div>
+          <div>
+            <div class="card" style="background:rgba(14,26,42,.66);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.12)">
+              <h3>Prayer Times</h3>
+              <div class="rowline"><span>Fajr</span><b>5:14</b></div>
+              <div class="rowline" style="background:rgba(255,255,255,.05);border-radius:10px"><span>Dhuhr</span><b>12:23</b></div>
+              <div class="rowline"><span>Asr</span><b>15:48</b></div>
+              <div class="rowline" style="background:rgba(74,222,128,.07);border-radius:10px"><span class="live"><i></i>Maghrib — abhi</span><b>18:31</b></div>
+              <div class="rowline"><span>Isha</span><b>19:52</b></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px">
+              <div style="flex:1;background:rgba(255,255,255,.07);border-radius:12px;padding:10px 12px;border:1px solid rgba(255,255,255,.1)">
+                <div style="font-size:.68rem;opacity:.55">QIBLA</div><b style="font-size:.92rem">167.4°</b>
+              </div>
+              <div style="flex:1;background:rgba(255,255,255,.07);border-radius:12px;padding:10px 12px;border:1px solid rgba(255,255,255,.1)">
+                <div style="font-size:.68rem;opacity:.55">HIJRI</div><b style="font-size:.92rem">Rabīʿ I 22</b>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dock" style="background:rgba(10,18,32,.78);backdrop-filter:blur(22px);border:1px solid rgba(140,203,247,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.14)">
+          <button class="tile on" style="--acctile:linear-gradient(135deg,#A8D9FF,#5CA8F0)"><svg fill="none" stroke="#04121F" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 12l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span class="tt" style="background:#0D1B2E;border:1px solid rgba(140,203,247,.4)">Home</span></button>
+          <button class="tile"><svg fill="none" stroke="#BFD6EF" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15z"/><path d="M20 17v5H6.5a2.5 2.5 0 0 1 0-5"/></svg><span class="tt" style="background:#0D1B2E;border:1px solid rgba(140,203,247,.4)">Quran</span></button>
+          <button class="tile"><svg fill="none" stroke="#BFD6EF" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3"/></svg><span class="tt" style="background:#0D1B2E;border:1px solid rgba(140,203,247,.4)">Videos</span></button>
+          <button class="tile"><svg fill="none" stroke="#BFD6EF" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span class="tt" style="background:#0D1B2E;border:1px solid rgba(140,203,247,.4)">Qibla</span></button>
+          <button class="tile"><svg fill="none" stroke="#BFD6EF" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.6 10a16 16 0 0 0 5.4 5.4l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"/></svg><span class="tt" style="background:#0D1B2E;border:1px solid rgba(140,203,247,.4)">Contact</span></button>
+          <button class="tile"><svg fill="none" stroke="#BFD6EF" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="tt" style="background:#0D1B2E;border:1px solid rgba(140,203,247,.4)">Profile</span></button>
+          <span class="sb" style="background:#8CCBF7"></span>
+        </div>
+        <p class="docknote">Bottom dock — hover pe naam, click pe tab. Mobile pe bhi yahi.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ② CREAM EDITORIAL ================= -->
+<section class="dir" id="d2" style="--winline:rgba(20,20,20,.12);--dockease:cubic-bezier(.22,.7,.3,1)">
+  <div class="dir-head">
+    <span class="badge" style="background:#2060E0;color:#fff">②</span>
+    <h2 style="font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:600;color:#16130E">Cream Editorial</h2>
+    <span class="mood" style="color:#5A554C">warm · editorial · dignified</span>
+  </div>
+  <div class="frame" style="background:linear-gradient(160deg,#F7F4EE,#EFEAE0)">
+    <div class="win" style="background:#FBF9F4;--winline:rgba(20,20,20,.1)">
+      <div class="topbar" style="border-bottom:1px solid #E5DFD3">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#2060E0" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-2.6 3.2-6 2-6 6.6V20h12v-10.4C18 5 14.6 6.2 12 3Z"/><path d="M9.6 20v-4.2a2.4 2.4 0 0 1 4.8 0V20"/></svg>
+        <b style="color:#16130E">Masjid e Mohammadi</b><span class="greet" style="color:#5A554C">Assalamu alaikum, Farhan</span>
+      </div>
+      <div class="winbody">
+        <div>
+          <div class="card" style="background:#fff;border:1px solid #E5DFD3;box-shadow:0 14px 38px rgba(90,80,60,.1)">
+            <h3 style="color:#16130E">Login</h3>
+            <div class="field" style="background:#F7F4EE;border:1px solid #DDD5C4;color:#555">••••••••</div>
+            <button class="btn" style="background:#2060E0;color:#fff;box-shadow:0 12px 26px rgba(32,96,224,.32)">Unlock</button>
+            <div class="savepop" style="background:#F7F4EE;border:1px solid #E5DFD3">
+              <b style="color:#16130E;font-size:.82rem">Save login?</b>
+              <p style="color:#6B6458;font-size:.74rem;margin-top:2px">Agli baar seedha khulega</p>
+              <div class="row">
+                <button style="background:#2060E0;color:#fff">Save</button>
+                <button style="background:#fff;color:#16130E;border:1px solid #DDD5C4">Not now</button>
+              </div>
+            </div>
+          </div>
+          <div class="alert" style="background:#2060E0;color:#fff">📢 Jummah baya 12:45 — masjid me aaiye</div>
+        </div>
+        <div>
+          <div class="card" style="background:transparent;border:1px solid #E5DFD3">
+            <h3 style="color:#16130E">Prayer Times</h3>
+            <div class="rowline" style="color:#16130E;border-bottom:1px solid #EFEAE0;border-radius:0"><span style="color:#5A554C">Fajr</span><b>5:14</b></div>
+            <div class="rowline" style="color:#16130E;border-bottom:1px solid #EFEAE0;border-radius:0"><span style="color:#5A554C">Dhuhr</span><b>12:23</b></div>
+            <div class="rowline" style="color:#16130E;border-bottom:1px solid #EFEAE0;border-radius:0"><span style="color:#5A554C">Asr</span><b>15:48</b></div>
+            <div class="rowline" style="color:#16130E;background:#EAEFFB;border-radius:8px;margin-top:4px"><span class="live" style="color:#16130E"><i></i>Maghrib — abhi</span><b>18:31</b></div>
+            <div class="rowline" style="color:#16130E"><span style="color:#5A554C">Isha</span><b>19:52</b></div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:14px;flex-wrap:wrap">
+            <div style="flex:1;min-width:130px">
+              <div style="font-size:.68rem;letter-spacing:.08em;color:#5A554C;text-transform:uppercase">Qibla</div>
+              <b style="font-size:1.3rem;color:#16130E;font-family:'Playfair Display',serif">167.4°</b>
+            </div>
+            <div style="flex:1;min-width:130px">
+              <div style="font-size:.68rem;letter-spacing:.08em;color:#5A554C;text-transform:uppercase">Hijri</div>
+              <b style="font-size:1.3rem;color:#16130E;font-family:'Playfair Display',serif">Rabīʿ I 22</b>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dock" style="background:rgba(255,255,255,.85);border:1px solid #E5DFD3;box-shadow:0 16px 40px rgba(90,80,60,.14)">
+        <button class="tile on" style="--acctile:#2060E0"><svg fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 12l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span class="tt" style="background:#fff;border:1px solid #DDD5C4;color:#16130E">Home</span></button>
+        <button class="tile"><svg fill="none" stroke="#2060E0" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15z"/><path d="M20 17v5H6.5a2.5 2.5 0 0 1 0-5"/></svg><span class="tt" style="background:#fff;border:1px solid #DDD5C4;color:#16130E">Quran</span></button>
+        <button class="tile"><svg fill="none" stroke="#2060E0" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3"/></svg><span class="tt" style="background:#fff;border:1px solid #DDD5C4;color:#16130E">Videos</span></button>
+        <button class="tile"><svg fill="none" stroke="#2060E0" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span class="tt" style="background:#fff;border:1px solid #DDD5C4;color:#16130E">Qibla</span></button>
+        <button class="tile"><svg fill="none" stroke="#2060E0" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.6 10a16 16 0 0 0 5.4 5.4l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"/></svg><span class="tt" style="background:#fff;border:1px solid #DDD5C4;color:#16130E">Contact</span></button>
+        <button class="tile"><svg fill="none" stroke="#2060E0" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="tt" style="background:#fff;border:1px solid #DDD5C4;color:#16130E">Profile</span></button>
+        <span class="sb" style="background:#2060E0"></span>
+      </div>
+      <p class="docknote">Bottom dock — hover pe naam, click pe tab. Mobile pe bhi yahi.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ③ LIQUID SLATE ================= -->
+<section class="dir" id="d3" style="--winline:rgba(255,255,255,.12);--dockease:cubic-bezier(.16,1,.3,1)">
+  <div class="dir-head">
+    <span class="badge" style="background:#6EA8FE;color:#06121F">③</span>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:1.7rem;font-weight:700">Liquid Slate</h2>
+    <span class="mood">sleek · cinematic · modern</span>
+  </div>
+  <div class="frame" style="background:linear-gradient(160deg,#0B1020 30%,#101A31)">
+    <div style="position:relative;overflow:hidden;border-radius:20px">
+      <div style="position:absolute;width:420px;height:420px;border-radius:50%;filter:blur(90px);opacity:.5;background:#2A4A8F;top:-120px;left:-80px;animation:drift 9s ease-in-out infinite alternate"></div>
+      <div style="position:absolute;width:360px;height:360px;border-radius:50%;filter:blur(80px);opacity:.4;background:#16356E;bottom:-140px;right:-60px;animation:drift 11s ease-in-out infinite alternate-reverse"></div>
+      <div class="win" style="--winline:rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)">
+        <div class="topbar" style="border-bottom:1px solid rgba(255,255,255,.08)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#6EA8FE" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-2.6 3.2-6 2-6 6.6V20h12v-10.4C18 5 14.6 6.2 12 3Z"/><path d="M9.6 20v-4.2a2.4 2.4 0 0 1 4.8 0V20"/></svg>
+          <b>Masjid e Mohammadi</b><span class="greet">Assalamu alaikum, Farhan</span>
+        </div>
+        <div class="winbody">
+          <div>
+            <div class="card" style="background:rgba(255,255,255,.055);backdrop-filter:blur(28px) saturate(160%);border:1px solid rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.14)">
+              <h3>Login</h3>
+              <div class="field" style="background:rgba(8,13,26,.6);border:1px solid rgba(110,168,254,.35);color:#E6EEFB">••••••••</div>
+              <button class="btn" style="background:linear-gradient(135deg,#8FBEFF,#4E8EF0);color:#06121F;box-shadow:0 12px 30px rgba(78,142,240,.4),inset 0 1px 0 rgba(255,255,255,.4)">Unlock</button>
+              <div class="savepop" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)">
+                <b style="font-size:.82rem">Save login?</b>
+                <p style="opacity:.65;font-size:.74rem;margin-top:2px">Agli baar seedha khulega</p>
+                <div class="row">
+                  <button style="background:linear-gradient(135deg,#8FBEFF,#4E8EF0);color:#06121F">Save</button>
+                  <button style="background:rgba(255,255,255,.1);color:#E6EEFB">Not now</button>
+                </div>
+              </div>
+            </div>
+            <div class="alert" style="background:rgba(110,168,254,.12);border:1px solid rgba(110,168,254,.4)">📢 Jummah baya 12:45 — masjid me aaiye</div>
+          </div>
+          <div>
+            <div class="card" style="background:rgba(255,255,255,.05);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.1)">
+              <h3>Prayer Times</h3>
+              <div class="rowline" style="border-radius:10px"><span>Fajr</span><b>5:14</b></div>
+              <div class="rowline" style="background:rgba(255,255,255,.05);border-radius:10px"><span>Dhuhr</span><b>12:23</b></div>
+              <div class="rowline" style="border-radius:10px"><span>Asr</span><b>15:48</b></div>
+              <div class="rowline" style="background:rgba(74,222,128,.08);border-radius:10px;border:1px solid rgba(74,222,128,.25)"><span class="live"><i></i>Maghrib — abhi</span><b>18:31</b></div>
+              <div class="rowline" style="border-radius:10px"><span>Isha</span><b>19:52</b></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:12px">
+              <div style="flex:1;background:rgba(255,255,255,.06);border-radius:12px;padding:10px 12px;border:1px solid rgba(255,255,255,.1)"><div style="font-size:.68rem;opacity:.55">QIBLA</div><b style="font-size:.92rem">167.4°</b></div>
+              <div style="flex:1;background:rgba(255,255,255,.06);border-radius:12px;padding:10px 12px;border:1px solid rgba(255,255,255,.1)"><div style="font-size:.68rem;opacity:.55">HIJRI</div><b style="font-size:.92rem">Rabīʿ I 22</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="dock" style="background:rgba(13,19,38,.72);backdrop-filter:blur(26px) saturate(160%);border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.16)">
+          <button class="tile on" style="--acctile:linear-gradient(135deg,#8FBEFF,#4E8EF0)"><svg fill="none" stroke="#06121F" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 12l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span class="tt" style="background:#101A31;border:1px solid rgba(255,255,255,.16)">Home</span></button>
+          <button class="tile"><svg fill="none" stroke="#9EC1F5" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15z"/><path d="M20 17v5H6.5a2.5 2.5 0 0 1 0-5"/></svg><span class="tt" style="background:#101A31;border:1px solid rgba(255,255,255,.16)">Quran</span></button>
+          <button class="tile"><svg fill="none" stroke="#9EC1F5" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3"/></svg><span class="tt" style="background:#101A31;border:1px solid rgba(255,255,255,.16)">Videos</span></button>
+          <button class="tile"><svg fill="none" stroke="#9EC1F5" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span class="tt" style="background:#101A31;border:1px solid rgba(255,255,255,.16)">Qibla</span></button>
+          <button class="tile"><svg fill="none" stroke="#9EC1F5" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.6 10a16 16 0 0 0 5.4 5.4l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"/></svg><span class="tt" style="background:#101A31;border:1px solid rgba(255,255,255,.16)">Contact</span></button>
+          <button class="tile"><svg fill="none" stroke="#9EC1F5" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="tt" style="background:#101A31;border:1px solid rgba(255,255,255,.16)">Profile</span></button>
+          <span class="sb" style="background:#6EA8FE"></span>
+        </div>
+        <p class="docknote">Bottom dock — hover pe naam, click pe tab. Mobile pe bhi yahi.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="end">Kaunsa number pasand aaya? <b>①</b> / <b>②</b> / <b>③</b> — ya mix: "② ka design, ① ka background" jaisi baat bhi chalegi 🙂</div>
+</div>
+<script>
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('show');io.unobserve(e.target)}})},{threshold:.12});
+  document.querySelectorAll('.dir').forEach(function(d){io.observe(d)});
+</script>
+</body>
+</html>

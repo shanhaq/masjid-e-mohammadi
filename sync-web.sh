@@ -26,7 +26,7 @@ for f in index.html quran.js quran-font.ttf azan.mp3 bg-calligraphy.jpg bg-mosqu
 done
 
 # ---- preview demos (kept in site/ so they survive the rebuild) ----
-for f in admin-preview.html sidebar-reel-preview.html; do
+for f in admin-preview.html sidebar-reel-preview.html ui-preview.html; do
   [ -f "$SITE/$f" ] && cp "$SITE/$f" "$DST/"
 done
 
