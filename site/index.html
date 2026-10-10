@@ -111,6 +111,10 @@ a{color:inherit}
 .tcell.on{background:linear-gradient(160deg,rgba(140,203,247,.2),rgba(255,255,255,.05));border-color:var(--accent);box-shadow:0 18px 40px rgba(62,155,232,.22)}
 .dateline{margin:0 0 30px;font-size:17px;color:var(--muted)}
 .locline{margin-top:28px;font-size:15.5px;color:var(--muted)}
+.locbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:0 0 22px}
+.locbar select{background:rgba(10,15,24,.92);border:1px solid var(--line);color:#EAF3FC;font-family:inherit;
+  font-size:16px;padding:13px 16px;border-radius:13px;cursor:pointer;min-width:240px;max-width:100%}
+.locbar select:focus{border-color:var(--accent);outline:none}
 
 /* generic info cards */
 .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:760px}
@@ -282,7 +286,11 @@ a{color:inherit}
     <!-- TIMES -->
     <section class="panel" id="p-times" data-p="times">
       <div class="blocktitle rv"><span class="eyebrow">Today</span><h2 class="ptitle">Prayer Times</h2>
-        <p class="psub">Aapki location ke hisaab se — Hanafi (Karachi) method.</p></div>
+        <p class="psub">Aapki location ke hisaab se — Hanafi (Karachi) method. Sheher khud bhi chun sakte hain.</p></div>
+      <div class="locbar rv">
+        <select id="citySel" aria-label="Select your city"></select>
+        <button class="btn ghost" id="useLoc" type="button">Use my location</button>
+      </div>
       <p class="dateline" id="dateLine">…</p>
       <div class="tgrid" id="tgrid">
         <div class="tcell"><div class="n">Fajr</div><div class="t" id="t-fajr">—</div></div>
@@ -482,9 +490,43 @@ function ipLoc(){
     });
   });
 }
-if(navigator.geolocation){
-  navigator.geolocation.getCurrentPosition(function(p){aladhan(p.coords.latitude,p.coords.longitude,null,null)},function(){ipLoc()},{timeout:8000,maximumAge:600000});
-}else{ipLoc()}
+/* ---------- city picker (manual location) ---------- */
+var CITIES=[
+ ["Mumbai","India"],["Delhi","India"],["Hyderabad","India"],["Bengaluru","India"],["Kolkata","India"],["Chennai","India"],["Pune","India"],["Ahmedabad","India"],["Lucknow","India"],["Bhopal","India"],["Jaipur","India"],["Kanpur","India"],["Surat","India"],["Nagpur","India"],["Indore","India"],["Patna","India"],["Srinagar","India"],
+ ["Karachi","Pakistan"],["Lahore","Pakistan"],["Islamabad","Pakistan"],["Rawalpindi","Pakistan"],["Peshawar","Pakistan"],["Quetta","Pakistan"],["Multan","Pakistan"],["Faisalabad","Pakistan"],
+ ["Dhaka","Bangladesh"],["Chittagong","Bangladesh"],["Sylhet","Bangladesh"],["Kabul","Afghanistan"],
+ ["Dubai","United Arab Emirates"],["Abu Dhabi","United Arab Emirates"],["Sharjah","United Arab Emirates"],
+ ["Riyadh","Saudi Arabia"],["Jeddah","Saudi Arabia"],["Mecca","Saudi Arabia"],["Medina","Saudi Arabia"],["Dammam","Saudi Arabia"],
+ ["Doha","Qatar"],["Kuwait City","Kuwait"],["Muscat","Oman"],["Manama","Bahrain"],
+ ["Istanbul","Turkey"],["Ankara","Turkey"],["Tehran","Iran"],["Baghdad","Iraq"],["Cairo","Egypt"],["Amman","Jordan"],["Beirut","Lebanon"],
+ ["Kuala Lumpur","Malaysia"],["Jakarta","Indonesia"],["Bandung","Indonesia"],["Singapore","Singapore"],
+ ["London","United Kingdom"],["Birmingham","United Kingdom"],["Manchester","United Kingdom"],
+ ["New York","United States"],["Chicago","United States"],["Houston","United States"],["Los Angeles","United States"],["Dallas","United States"],
+ ["Toronto","Canada"],["Cape Town","South Africa"],["Johannesburg","South Africa"],["Sydney","Australia"],["Melbourne","Australia"]
+];
+var CITYKEY='masjid-city';
+function setLocLine(txt){document.getElementById('locLine').textContent=txt}
+function applyCity(city,country,save){
+  setLocLine('Timings for '+city+(country?', '+country:'')+' · Hanafi (Karachi) method');
+  aladhan(null,null,city,country);
+  if(save!==false){try{localStorage.setItem(CITYKEY,city+'|'+(country||''))}catch(e){}}
+}
+function useGeo(){
+  setLocLine('Detecting your location…');
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(function(p){aladhan(p.coords.latitude,p.coords.longitude,null,null)},function(){ipLoc()},{timeout:8000,maximumAge:600000});
+  }else{ipLoc()}
+}
+(function initLocPicker(){
+  var sel=document.getElementById('citySel');
+  sel.innerHTML='<option value="">Choose your city…</option>'+CITIES.map(function(c){return '<option value="'+c[0]+'|'+c[1]+'">'+c[0]+', '+c[1]+'</option>'}).join('');
+  sel.addEventListener('change',function(){var v=this.value;if(!v)return;var p=v.split('|');applyCity(p[0],p[1])});
+  document.getElementById('useLoc').addEventListener('click',function(){try{localStorage.removeItem(CITYKEY)}catch(e){}sel.value='';useGeo();});
+  var saved=null;try{saved=localStorage.getItem(CITYKEY)}catch(e){}
+  if(saved&&saved.split('|')[0]){sel.value=saved;var p=saved.split('|');applyCity(p[0],p[1]||'',false);return}
+  useGeo();
+  setTimeout(function(){if(!times)setLocLine('Location nahi mili — upar se apna sheher select karein.')},10000);
+})();
 
 /* ---------- Quran / Duas / Tasbeeh / Qibla ---------- */
 function q$(id){return document.getElementById(id)}
