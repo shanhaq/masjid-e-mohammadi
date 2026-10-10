@@ -25,5 +25,10 @@ for f in index.html quran.js quran-font.ttf azan.mp3 bg-calligraphy.jpg bg-mosqu
   cp "$APP/$f" "$DST/app/$f"
 done
 
+# ---- preview demos (kept in site/ so they survive the rebuild) ----
+for f in admin-preview.html sidebar-reel-preview.html; do
+  [ -f "$SITE/$f" ] && cp "$SITE/$f" "$DST/"
+done
+
 : > "$DST/.nojekyll"
 echo "synced $(find "$DST" -type f | wc -l) files to docs/ (site at /, app at /app/)"

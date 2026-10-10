@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Masjid Admin — Complete Control Panel (Preview)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#05080E; --ink:#F2F7FD; --body:#A9BACD; --muted:#7E8EA3;
+  --accent:#8CCBF7; --accent2:#3E9BE8; --line:rgba(255,255,255,.12);
+  --glass:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+  --sh:0 30px 70px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.14);
+}
+html,body{height:100%}
+body{background:var(--bg);color:var(--body);font-family:Inter,system-ui,sans-serif;font-size:16px;
+  -webkit-font-smoothing:antialiased;line-height:1.6;overflow:hidden}
+h1,h2,h3{font-family:Fraunces,Georgia,serif}
+.bgimg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:url("bg-calligraphy.jpg") center 30%/cover no-repeat,url("bg-mosque.jpg") center 30%/cover no-repeat;
+  filter:saturate(.7) brightness(.6)}
+.bgscrim{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(120% 70% at 80% -10%,rgba(62,155,232,.20),transparent 55%),
+  linear-gradient(180deg,rgba(5,8,14,.88) 0%,rgba(5,8,14,.94) 100%)}
+.shell{position:relative;z-index:1;display:flex;height:100svh}
+.side{width:232px;flex:none;background:var(--glass);border-right:1px solid var(--line);
+  backdrop-filter:blur(24px) saturate(160%);display:flex;flex-direction:column;padding:22px 12px;overflow-y:auto}
+.side::-webkit-scrollbar{width:8px}.side::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:8px}
+.brand{display:flex;align-items:center;gap:11px;padding:4px 10px 18px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.mk{width:42px;height:42px;flex:none;border-radius:13px;display:grid;place-items:center;overflow:hidden;
+  background:linear-gradient(150deg,var(--accent),var(--accent2));color:#06131F}
+.mk img{width:100%;height:100%;object-fit:cover}
+.mk svg{width:21px;height:21px}
+.brand b{color:#fff;font-size:16.5px;font-family:Fraunces;letter-spacing:-.01em}
+.brand small{display:block;color:var(--muted);font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+.snav{display:flex;flex-direction:column;gap:4px;flex:1}
+.snav button{display:flex;align-items:center;gap:12px;width:100%;border:0;background:transparent;cursor:pointer;
+  color:#B4C3D6;font-family:inherit;font-size:15px;font-weight:500;padding:11px 13px;border-radius:13px;text-align:left;transition:.2s}
+.snav button:hover{background:rgba(255,255,255,.07);color:#fff}
+.snav button.on{background:linear-gradient(150deg,rgba(140,203,247,.22),rgba(255,255,255,.05));color:#fff;
+  box-shadow:inset 0 0 0 1px rgba(140,203,247,.35)}
+.snav button svg{width:19px;height:19px;flex:none;opacity:.9}
+.sync{display:flex;align-items:center;gap:9px;padding:11px 13px;margin-top:12px;border-radius:13px;border:1px solid rgba(140,203,247,.3);
+  background:rgba(140,203,247,.08);color:#BFE3FA;font-size:13.5px}
+.sync .dot{width:8px;height:8px;border-radius:50%;background:#5BE49B;box-shadow:0 0 10px #5BE49B;animation:bl 1.6s infinite}
+@keyframes bl{50%{opacity:.35}}
+.main{flex:1;overflow-y:auto;padding:clamp(24px,3.4vw,46px) clamp(20px,3.2vw,52px)}
+.main::-webkit-scrollbar{width:10px}.main::-webkit-scrollbar-thumb{background:rgba(255,255,255,.13);border-radius:10px}
+.hd{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:30px}
+.hd h1{font-size:clamp(1.9rem,3.4vw,2.8rem);color:#fff;font-weight:600;letter-spacing:-.02em}
+.hd .ey{font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;display:block}
+.hd .sub{color:var(--body);font-size:15.5px;margin-top:8px;max-width:600px}
+.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(91,228,155,.4);color:#9ff0c0;
+  background:rgba(91,228,155,.1);font-size:14px;font-weight:600;padding:10px 16px;border-radius:999px}
+.view{display:none}.view.on{display:block}
+.sec{margin-bottom:26px}
+.sec h2{font-size:1.35rem;color:#fff;font-weight:600;margin-bottom:6px}
+.sec p{font-size:14.5px;color:var(--muted);margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:26px}
+.stat{background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:20px;backdrop-filter:blur(10px)}
+.stat .n{font-family:Fraunces;font-size:30px;color:#fff;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat .l{font-size:13.5px;color:var(--muted);margin-top:4px}
+.card{background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:14px;backdrop-filter:blur(10px)}
+.row{display:grid;grid-template-columns:1.2fr .8fr 1fr 54px;gap:12px;align-items:center}
+@media(max-width:640px){.row{grid-template-columns:1fr 1fr;grid-auto-rows:auto}}
+.row.head{font-size:12.5px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;padding:4px 4px 10px}
+label{font-size:13px;color:#9AAEC2;display:block;margin:12px 4px 6px}
+input,textarea,select{width:100%;background:rgba(8,13,22,.85);border:1px solid var(--line);color:#EAF3FC;
+  font-family:inherit;font-size:15px;padding:11px 13px;border-radius:11px;outline:none;transition:border-color .2s}
+input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+textarea{min-height:84px;resize:vertical}
+.del{width:42px;height:42px;border-radius:11px;border:1px solid rgba(240,110,110,.4);background:rgba(240,110,110,.1);
+  color:#ff9d9d;cursor:pointer;display:grid;place-items:center;font-size:16px;align-self:center}
+.hint{font-size:13px;color:var(--muted);margin-top:8px}
+.hint b{color:#BFE3FA}
+.btn{cursor:pointer;border:none;font-family:inherit;font-weight:600;font-size:15.5px;padding:14px 26px;border-radius:13px;
+  display:inline-flex;align-items:center;gap:9px;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn.primary{background:var(--accent);color:#06131F;box-shadow:0 12px 28px rgba(140,203,247,.35)}
+.btn.ghost{background:rgba(255,255,255,.07);color:#fff;border:1px solid var(--line)}
+.btn.warn{background:rgba(240,110,110,.12);color:#ffb3b3;border:1px solid rgba(240,110,110,.4)}
+.btnrow{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+.add{border:1px dashed rgba(140,203,247,.4);background:rgba(140,203,247,.05)}
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:6px 0 4px}
+@media(max-width:720px){.flow{grid-template-columns:1fr}}
+.fstep{background:rgba(8,13,22,.5);border:1px solid var(--line);border-radius:15px;padding:18px}
+.fstep .k{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-weight:700;color:#06131F;background:var(--accent);margin-bottom:12px}
+.fstep b{color:#EAF3FC;font-size:15px;display:block;margin-bottom:5px}
+.fstep p{font-size:13.5px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);z-index:99;opacity:0;
+  background:rgba(8,13,22,.97);border:1px solid rgba(91,228,155,.45);color:#d9ffe9;padding:15px 24px;border-radius:14px;
+  font-size:15px;font-weight:500;box-shadow:0 20px 50px rgba(0,0,0,.6);transition:.4s;pointer-events:none;max-width:92vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.demo{display:inline-flex;align-items:center;gap:7px;margin-top:6px;font-size:12.5px;color:var(--muted)}
+.demo b{color:#BFE3FA}
+/* picker cards (logo/background) */
+.pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:8px}
+.pick button{position:relative;border:1px solid var(--line);border-radius:16px;padding:14px;cursor:pointer;background:rgba(8,13,22,.6);
+  color:#B4C3D6;font-family:inherit;font-size:14px;display:flex;flex-direction:column;gap:10px;align-items:center;transition:.2s}
+.pick button:hover{border-color:var(--accent);color:#fff}
+.pick button.on{border-color:var(--accent);box-shadow:0 0 0 3px rgba(140,203,247,.18),inset 0 0 0 1px rgba(140,203,247,.4);color:#fff}
+.pick button .th{width:100%;height:74px;border-radius:10px;background-size:cover;background-position:center;border:1px solid var(--line)}
+.pick button .lg{width:54px;height:54px;border-radius:14px;background-size:cover;background-position:center;border:1px solid var(--line)}
+.pick button.on:after{content:"✓";position:absolute;top:8px;right:10px;width:22px;height:22px;border-radius:50%;
+  background:var(--accent);color:#06131F;font-weight:700;font-size:13px;display:grid;place-items:center}
+.logo-prev{width:100%;max-width:180px;aspect-ratio:1/1;border-radius:24px;overflow:hidden;border:1px solid var(--line);margin:6px 0 4px;
+  background-image:url("app-icon.png"),url("icon-192.png"),url("android-chrome-192x192.png");background-size:cover;background-position:center}
+.logo-prev img{width:100%;height:100%;object-fit:cover;display:block}
+.jsonbox{background:rgba(6,10,17,.9);border:1px solid rgba(140,203,247,.25);border-radius:14px;padding:16px;margin-top:14px}
+.jsonbox pre{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;color:#9FD6F5;white-space:pre-wrap;word-break:break-all;line-height:1.5;max-height:260px;overflow-y:auto}
+.act{list-style:none;display:flex;flex-direction:column;gap:8px}
+.act li{display:flex;gap:12px;align-items:baseline;background:rgba(8,13,22,.5);border:1px solid var(--line);border-radius:12px;padding:11px 14px;font-size:14px}
+.act li b{color:#d9ffe9;font-weight:600}
+.act li time{color:var(--muted);font-size:12px;flex:none}
+.notelist{display:flex;flex-direction:column;gap:8px}
+.note{display:flex;gap:12px;align-items:flex-start;background:rgba(8,13,22,.5);border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+.note b{color:#EAF3FC}
+.note p{font-size:14px;color:var(--body);margin:3px 0 0}
+@media(max-width:760px){
+  .side{width:64px;padding:18px 8px}
+  .brand b,.brand small,.snav button span,.sync span{display:none}
+  .snav button{justify-content:center;padding:12px}
+  .sync{justify-content:center;padding:11px}
+}
+</style>
+</head>
+<body>
+<div class="bgimg"></div><div class="bgscrim"></div>
+
+<div class="shell">
+  <aside class="side">
+    <div class="brand">
+      <span class="mk" id="brandMark"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#06131F" stroke-width="1.9" stroke-linecap="round"><path d="M12 3c-2.6 3.2-6 2-6 6.6V20h12v-10.4C18 5 14.6 6.2 12 3Z"/><path d="M9.6 20v-4.2a2.4 2.4 0 0 1 4.8 0V20"/></svg></span>
+      <div><b id="mName">Masjid Admin</b><small id="mTag">Control Panel</small></div>
+    </div>
+    <nav class="snav">
+      <button class="on" data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.5 12 3l8.5 7.5"/><path d="M5.5 9.5V21h13V9.5"/></svg><span>Overview</span></button>
+      <button data-v="brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.4"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34 1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.09a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1Z"/></svg><span>Branding · Logo</span></button>
+      <button data-v="bg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><circle cx="9" cy="9" r="1.8"/><path d="m4.5 18 4.7-4.7a1.5 1.5 0 0 1 2.1 0l3.2 3.2"/><path d="m14.5 14 2.4-2.4a1.5 1.5 0 0 1 2.1 0l3 3"/></svg><span>Background</span></button>
+      <button data-v="contacts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.4h3.6L12 5.6v12.8L7.6 14.6H4a1 1 0 0 1-1-1v-3.2a1 1 0 0 1 1-1Z"/><path d="M15.4 9.2a4.2 4.2 0 0 1 0 5.6"/><path d="M18 6.6a7.8 7.8 0 0 1 0 10.8"/></svg><span>Contacts</span></button>
+      <button data-v="ann"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4a1.5 1.5 0 0 0 1.5 1.5H8l7 4V4.5L8 8.5H5.5A1.5 1.5 0 0 0 4 10Z"/><path d="M18 9.5a4 4 0 0 1 0 5"/><path d="M19.5 7a8 8 0 0 1 0 10"/></svg><span>Announcements</span></button>
+      <button data-v="times"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Prayer Times</span></button>
+      <button data-v="history"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l2.6 1.6"/><path d="M4.3 10a8 8 0 1 1 7.7 10"/><path d="m3 8 4-1-1 4"/></svg><span>History & About</span></button>
+      <button data-v="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="9" width="15" height="6" rx="2"/><path d="M9 9V6.8A2.8 2.8 0 0 1 11.8 4h.4A2.8 2.8 0 0 1 15 6.8V9"/><path d="M12 12v1.2"/></svg><span>Settings</span></button>
+    </nav>
+    <div class="sync"><span class="dot"></span><span>Draft save — <b style="color:#d9ffe9">ON</b></span></div>
+  </aside>
+
+  <main class="main">
+    <div class="hd">
+      <div><span class="ey">Complete Control Panel — Preview</span><h1>Masjid Admin</h1>
+        <p class="sub">Ab <b style="color:#EAF3FC">sab kuch</b> yahan se badal sakte ho — logo, background, timings, announcements, history, contacts. Sab save hota hai; agla step = ek click me app+website pe LIVE.</p>
+      </div>
+      <span class="pill"><span style="color:#5BE49B">●</span> App pe LIVE — no APK needed</span>
+    </div>
+
+    <!-- OVERVIEW -->
+    <section class="view on" id="v-overview">
+      <div class="stats">
+        <div class="stat"><div class="n" id="st-contacts">5</div><div class="l">Contacts</div></div>
+        <div class="stat"><div class="n" id="st-ann">4</div><div class="l">Announcements</div></div>
+        <div class="stat"><div class="n" id="st-about">0</div><div class="l">History paras</div></div>
+        <div class="stat"><div class="n" id="st-last">—</div><div class="l">Last save</div></div>
+      </div>
+      <div class="sec">
+        <h2>Sab kuch ek jagah — bina nayi APK ke</h2>
+        <p>Content ek hi file me rehta hai. Tum yahan kuch bhi badlo aur <b style="color:#BFE3FA">Save</b> dabao — app aur website dono naya data le lete hain. Koi APK update nahi, koi Play Store nahi.</p>
+        <div class="flow">
+          <div class="fstep"><div class="k">1</div><b>Kuch bhi badlo</b><p>Logo, wallpaper, timing, announcement, history, contact — sab.</p></div>
+          <div class="fstep"><div class="k">2</div><b>Save dabao</b><p>Ek click — data ek file me update ho jata hai (draft yahan save ho raha hai).</p></div>
+          <div class="fstep"><div class="k">3</div><b>Sab jagah dikhe</b><p>App khule ya website — foran naya content. Offline ho to aakhri saved copy.</p></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2 style="font-size:1.1rem">Aakhri changes (is device pe)</h2>
+        <ul class="act" id="actlist"><li style="color:var(--muted)">Abhi tak koi save nahi hua — kuch badlo aur Save dabao.</li></ul>
+      </div>
+      <div class="card">
+        <h2 style="font-size:1.1rem">Publish — agla step</h2>
+        <p style="margin:4px 0 12px">Preview me sab <b>draft</b> hai: refresh pe wapas original. Asli panel me <b style="color:#BFE3FA">Publish</b> dabate hi app+site pe foran lag jayega (login ke baad).</p>
+        <button class="btn primary" id="publishBtn">Publish to App + Website</button>
+        <button class="btn ghost" id="jsonToggle">Dekho: kya save hua (JSON)</button>
+        <div class="jsonbox" id="jsonBox" style="display:none"><pre id="jsonPre"></pre></div>
+      </div>
+    </section>
+
+    <!-- BRANDING -->
+    <section class="view" id="v-brand">
+      <div class="sec">
+        <h2>Branding — Logo & Naam</h2>
+        <p>App ka icon, naam aur tagline. Logo change karo to app launcher icon, website pe bhi wahi dikhega.</p>
+        <div class="card">
+          <label>Masjid ka naam</label>
+          <input id="bName" placeholder="e.g. Masjid e Mohammadi">
+          <label>Tagline (chhota line)</label>
+          <input id="bTag" placeholder="e.g. Markaz of knowledge & prayer">
+          <label>Logo preview</label>
+          <div class="logo-prev" id="logoPrev"><img id="logoImg" alt="logo" style="display:none"></div>
+          <div class="pick">
+            <button class="on" id="logoDef" data-logo="default"><span class="lg" style="background-image:url('app-icon.png'),url('icon-192.png'),url('android-chrome-192x192.png')"></span>Default (mosque)</button>
+            <button id="logoUpBtn"><span class="lg" style="background:linear-gradient(150deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#06131F;font-size:26px;font-weight:700">↥</span>Upload karo</button>
+          </div>
+          <input type="file" id="logoFile" accept="image/png,image/jpeg,image/webp" style="display:none">
+          <div class="btnrow"><button class="btn primary" id="bSave">Save Branding</button></div>
+          <div class="hint">Uploaded logo <b>isi browser me</b> preview ho jayega. Asli publish pe app ke icon tak pahunchega.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BACKGROUND -->
+    <section class="view" id="v-bg">
+      <div class="sec">
+        <h2>Background — Wallpaper</h2>
+        <p>App aur website dono ka backdrop. Ek click me badal jayega.</p>
+        <div class="card">
+          <label>Wallpaper chuno</label>
+          <div class="pick">
+            <button class="on" id="bgCalli" data-bg="calligraphy"><span class="th" style="background-image:url('bg-calligraphy.jpg')"></span>Calligraphy</button>
+            <button id="bgMosque" data-bg="mosque"><span class="th" style="background-image:url('bg-mosque.jpg')"></span>Mosque scene</button>
+            <button id="bgUpBtn"><span class="th" style="background:linear-gradient(150deg,rgba(140,203,247,.35),rgba(62,155,232,.15));display:grid;place-items:center;color:#BFE3FA;font-size:22px">↥</span>Apni image</button>
+          </div>
+          <input type="file" id="bgFile" accept="image/png,image/jpeg,image/webp" style="display:none">
+          <div class="btnrow"><button class="btn primary" id="bgSave">Save Background</button></div>
+          <div class="hint">Pehle se wahi <b>calligraphy</b> wallpaper laga hai jo app me hai. Mosque scene bhi ek aur option hai.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACTS -->
+    <section class="view" id="v-contacts">
+      <div class="sec">
+        <h2>Contacts</h2>
+        <p>Imam, Muazzin, Office ke asli numbers — app aur website dono me foran dikh jayenge.</p>
+        <div class="card">
+          <div class="row head"><span>Name</span><span>Role</span><span>Phone</span><span></span></div>
+          <div id="crows"></div>
+          <div class="btnrow">
+            <button class="btn ghost" id="cAdd">+ Add contact</button>
+            <button class="btn primary" id="cSave">Save Contacts</button>
+          </div>
+          <div class="hint">Ye abhi <b>dummy numbers</b> hain — asli number daal do, sab jagah sahi ho jayega.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANNOUNCEMENTS -->
+    <section class="view" id="v-ann">
+      <div class="sec">
+        <h2>Announcements</h2>
+        <p>Timing change, Jummah reminder, event, ta'lim — app Home pe sabse upar dikhegi.</p>
+        <div class="card add">
+          <h2 style="font-size:1.05rem;margin-bottom:4px">+ Nayi announcement</h2>
+          <label>Title</label><input id="anT" placeholder="e.g. Friday Khutba timing">
+          <label>Message</label><textarea id="anB" placeholder="e.g. Jummah khutba ab 1:15 PM se shuru hoga."></textarea>
+          <div class="btnrow"><button class="btn primary" id="anAdd">Add</button></div>
+        </div>
+        <div id="anlist"></div>
+      </div>
+    </section>
+
+    <!-- TIMES -->
+    <section class="view" id="v-times">
+      <div class="sec">
+        <h2>Prayer Times</h2>
+        <p>Fajr, Dhuhr waghera <b style="color:#BFE3FA">automatically</b> aate hain (Aladhan se, har sheher ke hisaab se). Yahan khaas settings hain.</p>
+        <div class="card">
+          <div class="row" style="grid-template-columns:1fr 1fr;gap:14px">
+            <div>
+              <label>Default city (masjid)</label>
+              <input id="pCity" placeholder="e.g. City, Country">
+            </div>
+            <div>
+              <label>Timing method</label>
+              <select id="pMethod">
+                <option value="2">ISNA (North America)</option>
+                <option value="3" selected>MWL (world standard)</option>
+                <option value="1">Karachi (Indian Subcontinent)</option>
+                <option value="4">Umm Al-Qura (Makkah)</option>
+                <option value="5">Egyptian</option>
+                <option value="12">Dubai</option>
+              </select>
+            </div>
+          </div>
+          <label>Jummah khutba timing (Friday)</label>
+          <input id="tJumma" placeholder="e.g. 1:15 PM">
+          <label>Seasonal note (jab timing badle)</label>
+          <textarea id="tNote" placeholder="e.g. Fajr timing 15 min aage kar di gayi hai..."></textarea>
+          <div class="btnrow"><button class="btn primary" id="tSave">Save Timings</button></div>
+          <div class="hint">Normal 5 namaz ka time <b>automatic</b> rehta hai — city+method se. Sirf Jummah aur note yahan se.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HISTORY -->
+    <section class="view" id="v-history">
+      <div class="sec">
+        <h2>History & About</h2>
+        <p>Masjid kab bani, kya kya hua — website ka About section aur app ki history screen yahi se.</p>
+        <div class="card">
+          <label>Bani kis saal</label>
+          <input id="hFounded" placeholder="e.g. 1998">
+          <label>History paragraphs (har line ek paragraph)</label>
+          <textarea id="hAbout" placeholder="Line 1&#10;Line 2&#10;Line 3"></textarea>
+          <div class="btnrow"><button class="btn primary" id="hSave">Save History</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="view" id="v-settings">
+      <div class="sec">
+        <h2>Settings</h2>
+        <div class="card">
+          <label>Masjid ka pata (Google Maps ke liye)</label>
+          <input id="tAddr" placeholder="e.g. Street, City, PIN">
+          <label>YouTube channel URL</label>
+          <input id="sYt" placeholder="https://youtube.com/@...">
+          <label>Google Maps link (Directions)</label>
+          <input id="sMaps" placeholder="https://maps.google.com/?q=...">
+          <div class="btnrow">
+            <button class="btn primary" id="tSetSave">Save Settings</button>
+            <button class="btn warn" id="resetBtn">Reset — sab default</button>
+          </div>
+          <div class="demo"><b>Agla step:</b> admin login (password) isi screen me aayega.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= COMPLETE content model ================= */
+var DEFAULTS={
+  brand:{name:'Masjid e Mohammadi',tag:'Markaz of knowledge & prayer',logo:'default'},
+  bg:{kind:'calligraphy'},
+  contacts:[
+    {n:'Imam Sahab',r:'Religious guidance',p:'+91 97675 43210'},
+    {n:'Muazzin',r:'Azan & masjid duties',p:'+91 87654 32101'},
+    {n:'Masjid Office',r:'General enquiries',p:'+91 87654 32109'},
+    {n:'Committee',r:'Management',p:'+91 76543 21098'},
+    {n:'Emergency',r:'Urgent contact',p:'+91 99999 99999'}
+  ],
+  announcements:[
+    {t:'Prayer Timing Changed',b:'Due to seasonal changes, Fajr timing will be updated from tomorrow.',d:'14 Nov 2025'},
+    {t:'Jummah Reminder',b:'Friday khutba ab 1:15 PM se — zaroor aayein.',d:'17 Nov 2025'},
+    {t:'Quran Class',b:'Naya Quran class Saturday ko, baad namaz Asr.',d:'21 Nov 2025'}
+  ],
+  prayer:{city:'',method:'3',jummah:'',note:''},
+  history:{founded:'',about:[]},
+  settings:{address:'',youtube:'',maps:''}
+};
+var KEY='masjid-admin-content', LOGKEY='masjid-admin-log', LOGMAX=8;
+var $=function(id){return document.getElementById(id)};
+var C;
+try{C=JSON.parse(localStorage.getItem(KEY))||JSON.parse(JSON.stringify(DEFAULTS));}
+catch(e){C=JSON.parse(JSON.stringify(DEFAULTS));}
+function saveC(msg){
+  localStorage.setItem(KEY,JSON.stringify(C));
+  var st=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  $('st-last').textContent=st;
+  var log=[];try{log=JSON.parse(localStorage.getItem(LOGKEY))||[]}catch(e){}
+  log.unshift({m:msg,t:st});log=log.slice(0,LOGMAX);
+  localStorage.setItem(LOGKEY,JSON.stringify(log));
+  renderAct();refreshJson();toast(msg+' — draft save ho gaya');
+}
+function renderAct(){
+  var log=[];try{log=JSON.parse(localStorage.getItem(LOGKEY))||[]}catch(e){}
+  $('actlist').innerHTML=log.length?log.map(function(l){
+    return '<li><b>'+l.m.replace(/"/g,'&quot;')+'</b><time>'+l.t+'</time></li>';
+  }).join(''):'<li style="color:var(--muted)">Abhi tak koi save nahi hua — kuch badlo aur Save dabao.</li>';
+}
+function toast(m){var el=$('toast');el.textContent=m;el.classList.add('show');
+  clearTimeout(toast._t);toast._t=setTimeout(function(){el.classList.remove('show')},2800);}
+function refreshJson(){var el=$('jsonPre');if(el)el.textContent=JSON.stringify(C,null,1);}
+
+/* view router */
+document.querySelectorAll('.snav button').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.snav button').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on');var v=b.getAttribute('data-v');
+    document.querySelectorAll('.view').forEach(function(x){x.classList.remove('on')});
+    $('v-'+v).classList.add('on');$('main').scrollTop=0;
+  });
+});
+$('jsonToggle').addEventListener('click',function(){
+  var b=$('jsonBox'),on=b.style.display!=='none';
+  b.style.display=on?'none':'block';refreshJson();
+  this.textContent=on?'Dekho: kya save hua (JSON)':'Chhupao JSON';
+});
+
+/* ---------- BRANDING ---------- */
+function applyBrand(){
+  $('mName').textContent=C.brand.name;
+  $('mTag').textContent=C.brand.tag;
+  document.title=C.brand.name+' — Admin';
+  var im=$('logoImg');
+  if(C.brand.logo==='upload'&&C.brand.logoData){im.src=C.brand.logoData;im.style.display='block';}
+  else{im.style.display='none';}
+  $('logoDef').className=C.brand.logo==='default'?'on':'';
+}
+$('bName').value=C.brand.name;$('bTag').value=C.brand.tag;
+$('logoDef').addEventListener('click',function(){C.brand.logo='default';applyBrand()});
+$('logoUpBtn').addEventListener('click',function(){$('logoFile').click()});
+$('logoFile').addEventListener('change',function(){
+  var f=this.files[0];if(!f)return;
+  var r=new FileReader();r.onload=function(){
+    C.brand.logo='upload';C.brand.logoData=r.result;applyBrand();
+    toast('Logo upload ho gaya — Save dabao');
+  };r.readAsDataURL(f);
+});
+$('bSave').addEventListener('click',function(){
+  C.brand.name=$('bName').value.trim()||DEFAULTS.brand.name;
+  C.brand.tag=$('bTag').value.trim();
+  applyBrand();saveC('Branding save: '+(C.brand.logo==='upload'?'naya logo':'default logo'));
+});
+
+/* ---------- BACKGROUND ---------- */
+function applyBg(){
+  var k=C.bg.kind;
+  $('bgCalli').className=k==='calligraphy'?'on':'';
+  $('bgMosque').className=k==='mosque'?'on':'';
+  if(k==='upload'&&C.bg.data){
+    document.querySelector('.bgimg').style.background='url("'+C.bg.data+'") center/cover no-repeat';
+  }else if(k==='mosque'){
+    document.querySelector('.bgimg').style.background='url("bg-mosque.jpg") center 30%/cover no-repeat';
+  }else{
+    document.querySelector('.bgimg').style.background='';
+  }
+}
+$('bgCalli').addEventListener('click',function(){C.bg.kind='calligraphy';applyBg()});
+$('bgMosque').addEventListener('click',function(){C.bg.kind='mosque';applyBg()});
+$('bgUpBtn').addEventListener('click',function(){$('bgFile').click()});
+$('bgFile').addEventListener('change',function(){
+  var f=this.files[0];if(!f)return;
+  var r=new FileReader();r.onload=function(){C.bg.kind='upload';C.bg.data=r.result;applyBg();
+    toast('Wallpaper laga diya — Save dabao');};r.readAsDataURL(f);
+});
+$('bgSave').addEventListener('click',function(){saveC('Background set: '+C.bg.kind)});
+
+/* ---------- CONTACTS ---------- */
+function renderContacts(){
+  $('crows').innerHTML=C.contacts.map(function(c,i){
+    return '<div class="row" style="margin-bottom:10px">'+
+      '<input data-i="'+i+'" data-f="n" value="'+c.n.replace(/"/g,'&quot;')+'">'+
+      '<input data-i="'+i+'" data-f="r" value="'+c.r.replace(/"/g,'&quot;')+'">'+
+      '<input data-i="'+i+'" data-f="p" value="'+c.p.replace(/"/g,'&quot;')+'">'+
+      '<button class="del" data-d="'+i+'" aria-label="Delete">✕</button></div>';
+  }).join('');
+  $('st-contacts').textContent=C.contacts.length;
+}
+renderContacts();
+$('crows').addEventListener('input',function(e){
+  var t=e.target,i=t.getAttribute('data-i'),f=t.getAttribute('data-f');
+  if(i!=null&&f)C.contacts[+i][f]=t.value;
+});
+$('crows').addEventListener('click',function(e){
+  var d=e.target.getAttribute&&e.target.getAttribute('data-d');
+  if(d!=null){C.contacts.splice(+d,1);renderContacts();}
+});
+$('cAdd').addEventListener('click',function(){C.contacts.push({n:'New contact',r:'Role',p:'+91 '});renderContacts()});
+$('cSave').addEventListener('click',function(){renderContacts();saveC('Contacts saved ('+C.contacts.length+')')});
+
+/* ---------- ANNOUNCEMENTS ---------- */
+function renderAnn(){
+  $('st-ann').textContent=C.announcements.length;
+  $('anlist').innerHTML=C.announcements.map(function(a,i){
+    return '<div class="card"><div class="row" style="align-items:flex-start">'+
+      '<div><h2 style="font-size:1.05rem;margin-bottom:5px">'+a.t.replace(/"/g,'&quot;')+'</h2>'+
+      '<p style="font-size:14.5px;color:var(--body);margin:0">'+a.b.replace(/"/g,'&quot;')+'</p>'+
+      '<div class="demo">'+a.d+'</div></div>'+
+      '<button class="del" data-ad="'+i+'" aria-label="Delete">✕</button></div></div>';
+  }).join('');
+}
+renderAnn();
+$('anlist').addEventListener('click',function(e){
+  var d=e.target.getAttribute&&e.target.getAttribute('data-ad');
+  if(d!=null){C.announcements.splice(+d,1);renderAnn();}
+});
+$('anAdd').addEventListener('click',function(){
+  var t=$('anT').value.trim(),b=$('anB').value.trim();
+  if(!t)return toast('Pehle title likho');
+  var d=new Date().toLocaleDateString([],{day:'numeric',month:'short',year:'numeric'});
+  C.announcements.unshift({t:t,b:b||'(message daalein)',d:d});
+  $('anT').value='';$('anB').value='';
+  renderAnn();saveC('Announcement add: '+t);
+});
+
+/* ---------- PRAYER TIMES ---------- */
+$('pCity').value=C.prayer.city;$('pMethod').value=C.prayer.method;
+$('tJumma').value=C.prayer.jummah;$('tNote').value=C.prayer.note;
+$('tSave').addEventListener('click',function(){
+  C.prayer.city=$('pCity').value.trim();
+  C.prayer.method=$('pMethod').value;
+  C.prayer.jummah=$('tJumma').value.trim();
+  C.prayer.note=$('tNote').value.trim();
+  saveC('Prayer timings save');
+});
+
+/* ---------- HISTORY ---------- */
+$('hFounded').value=C.history.founded;
+$('hAbout').value=C.history.about.join('\n');
+$('hSave').addEventListener('click',function(){
+  C.history.founded=$('hFounded').value.trim();
+  C.history.about=$('hAbout').value.split('\n').map(function(s){return s.trim()}).filter(Boolean);
+  $('st-about').textContent=C.history.about.length;
+  saveC('History save ('+C.history.about.length+' para)');
+});
+
+/* ---------- SETTINGS ---------- */
+$('tAddr').value=C.settings.address;$('sYt').value=C.settings.youtube;$('sMaps').value=C.settings.maps;
+$('tSetSave').addEventListener('click',function(){
+  C.settings.address=$('tAddr').value.trim();
+  C.settings.youtube=$('sYt').value.trim();
+  C.settings.maps=$('sMaps').value.trim();
+  saveC('Settings save');
+});
+$('resetBtn').addEventListener('click',function(){
+  if(!confirm('Sab kuch default pe wapas? (contacts, announcements, sab)'))return;
+  C=JSON.parse(JSON.stringify(DEFAULTS));
+  localStorage.removeItem(KEY);
+  $('bName').value=C.brand.name;$('bTag').value=C.brand.tag;
+  $('pCity').value='';$('pMethod').value='3';$('tJumma').value='';$('tNote').value='';
+  $('hFounded').value='';$('hAbout').value='';
+  $('tAddr').value='';$('sYt').value='';$('sMaps').value='';
+  applyBrand();applyBg();renderContacts();renderAnn();
+  saveC('Sab default reset');
+});
+$('publishBtn').addEventListener('click',function(){
+  toast('Published! (preview me) — asli panel me login karke ek click me app+site pe lagega');
+});
+
+/* boot */
+applyBrand();applyBg();renderAct();refreshJson();
+</script>
+</body>
+</html>

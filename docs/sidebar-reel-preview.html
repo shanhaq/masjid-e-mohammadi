@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sidebar Look Demo — Masjid e Mohammadi</title>
+<style>
+  :root{
+    --rowh:54px; --gap:6px; --pad:14px;
+    --rail:80px; --exp:280px;
+    --spring:cubic-bezier(.34,1.4,.64,1);
+    --smooth:cubic-bezier(.22,1,.36,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    color:#eef3fa; overflow:hidden;
+    --bg1:#2a3140; --bg2:#12161f;
+    background:radial-gradient(1200px 700px at 75% -10%,#90b0e033,transparent 60%),
+               linear-gradient(160deg,var(--bg1),var(--bg2));
+    background-attachment:fixed;
+  }
+  .wallpaper{
+    position:fixed; inset:0; z-index:0; object-fit:cover; width:100%; height:100%;
+    opacity:0; transition:opacity .6s;
+  }
+  .wallpaper.on{opacity:1}
+  .scrim{position:fixed; inset:0; z-index:1; background:linear-gradient(180deg,rgba(13,18,28,.62),rgba(10,14,22,.74)); opacity:0; transition:opacity .6s}
+  .scrim.on{opacity:1}
+
+  .shell{position:relative; z-index:2; display:flex; height:100%; width:100%}
+
+  /* ============ SIDEBAR ============ */
+  .sidebar{
+    position:relative;
+    width:var(--exp);
+    display:flex; flex-direction:column;
+    padding:22px var(--pad) 18px;
+    gap:6px;
+    transition:width .48s var(--smooth);
+    background:rgba(67,73,88,.82);
+    backdrop-filter:blur(22px) saturate(1.15); -webkit-backdrop-filter:blur(22px) saturate(1.15);
+    border-right:1px solid rgba(255,255,255,.07);
+    overflow:visible;
+  }
+  .sidebar.collapsed{width:var(--rail)}
+
+  /* brand */
+  .brand{display:flex; align-items:center; gap:12px; padding:2px 6px 16px; min-width:0; flex-shrink:0}
+  .brand .mark{
+    width:44px;height:44px;flex:0 0 44px;border-radius:14px;
+    background:linear-gradient(145deg,#ffffff22,#ffffff08);
+    border:1px solid rgba(255,255,255,.16);
+    display:grid;place-items:center;
+    color:#8CCBF7;
+  }
+  .brand .mark svg{width:24px;height:24px}
+  .brand .btxt{white-space:nowrap; overflow:hidden}
+  .brand .btxt b{display:block; font-size:15px; letter-spacing:.2px}
+  .brand .btxt span{display:block; font-size:11px; opacity:.55; margin-top:2px}
+
+  /* collapse button (floating, CodeXR style) */
+  .collapse-btn{
+    position:absolute; right:-13px; top:26px; z-index:10;
+    width:26px;height:26px;border-radius:50%;
+    background:#fff; color:#10151f; border:none; cursor:pointer;
+    box-shadow:0 3px 12px rgba(0,0,0,.35);
+    display:grid;place-items:center;
+    transition:transform .35s var(--spring), background .2s;
+  }
+  .collapse-btn:hover{transform:scale(1.12)}
+  .collapse-btn svg{width:15px;height:15px; transition:transform .4s var(--smooth)}
+  .sidebar.collapsed .collapse-btn svg{transform:rotate(180deg)}
+
+  /* nav */
+  .nav{display:flex; flex-direction:column; gap:var(--gap); flex:1; position:relative; min-width:0}
+  .nav .items{position:relative; display:flex; flex-direction:column; gap:var(--gap)}
+
+  /* sliding active pill — the CodeXR layoutId trick */
+  .pill{
+    position:absolute; left:0; right:0; top:0; height:var(--rowh);
+    border-radius:15px;
+    background:linear-gradient(145deg,#ffffffee,#ffffffd8);
+    box-shadow:0 6px 22px rgba(9,14,24,.45);
+    transform:translateY(calc(var(--iy,0)* (var(--rowh) + var(--gap))));
+    transition:transform .55s var(--spring);
+  }
+
+  .nav-item{
+    position:relative; z-index:2;
+    height:var(--rowh); width:100%;
+    display:flex; align-items:center; gap:13px;
+    padding:0 16px; border-radius:15px;
+    cursor:pointer; user-select:none;
+    color:#dfe7f5; font-size:15px; font-weight:500;
+    transition:background .25s, color .3s;
+  }
+  .nav-item:hover{background:rgba(255,255,255,.08)}
+  .nav-item svg{width:22px;height:22px; flex:0 0 22px}
+  .nav-item .lbl{white-space:nowrap}
+  .nav-item .tip{
+    position:absolute; left:calc(100% + 12px); top:50%; transform:translateY(-50%) translateX(-6px);
+    background:#10151f; color:#fff; font-size:12px; padding:6px 10px; border-radius:8px;
+    opacity:0; pointer-events:none; white-space:nowrap; z-index:50;
+    transition:opacity .18s, transform .18s;
+    box-shadow:0 4px 14px rgba(0,0,0,.4);
+  }
+  .sidebar.collapsed .nav-item:hover .tip{opacity:1; transform:translateY(-50%) translateX(0)}
+
+  /* labels hide like clipPath */
+  .nav-item .lbl{display:block; overflow:hidden}
+  .nav-item .lbl i{
+    display:block; font-style:normal;
+    clip-path:inset(0 0 0 0); opacity:1;
+    transition:clip-path .42s var(--smooth), opacity .3s;
+  }
+  .sidebar.collapsed .lbl i{
+    clip-path:inset(0 100% 0 0); opacity:0;
+  }
+
+  /* active state colors */
+  body[data-theme="reel-dark"] .nav-item.on{color:#131a28}
+  body[data-theme="reel-light"] .nav-item.on{color:#fff}
+  body[data-theme="hybrid"]  .nav-item.on{color:#0d1420}
+  .nav-item.on svg{stroke:#3E9BE8}
+  body[data-theme="reel-light"] .nav-item.on svg{stroke:#fff}
+
+  /* badge (like notification count) */
+  .nav-item .bdg{
+    margin-left:auto; font-size:11px; font-weight:700;
+    background:#ff5470; color:#fff; border-radius:20px; padding:2px 8px;
+  }
+
+  /* user footer */
+  .user{
+    flex-shrink:0; margin-top:6px; display:flex; align-items:center; gap:12px;
+    padding:9px; border-radius:15px; cursor:pointer; min-width:0;
+    border:1px solid rgba(255,255,255,.09);
+    transition:background .25s;
+  }
+  .user:hover{background:rgba(255,255,255,.08)}
+  .user .av{
+    width:38px;height:38px;flex:0 0 38px;border-radius:50%;
+    background:linear-gradient(135deg,#8CCBF7,#3E9BE8);
+    display:grid;place-items:center;color:#082238;font-weight:800;font-size:14px;
+  }
+  .user .uname{white-space:nowrap;overflow:hidden;font-size:13px;font-weight:600}
+  .user .umail{white-space:nowrap;overflow:hidden;font-size:11px;opacity:.5;margin-top:2px}
+
+  /* ============ CONTENT ============ */
+  .main{flex:1; min-width:0; position:relative; overflow:hidden}
+  .panel{
+    position:absolute; inset:0; padding:clamp(26px,5vh,54px) clamp(22px,4vw,64px);
+    overflow-y:auto; opacity:0; transform:translateY(14px); pointer-events:none;
+    transition:opacity .35s var(--smooth), transform .35s var(--smooth);
+  }
+  .panel.on{opacity:1; transform:none; pointer-events:auto}
+  .panel h1{font-size:clamp(30px,4.2vw,52px); font-weight:800; letter-spacing:-.5px}
+  .panel .lead{font-size:clamp(15px,1.6vw,19px); opacity:.72; max-width:640px; margin:14px 0 34px; line-height:1.6}
+  .cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:16px; max-width:900px}
+  .card{
+    background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1);
+    border-radius:18px; padding:22px; min-height:120px;
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    transition:transform .3s var(--spring), background .3s;
+  }
+  .card:hover{transform:translateY(-4px); background:rgba(255,255,255,.11)}
+  .card b{display:block; font-size:16px; margin-bottom:8px}
+  .card p{font-size:13px; opacity:.65; line-height:1.55}
+
+  /* theme chips */
+  .themes{position:fixed; right:18px; bottom:18px; z-index:60; display:flex; gap:8px;
+    background:rgba(10,14,22,.55); border:1px solid rgba(255,255,255,.12);
+    padding:7px;border-radius:14px; backdrop-filter:blur(14px);}
+  .themes button{
+    width:34px;height:34px;border-radius:10px;border:1px solid rgba(255,255,255,.16);cursor:pointer;
+    display:grid;place-items:center;font-size:11px;font-weight:700;
+  }
+  .themes button[data-t="reel-dark"]{background:#434958;color:#fff}
+  .themes button[data-t="reel-light"]{background:#e2e7e5;color:#151a22}
+  .themes button[data-t="hybrid"]{background:#101620;color:#8CCBF7}
+  .themes button.sel{outline:2px solid #8CCBF7; outline-offset:2px}
+
+  /* ---------- LIGHT theme ---------- */
+  body[data-theme="reel-light"]{
+    color:#181d24;
+    background:radial-gradient(900px 500px at 80% -5%,#ffffff66,transparent 60%),
+               linear-gradient(160deg,#e2e7e5,#ced3d2);
+  }
+  body[data-theme="reel-light"] .sidebar{
+    background:rgba(255,255,255,.86);
+    border-right:1px solid rgba(20,30,45,.08);
+    box-shadow:0 12px 40px rgba(30,45,60,.12);
+  }
+  body[data-theme="reel-light"] .collapse-btn{background:#2060e0; color:#fff}
+  body[data-theme="reel-light"] .pill{background:linear-gradient(145deg,#2060e0,#2f7af0); box-shadow:0 8px 24px rgba(32,96,224,.4)}
+  body[data-theme="reel-light"] .nav-item{color:#39424e}
+  body[data-theme="reel-light"] .nav-item:hover{background:rgba(32,96,224,.08)}
+  body[data-theme="reel-light"] .nav-item .bdg{background:#ff5470}
+  body[data-theme="reel-light"] .brand .btxt b{color:#151a22}
+  body[data-theme="reel-light"] .brand .btxt span{color:#151a22;opacity:.45}
+  body[data-theme="reel-light"] .user{border-color:rgba(20,30,45,.1); color:#181d24}
+  body[data-theme="reel-light"] .user:hover{background:rgba(32,96,224,.08)}
+  body[data-theme="reel-light"] .card{background:#fff; border:1px solid rgba(20,30,45,.07); box-shadow:0 6px 20px rgba(30,45,60,.08)}
+  body[data-theme="reel-light"] .card b{color:#151a22}
+  body[data-theme="reel-light"] .card p{color:#3a424d}
+
+  /* ---------- HYBRID (masjid) ---------- */
+  body[data-theme="hybrid"]{
+    color:#eef3fa;
+    background:linear-gradient(160deg,#0c1119,#05070c);
+  }
+  body[data-theme="hybrid"] .sidebar{
+    background:rgba(10,16,26,.66);
+    border-right:1px solid rgba(140,203,247,.14);
+    box-shadow:8px 0 40px rgba(0,0,0,.35);
+  }
+  body[data-theme="hybrid"] .pill{background:linear-gradient(145deg,#ffffff,#e8f4ff); box-shadow:0 8px 26px rgba(8,15,26,.5)}
+  body[data-theme="hybrid"] .nav-item.on svg{stroke:#3E9BE8}
+  body[data-theme="hybrid"] .user{background:rgba(140,203,247,.08); border-color:rgba(140,203,247,.18)}
+  body[data-theme="hybrid"] .card{background:rgba(16,26,40,.6); border-color:rgba(140,203,247,.16)}
+
+  @media (max-width:720px){
+    .sidebar{width:var(--rail)}
+    .sidebar .brand b,.sidebar .brand span,.sidebar .user .uname,.sidebar .user .umail,.sidebar .lbl{display:none}
+    .themes{right:10px; bottom:10px}
+  }
+</style>
+</head>
+<body data-theme="hybrid">
+<img class="wallpaper on" src="bg-calligraphy.jpg" alt="">
+<div class="scrim on"></div>
+
+<div class="shell">
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sb">
+
+    <div class="brand">
+      <div class="mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 21h16M6 21V8l6-4 6 4v13M10 21v-5a2 2 0 0 1 4 0v5"/>
+        </svg>
+      </div>
+      <div class="btxt"><b>Masjid e Mohammadi</b><span>Mosque app</span></div>
+    </div>
+
+    <button class="collapse-btn" id="tb" aria-label="Toggle sidebar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+
+    <nav class="nav">
+      <div class="items" id="items">
+        <div class="pill" id="pill"></div>
+
+        <div class="nav-item on" data-go="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10.5 12 3l9 7.5V21h-6v-6h-6v6H3z"/></svg><span class="lbl"><i>Home</i></span></div>
+        <div class="nav-item" data-go="prayer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg><span class="lbl"><i>Prayer Times</i></span></div>
+        <div class="nav-item" data-go="quran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19c0-1.1.9-2 2-2h13"/><path d="M9 8h6"/></svg><span class="lbl"><i>Quran</i></span></div>
+        <div class="nav-item" data-go="duas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.4" fill="currentColor"/><path d="M12 21v-6.6"/></svg><span class="lbl"><i>Duas &amp; Tasbeeh</i></span><span class="bdg">3</span></div>
+        <div class="nav-item" data-go="videos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="14" height="14" rx="3"/><path d="M16 10l6-3v10l-6-3"/></svg><span class="lbl"><i>Videos</i></span></div>
+        <div class="nav-item" data-go="contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v13.5a1.5 1.5 0 0 1-2.4 1.2L12 15l-5.6 4.7a1.5 1.5 0 0 1-2.4-1.2z"/></svg><span class="lbl"><i>Contact</i></span></div>
+      </div>
+    </nav>
+
+    <div class="user">
+      <div class="av">S</div>
+      <div><div class="uname">Shan Ahmed</div><div class="umail">shan@masjid.app</div></div>
+    </div>
+  </aside>
+
+  <!-- ============ CONTENT ============ -->
+  <main class="main">
+    <section class="panel on" id="p-home">
+      <h1>Assalamu Alaikum</h1>
+      <p class="lead">This is the new sidebar look — a sliding active pill, a springy collapse, and the same feeling as the reel you sent.</p>
+      <div class="cards">
+        <div class="card"><b>Next Prayer</b><p>Asr — in 02:14:33</p></div>
+        <div class="card"><b>Date</b><p>10 Oct 2026 · 29 Rabi al-Awwal 1448</p></div>
+        <div class="card"><b>Masjid</b><p>Masjid e Mohammadi, community updates.</p></div>
+      </div>
+    </section>
+
+    <section class="panel" id="p-prayer">
+      <h1>Prayer Times</h1>
+      <p class="lead">Fajr 05:12 · Dhuhr 12:34 · Asr 15:47 · Maghrib 18:22 · Isha 19:41</p>
+      <div class="cards">
+        <div class="card"><b>Fajr</b><p>05:12</p></div>
+        <div class="card"><b>Dhuhr</b><p>12:34</p></div>
+        <div class="card"><b>Asr</b><p>15:47</p></div>
+        <div class="card"><b>Maghrib</b><p>18:22</p></div>
+        <div class="card"><b>Isha</b><p>19:41</p></div>
+      </div>
+    </section>
+
+    <section class="panel" id="p-quran">
+      <h1>Quran</h1>
+      <p class="lead">Read or listen — 114 surahs, translations, 6 qaris, offline.</p>
+      <div class="cards">
+        <div class="card"><b>Al-Fatiha</b><p>Surah 1 · 7 ayahs</p></div>
+        <div class="card"><b>Ya-Sin</b><p>Surah 36 · 83 ayahs</p></div>
+        <div class="card"><b>Al-Kahf</b><p>Surah 18 · 110 ayahs</p></div>
+        <div class="card"><b>Ar-Rahman</b><p>Surah 55 · 78 ayahs</p></div>
+      </div>
+    </section>
+
+    <section class="panel" id="p-duas">
+      <h1>Duas &amp; Tasbeeh</h1>
+      <p class="lead">Daily duas and a tasbeeh counter — 33, 99 or free mode.</p>
+      <div class="cards">
+        <div class="card"><b>Morning</b><p>Duas for the start of the day.</p></div>
+        <div class="card"><b>Evening</b><p>Duas of protection and gratitude.</p></div>
+        <div class="card"><b>Tasbeeh</b><p>Tap counter with vibration.</p></div>
+      </div>
+    </section>
+
+    <section class="panel" id="p-videos">
+      <h1>Videos</h1>
+      <p class="lead">Masjid e Mohammadi YouTube — real channel videos, in-app player.</p>
+      <div class="cards">
+        <div class="card"><b>Weekly Reminder</b><p>New uploads appear here.</p></div>
+        <div class="card"><b>Jummah Khutbah</b><p>Friday sermon recordings.</p></div>
+        <div class="card"><b>Quran Recitation</b><p>Beautiful recitations collection.</p></div>
+      </div>
+    </section>
+
+    <section class="panel" id="p-contact">
+      <h1>Contact</h1>
+      <p class="lead">Reach the masjid — phone, WhatsApp, map, email.</p>
+      <div class="cards">
+        <div class="card"><b>Imam</b><p>+92 300 0000000</p></div>
+        <div class="card"><b>Masjid</b><p>+92 300 0000000</p></div>
+        <div class="card"><b>Location</b><p>Open in Google Maps</p></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="themes">
+  <button data-t="reel-dark" class="sel" title="Dark (reel)">D</button>
+  <button data-t="reel-light" title="Light (reel)">L</button>
+  <button data-t="hybrid" title="Masjid hybrid">M</button>
+</div>
+
+<script>
+  // ---- sliding pill (CodeXR layoutId effect) ----
+  const items = document.getElementById('items');
+  const pill  = document.getElementById('pill');
+  const setPill = i => pill.style.setProperty('--iy', i);
+
+  const navItems = [...document.querySelectorAll('.nav-item')];
+  let active = 0;
+  const go = idx => {
+    active = idx;
+    navItems.forEach((n,i)=>n.classList.toggle('on', i===idx));
+    setPill(idx);
+    const p = navItems[idx].dataset.go;
+    document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('on', x.id==='p-'+p));
+    // breadcrumb in home panel? no — panel swap only
+  };
+  navItems.forEach((n,i)=> n.addEventListener('click', ()=>go(i)));
+  setPill(0);
+
+  // ---- collapse (width 280 <-> 80, labels clipPath) ----
+  const sb = document.getElementById('sb');
+  document.getElementById('tb').addEventListener('click', ()=> sb.classList.toggle('collapsed'));
+
+  // ---- theme switch ----
+  const chips = document.querySelectorAll('.themes button[data-t]');
+  const applyTheme = t => {
+    document.body.dataset.theme = t;
+    chips.forEach(c=>c.classList.toggle('sel', c.dataset.t===t));
+    const wall = document.querySelector('.wallpaper'), sc = document.querySelector('.scrim');
+    const on = t==='hybrid';
+    wall.classList.toggle('on', on); sc.classList.toggle('on', on);
+  };
+  chips.forEach(c=> c.addEventListener('click', ()=>applyTheme(c.dataset.t)));
+</script>
+</body>
+</html>
