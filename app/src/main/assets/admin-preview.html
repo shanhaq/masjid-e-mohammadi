@@ -4,19 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Masjid Admin — Demo (App ke andar)</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#05080E; --ink:#F2F7FD; --body:#A9BACD; --muted:#7E8EA3;
   --accent:#8CCBF7; --accent2:#3E9BE8; --line:rgba(255,255,255,.12);
-  --glass:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+  --glass:linear-gradient(160deg,rgba(255,255,255,.13),rgba(255,255,255,.06));
   --sh:0 30px 70px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.14);
+  --cardbg:rgba(10,16,26,.62);
 }
 html,body{height:100%}
-body{background:var(--bg);color:var(--body);font-family:Inter,system-ui,sans-serif;font-size:16px;
+body{background:var(--bg);color:var(--body);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;
   -webkit-font-smoothing:antialiased;line-height:1.6;overflow:hidden}
 h1,h2,h3{font-family:Fraunces,Georgia,serif}
 .bgimg{position:fixed;inset:0;z-index:0;pointer-events:none;
@@ -25,14 +23,14 @@ h1,h2,h3{font-family:Fraunces,Georgia,serif}
 .bgscrim{position:fixed;inset:0;z-index:0;pointer-events:none;
   background:radial-gradient(120% 70% at 80% -10%,rgba(62,155,232,.20),transparent 55%),
   linear-gradient(180deg,rgba(5,8,14,.88) 0%,rgba(5,8,14,.94) 100%)}
-.shell{position:relative;z-index:1;display:flex;height:100svh}
+.shell{position:relative;z-index:1;display:flex;height:100vh}
 .appbar{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;gap:10px;
   background:rgba(6,10,17,.88);backdrop-filter:blur(18px) saturate(160%);
   border-bottom:1px solid var(--line);padding:10px 14px;color:#BFE3FA;font-size:14.5px;font-weight:600}
 .appbar button{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:rgba(255,255,255,.07);
   color:#fff;font-size:22px;cursor:pointer;display:grid;place-items:center;line-height:1}
 .appbar b{margin-left:auto;font-size:12px;color:var(--muted);font-weight:600}
-.side{width:232px;flex:none;background:var(--glass);border-right:1px solid var(--line);
+.side{width:232px;flex:none;background:var(--cardbg);background-image:var(--glass);border-right:1px solid var(--line);
   backdrop-filter:blur(24px) saturate(160%);display:flex;flex-direction:column;padding:22px 12px;overflow-y:auto}
 .side::-webkit-scrollbar{width:8px}.side::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:8px}
 .brand{display:flex;align-items:center;gap:11px;padding:4px 10px 18px;border-bottom:1px solid var(--line);margin-bottom:14px}
@@ -53,7 +51,7 @@ h1,h2,h3{font-family:Fraunces,Georgia,serif}
   background:rgba(140,203,247,.08);color:#BFE3FA;font-size:13.5px}
 .sync .dot{width:8px;height:8px;border-radius:50%;background:#5BE49B;box-shadow:0 0 10px #5BE49B;animation:bl 1.6s infinite}
 @keyframes bl{50%{opacity:.35}}
-.main{flex:1;overflow-y:auto;padding:clamp(92px,12vw,112px) clamp(20px,3.2vw,52px) 40px}
+.main{flex:1;min-width:0;overflow-y:auto;padding:clamp(92px,12vw,112px) clamp(20px,3.2vw,52px) 40px}
 .main::-webkit-scrollbar{width:10px}.main::-webkit-scrollbar-thumb{background:rgba(255,255,255,.13);border-radius:10px}
 .hd{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:30px}
 .hd h1{font-size:clamp(1.9rem,3.4vw,2.8rem);color:#fff;font-weight:600;letter-spacing:-.02em}
@@ -66,10 +64,10 @@ h1,h2,h3{font-family:Fraunces,Georgia,serif}
 .sec h2{font-size:1.35rem;color:#fff;font-weight:600;margin-bottom:6px}
 .sec p{font-size:14.5px;color:var(--muted);margin-bottom:16px}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:26px}
-.stat{background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:20px;backdrop-filter:blur(10px)}
+.stat{background:var(--cardbg);background-image:var(--glass);border:1px solid var(--line);border-radius:18px;padding:20px;backdrop-filter:blur(10px)}
 .stat .n{font-family:Fraunces;font-size:30px;color:#fff;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .stat .l{font-size:13.5px;color:var(--muted);margin-top:4px}
-.card{background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:14px;backdrop-filter:blur(10px)}
+.card{background:var(--cardbg);background-image:var(--glass);border:1px solid var(--line);border-radius:18px;padding:22px;margin-bottom:14px;backdrop-filter:blur(10px)}
 .row{display:grid;grid-template-columns:1.2fr .8fr 1fr 54px;gap:12px;align-items:center}
 @media(max-width:640px){.row{grid-template-columns:1fr 1fr;grid-auto-rows:auto}}
 .row.head{font-size:12.5px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;padding:4px 4px 10px}
@@ -369,12 +367,12 @@ var C;
 try{C=JSON.parse(localStorage.getItem(KEY))||JSON.parse(JSON.stringify(DEFAULTS));}
 catch(e){C=JSON.parse(JSON.stringify(DEFAULTS));}
 function saveC(msg){
-  localStorage.setItem(KEY,JSON.stringify(C));
+  try{localStorage.setItem(KEY,JSON.stringify(C))}catch(e){}
   var st=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
   $('st-last').textContent=st;
   var log=[];try{log=JSON.parse(localStorage.getItem(LOGKEY))||[]}catch(e){}
   log.unshift({m:msg,t:st});log=log.slice(0,LOGMAX);
-  localStorage.setItem(LOGKEY,JSON.stringify(log));
+  try{localStorage.setItem(LOGKEY,JSON.stringify(log))}catch(e){}
   renderAct();refreshJson();toast(msg+' — draft save ho gaya');
 }
 function renderAct(){
