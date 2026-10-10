@@ -757,6 +757,18 @@ if(navigator.geolocation){
 addEventListener('deviceorientationabsolute',hQ,true);
 addEventListener('deviceorientation',hQ,true);
 
+/* ---------- ADMIN WALLPAPER OVERRIDE ----------
+   Agar admin panel (docs/admin-preview.html) me wallpaper save hua ho
+   (localStorage draft 'masjid-admin-content' -> bg.upload), to wahi lagao.
+   Jaise hi real backend aayega, ye localStorage draft -> remote JSON banega. */
+try{
+  var ac=JSON.parse(localStorage.getItem('masjid-admin-content'));
+  if(ac&&ac.bg&&ac.bg.kind==='upload'&&ac.bg.data){
+    var bgel=document.querySelector('.bgimg');
+    if(bgel)bgel.style.background='url("'+ac.bg.data+'") center 28%/cover no-repeat';
+  }
+}catch(e){}
+
 /* ---------- PWA ---------- */
 if('serviceWorker' in navigator && location.protocol==='https:'){
   addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});
