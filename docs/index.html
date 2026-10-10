@@ -39,26 +39,62 @@ a{color:inherit}
     radial-gradient(130% 78% at 70% -8%,rgba(74,168,240,.16),transparent 56%),
     linear-gradient(180deg,rgba(6,11,19,.70) 0%,rgba(6,11,19,.80) 52%,rgba(6,11,19,.94) 100%)}
 
-/* ---------- floating dock nav ---------- */
-.dock{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:120;
-  display:flex;flex-direction:column;gap:6px;padding:14px 11px;border-radius:999px;
-  background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(22px) saturate(165%);
-  box-shadow:0 26px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.16)}
-.dock .brand{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;margin:0 auto 10px;
-  background:linear-gradient(150deg,var(--accent),var(--accent2));color:#06131F;box-shadow:0 10px 24px rgba(62,155,232,.45)}
-.dock .brand svg{width:24px;height:24px}
-.dock nav{display:flex;flex-direction:column;gap:6px}
-.dock button.nv{position:relative;width:50px;height:50px;border-radius:50%;display:grid;place-items:center;
-  color:#B4C3D6;background:transparent;border:0;cursor:pointer;transition:.2s}
-.dock button.nv svg{width:22px;height:22px;opacity:.9}
-.dock button.nv:hover{background:rgba(255,255,255,.09);color:#fff}
-.dock button.nv.on{background:var(--accent);color:#06131F;box-shadow:0 12px 26px rgba(140,203,247,.42)}
-.dock button.nv::after{content:attr(data-lb);position:absolute;left:calc(100% + 16px);top:50%;
+/* ---------- sidebar nav (reel M style: sliding pill + collapsible) ---------- */
+:root{--sbw:280px;--rowh:54px;--sbgap:6px;--spring:cubic-bezier(.34,1.4,.64,1);--smooth:cubic-bezier(.22,1,.36,1)}
+body.sb-col{--sbw:80px}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sbw);z-index:120;
+  display:flex;flex-direction:column;gap:0;padding:22px 14px 18px;
+  background:rgba(10,16,26,.68);border-right:1px solid rgba(140,203,247,.14);
+  backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);
+  box-shadow:8px 0 40px rgba(0,0,0,.35);
+  transition:width .48s var(--smooth);overflow:visible}
+.sidebar .brand{display:flex;align-items:center;gap:12px;padding:2px 6px 16px;min-width:0;flex-shrink:0}
+.sidebar .brand .mark{width:46px;height:46px;flex:0 0 46px;border-radius:15px;
+  background:linear-gradient(150deg,var(--accent),var(--accent2));color:#06131F;
+  display:grid;place-items:center;box-shadow:0 10px 24px rgba(62,155,232,.45)}
+.sidebar .brand .mark svg{width:25px;height:25px}
+.sidebar .brand .btxt{white-space:nowrap;overflow:hidden}
+.sidebar .brand .btxt b{display:block;font-size:15.5px;color:#fff;letter-spacing:.2px}
+.sidebar .brand .btxt span{display:block;font-size:11.5px;color:#7E93AB;margin-top:2px}
+.sidebar .collapse-btn{position:absolute;right:-13px;top:26px;z-index:10;
+  width:26px;height:26px;border-radius:50%;border:0;cursor:pointer;
+  background:#fff;color:#10151F;display:grid;place-items:center;
+  box-shadow:0 3px 12px rgba(0,0,0,.35);transition:transform .35s var(--spring),background .2s}
+.sidebar .collapse-btn:hover{transform:scale(1.12)}
+.sidebar .collapse-btn svg{width:15px;height:15px;transition:transform .4s var(--smooth)}
+body.sb-col .collapse-btn svg{transform:rotate(180deg)}
+.sidebar nav{position:relative;flex:1;display:flex;flex-direction:column;min-width:0}
+.sidebar .items{position:relative;display:flex;flex-direction:column;gap:var(--sbgap)}
+.sidebar .pill{position:absolute;left:0;right:0;top:0;height:var(--rowh);border-radius:15px;
+  background:linear-gradient(145deg,#ffffffee,#e8f4ff);box-shadow:0 8px 26px rgba(8,15,26,.5);
+  transform:translateY(calc(var(--iy,0)*(var(--rowh) + var(--sbgap))));
+  transition:transform .55s var(--spring)}
+.sidebar button.nv{position:relative;z-index:2;height:var(--rowh);width:100%;
+  display:flex;align-items:center;gap:13px;padding:0 16px;border-radius:15px;border:0;
+  background:transparent;cursor:pointer;color:#B4C3D6;font-size:15px;font-weight:500;
+  transition:background .25s,color .3s}
+.sidebar button.nv svg{width:22px;height:22px;flex:0 0 22px;opacity:.92}
+.sidebar button.nv:hover{background:rgba(255,255,255,.08);color:#fff}
+.sidebar button.nv.on{color:#0d1420}
+.sidebar button.nv.on svg{stroke:#3E9BE8}
+.sidebar .lbl{display:block;overflow:hidden;white-space:nowrap}
+.sidebar .lbl i{display:block;font-style:normal;clip-path:inset(0 0 0 0);opacity:1;
+  transition:clip-path .42s var(--smooth),opacity .3s}
+body.sb-col .lbl i{clip-path:inset(0 100% 0 0);opacity:0}
+.sidebar button.nv::after{content:attr(data-lb);position:absolute;left:calc(100% + 14px);top:50%;
   transform:translateY(-50%) scale(.96);transform-origin:left center;
   background:rgba(10,15,24,.96);border:1px solid var(--line);color:#fff;font-size:14.5px;font-weight:500;
   padding:9px 14px;border-radius:11px;white-space:nowrap;opacity:0;pointer-events:none;transition:.18s;
   box-shadow:0 12px 30px rgba(0,0,0,.5)}
-.dock button.nv:hover::after,.dock button.nv:focus-visible::after{opacity:1;transform:translateY(-50%) scale(1)}
+body.sb-col .sidebar button.nv:hover::after{opacity:1;transform:translateY(-50%) scale(1)}
+.sidebar .user{flex-shrink:0;display:flex;align-items:center;gap:12px;padding:9px;margin-top:6px;
+  border-radius:15px;border:1px solid rgba(140,203,247,.18);background:rgba(140,203,247,.08);
+  min-width:0;transition:background .25s}
+.sidebar .user .av{width:38px;height:38px;flex:0 0 38px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#082238;font-weight:800;font-size:15px;
+  display:grid;place-items:center}
+.sidebar .user .uname{white-space:nowrap;overflow:hidden;font-size:13px;font-weight:600;color:#dfe9f4}
+.sidebar .user .umail{white-space:nowrap;overflow:hidden;font-size:11px;color:#7E93AB;margin-top:2px}
 .cprt{position:fixed;right:20px;bottom:16px;z-index:60;font-size:12.5px;color:#5E6E82;pointer-events:none}
 .btn{cursor:pointer;border:none;font-family:inherit;font-weight:600;font-size:16.5px;padding:15px 26px;border-radius:14px;
   text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:9px;
@@ -71,7 +107,7 @@ a{color:inherit}
 .btn.w100{width:100%}
 
 /* ---------- main / panels ---------- */
-.main{margin-left:118px;position:relative;z-index:1;height:100svh;overflow:hidden}
+.main{margin-left:var(--sbw);position:relative;z-index:1;height:100svh;overflow:hidden}
 .panel{position:absolute;inset:0;display:none;overflow-y:auto;padding:clamp(34px,4.6vw,72px) clamp(26px,4.8vw,80px)}
 .panel.on{display:block}
 .panel::-webkit-scrollbar{width:10px}
@@ -236,12 +272,18 @@ a{color:inherit}
 
 /* ---------- mobile ---------- */
 @media(max-width:980px){
-  .dock{left:10px;padding:12px 8px;gap:5px}
-  .dock .brand{width:42px;height:42px;margin-bottom:6px}
-  .dock button.nv{width:42px;height:42px}
-  .dock button.nv svg{width:20px;height:20px}
-  .dock button.nv::after{display:none}
-  .main{margin-left:74px}
+  body.sb-col{--sbw:80px}
+  .sidebar{padding-top:18px}
+  .sidebar .brand{padding-bottom:12px}
+  .sidebar .brand .mark{width:40px;height:40px;flex-basis:40px}
+  .sidebar .brand .btxt{display:none}
+  .sidebar .collapse-btn,.sidebar .user .uname,.sidebar .user .umail{display:none}
+  body:not(.sb-col) .sidebar{width:80px}
+  body:not(.sb-col) .sidebar .brand .mark{margin:0 auto}
+  body.sb-col .sidebar .brand{padding-left:0}
+  .sidebar .user{padding:7px;background:transparent;border-color:transparent}
+  .sidebar .user .av{margin:0 auto}
+  .main{margin-left:80px}
   .panel{padding:36px 18px 44px}
   .cprt{display:none}
 }
@@ -250,18 +292,27 @@ a{color:inherit}
 <body>
 <div class="bgimg"></div><div class="bgscrim"></div>
 
-<aside class="dock" id="dock">
-  <a class="brand" href="#" data-go="home" aria-label="Masjid e Mohammadi — Home">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-2.6 3.2-6 2-6 6.6V20h12v-10.4C18 5 14.6 6.2 12 3Z"/><path d="M9.6 20v-4.2a2.4 2.4 0 0 1 4.8 0V20"/></svg>
-  </a>
+<aside class="sidebar" id="sb">
+  <div class="brand">
+    <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-2.6 3.2-6 2-6 6.6V20h12v-10.4C18 5 14.6 6.2 12 3Z"/><path d="M9.6 20v-4.2a2.4 2.4 0 0 1 4.8 0V20"/></svg></span>
+    <span class="btxt"><b>Masjid e Mohammadi</b><span>Official website</span></span>
+  </div>
+  <button class="collapse-btn" id="tb" aria-label="Toggle sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
   <nav>
-    <button class="nv on" data-go="home" data-lb="Home" aria-label="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg></button>
-    <button class="nv" data-go="times" data-lb="Prayer Times" aria-label="Prayer Times"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></button>
-    <button class="nv" data-go="quran" data-lb="Quran" aria-label="Quran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></button>
-    <button class="nv" data-go="videos" data-lb="Videos" aria-label="Videos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10.2 9.3v5.4l4.8-2.7Z"/></svg></button>
-    <button class="nv" data-go="contact" data-lb="Contact" aria-label="Contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.4h3.6L12 5.6v12.8L7.6 14.6H4a1 1 0 0 1-1-1v-3.2a1 1 0 0 1 1-1Z"/><path d="M15.4 9.2a4.2 4.2 0 0 1 0 5.6"/><path d="M18 6.6a7.8 7.8 0 0 1 0 10.8"/></svg></button>
-    <button class="nv" data-go="app" data-lb="Get the App" aria-label="Get the App"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M11 18.5h2"/></svg></button>
+    <div class="items" id="items">
+      <div class="pill" id="pill"></div>
+      <button class="nv on" data-go="home" data-lb="Home" aria-label="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg><span class="lbl"><i>Home</i></span></button>
+      <button class="nv" data-go="times" data-lb="Prayer Times" aria-label="Prayer Times"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span class="lbl"><i>Prayer Times</i></span></button>
+      <button class="nv" data-go="quran" data-lb="Quran" aria-label="Quran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span class="lbl"><i>Quran</i></span></button>
+      <button class="nv" data-go="videos" data-lb="Videos" aria-label="Videos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10.2 9.3v5.4l4.8-2.7Z"/></svg><span class="lbl"><i>Videos</i></span></button>
+      <button class="nv" data-go="contact" data-lb="Contact" aria-label="Contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.4h3.6L12 5.6v12.8L7.6 14.6H4a1 1 0 0 1-1-1v-3.2a1 1 0 0 1 1-1Z"/><path d="M15.4 9.2a4.2 4.2 0 0 1 0 5.6"/><path d="M18 6.6a7.8 7.8 0 0 1 0 10.8"/></svg><span class="lbl"><i>Contact</i></span></button>
+      <button class="nv" data-go="app" data-lb="Get the App" aria-label="Get the App"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M11 18.5h2"/></svg><span class="lbl"><i>Get the App</i></span></button>
+    </div>
   </nav>
+  <div class="user">
+    <span class="av">M</span>
+    <span><span class="uname">Masjid e Mohammadi</span><br><span class="umail">Community mosque · Est. 2020</span></span>
+  </div>
 </aside>
 
 <main class="main">
@@ -421,15 +472,20 @@ var VIDEOS=[
 ];
 var PRAYERS=['Fajr','Sunrise','Dhuhr','Asr','Maghrib','Isha'];
 
-/* ---------- dock router ---------- */
+/* ---------- sidebar router (sliding pill) ---------- */
+var SB_NVS=[].slice.call(document.querySelectorAll('.sidebar .nv'));
+var SB_PILL=document.getElementById('pill');
+function setPill(i){if(SB_PILL&&SB_PILL.style&&SB_PILL.style.setProperty)SB_PILL.style.setProperty('--iy',i)}
 function go(p){
   document.querySelectorAll('.panel').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-p')===p)});
-  document.querySelectorAll('.dock .nv').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-go')===p)});
+  SB_NVS.forEach(function(b,i){b.classList.toggle('on',b.getAttribute('data-go')===p);if(b.getAttribute('data-go')===p)setPill(i)});
   var el=document.querySelector('.panel.on');if(el)el.scrollTop=0;
 }
 document.addEventListener('click',function(e){
   var t=e.target.closest('[data-go]');if(t){e.preventDefault();go(t.getAttribute('data-go'))}
 });
+document.getElementById('tb').addEventListener('click',function(){document.body.classList.toggle('sb-col')});
+setPill(0);
 document.getElementById('yr').textContent=new Date().getFullYear();
 
 /* ---------- videos ---------- */
