@@ -1,4 +1,4 @@
-const CACHE = 'masjid-site-v8';
+const CACHE = 'masjid-site-v9';
 const ASSETS = [
   './', './index.html', './bg-calligraphy.jpg', './bg-mosque.jpg',
   './icon_masjid.svg', './icon-192.png', './icon-512.png',
