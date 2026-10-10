@@ -2,772 +2,477 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#060B13">
-<title>Masjid e Mohammadi — Prayer Times, Quran & Community</title>
-<meta name="description" content="Masjid e Mohammadi — daily prayer times, complete Quran, duas, qibla and community updates. Faith · Worship · Community.">
-<meta property="og:title" content="Masjid e Mohammadi">
-<meta property="og:description" content="Daily prayer times, complete Quran, duas, qibla and community updates.">
-<meta property="og:image" content="bg-calligraphy.jpg">
-<meta property="og:type" content="website">
-<link rel="icon" href="icon_masjid.svg" type="image/svg+xml">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<link rel="manifest" href="manifest.webmanifest">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Masjid e Mohammadi — App</title>
+<meta name="theme-color" content="#07101E">
+<meta name="description" content="Masjid e Mohammadi — namaz timings, Quran, duas, tasbeeh, qibla, videos aur contact. Official website.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕌</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#060B13; --ink:#F2F7FD; --body:#A9BACD; --muted:#7E8EA3;
-  --accent:#8CCBF7; --accent2:#3E9BE8; --line:rgba(255,255,255,.12);
-  --glass:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.028));
-  --sh:0 30px 70px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.16);
+  --bg:#060D18; --panel:rgba(13,25,42,.72); --panel2:rgba(16,30,50,.60);
+  --line:rgba(140,203,247,.22); --linel:rgba(255,255,255,.12);
+  --ac1:#A8D9FF; --ac2:#5CA8F0; --ac-ink:#04121F;
+  --text:#EAF4FF; --text2:#9FB6CC; --ok:#4ADE80;
+  --r:18px; --rs:12px; --rdock:22px;
+  --space-1:4px;--space-2:8px;--space-3:16px;--space-4:24px;--space-5:48px;--space-6:96px;
+  --ease: cubic-bezier(.34,1.4,.64,1);
+  --sease: cubic-bezier(.16,1,.3,1);
 }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
-body{background:var(--bg);color:var(--body);font-family:Inter,system-ui,-apple-system,sans-serif;font-size:16.5px;
-  -webkit-font-smoothing:antialiased;line-height:1.65;overflow:hidden}
-h1,h2,h3{font-family:Fraunces,Georgia,serif}
-a{color:inherit}
-/* ---------- page wallpaper (visible behind every panel) ---------- */
+body{font-family:Manrope,system-ui,sans-serif;background:var(--bg);color:var(--text);overflow:hidden;line-height:1.6}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:600;letter-spacing:-.01em}
+#app{position:fixed;inset:0;display:flex;flex-direction:column}
+
+/* ---------- wallpaper (admin override block below can replace .bgimg) ---------- */
 .bgimg{position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:url("bg-calligraphy.jpg") center 28%/cover no-repeat,
-             url("bg-mosque.jpg") center 28%/cover no-repeat}
+  background:url("bg-calligraphy.jpg") center 28%/cover no-repeat}
 .bgscrim{position:fixed;inset:0;z-index:0;pointer-events:none;
   background:
-    radial-gradient(130% 78% at 70% -8%,rgba(74,168,240,.16),transparent 56%),
-    linear-gradient(180deg,rgba(6,11,19,.70) 0%,rgba(6,11,19,.80) 52%,rgba(6,11,19,.94) 100%)}
+    radial-gradient(120% 80% at 75% -10%,rgba(74,168,240,.18),transparent 55%),
+    radial-gradient(90% 70% at -10% 110%,rgba(62,155,232,.10),transparent 55%),
+    linear-gradient(180deg,rgba(6,13,24,.74) 0%,rgba(6,13,24,.82) 55%,rgba(6,13,24,.96) 100%)}
 
-/* ---------- sidebar nav (reel M style: sliding pill + collapsible) ---------- */
-:root{--sbw:280px;--rowh:54px;--sbgap:6px;--spring:cubic-bezier(.34,1.4,.64,1);--smooth:cubic-bezier(.22,1,.36,1)}
-body.sb-col{--sbw:80px}
-.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sbw);z-index:120;
-  display:flex;flex-direction:column;gap:0;padding:22px 14px 18px;
-  background:rgba(10,16,26,.68);border-right:1px solid rgba(140,203,247,.14);
-  backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);
-  box-shadow:8px 0 40px rgba(0,0,0,.35);
-  transition:width .48s var(--smooth);overflow:visible}
-.sidebar .brand{display:flex;align-items:center;gap:12px;padding:2px 6px 16px;min-width:0;flex-shrink:0}
-.sidebar .brand .mark{width:46px;height:46px;flex:0 0 46px;border-radius:15px;
-  background:linear-gradient(150deg,var(--accent),var(--accent2));color:#06131F;
-  display:grid;place-items:center;box-shadow:0 10px 24px rgba(62,155,232,.45)}
-.sidebar .brand .mark svg{width:25px;height:25px}
-.sidebar .brand .btxt{white-space:nowrap;overflow:hidden}
-.sidebar .brand .btxt b{display:block;font-size:15.5px;color:#fff;letter-spacing:.2px}
-.sidebar .brand .btxt span{display:block;font-size:11.5px;color:#7E93AB;margin-top:2px}
-.sidebar .collapse-btn{position:absolute;right:-13px;top:26px;z-index:10;
-  width:26px;height:26px;border-radius:50%;border:0;cursor:pointer;
-  background:#fff;color:#10151F;display:grid;place-items:center;
-  box-shadow:0 3px 12px rgba(0,0,0,.35);transition:transform .35s var(--spring),background .2s}
-.sidebar .collapse-btn:hover{transform:scale(1.12)}
-.sidebar .collapse-btn svg{width:15px;height:15px;transition:transform .4s var(--smooth)}
-body.sb-col .collapse-btn svg{transform:rotate(180deg)}
-.sidebar nav{position:relative;flex:1;display:flex;flex-direction:column;min-width:0}
-.sidebar .items{position:relative;display:flex;flex-direction:column;gap:var(--sbgap)}
-.sidebar .pill{position:absolute;left:0;right:0;top:0;height:var(--rowh);border-radius:15px;
-  background:linear-gradient(145deg,#ffffffee,#e8f4ff);box-shadow:0 8px 26px rgba(8,15,26,.5);
-  transform:translateY(calc(var(--iy,0)*(var(--rowh) + var(--sbgap))));
-  transition:transform .55s var(--spring)}
-.sidebar button.nv{position:relative;z-index:2;height:var(--rowh);width:100%;
-  display:flex;align-items:center;gap:13px;padding:0 16px;border-radius:15px;border:0;
-  background:transparent;cursor:pointer;color:#B4C3D6;font-size:15px;font-weight:500;
-  transition:background .25s,color .3s}
-.sidebar button.nv svg{width:22px;height:22px;flex:0 0 22px;opacity:.92}
-.sidebar button.nv:hover{background:rgba(255,255,255,.08);color:#fff}
-.sidebar button.nv.on{color:#0d1420}
-.sidebar button.nv.on svg{stroke:#3E9BE8}
-.sidebar .lbl{display:block;overflow:hidden;white-space:nowrap}
-.sidebar .lbl i{display:block;font-style:normal;clip-path:inset(0 0 0 0);opacity:1;
-  transition:clip-path .42s var(--smooth),opacity .3s}
-body.sb-col .lbl i{clip-path:inset(0 100% 0 0);opacity:0}
-.sidebar button.nv::after{content:attr(data-lb);position:absolute;left:calc(100% + 14px);top:50%;
-  transform:translateY(-50%) scale(.96);transform-origin:left center;
-  background:rgba(10,15,24,.96);border:1px solid var(--line);color:#fff;font-size:14.5px;font-weight:500;
-  padding:9px 14px;border-radius:11px;white-space:nowrap;opacity:0;pointer-events:none;transition:.18s;
-  box-shadow:0 12px 30px rgba(0,0,0,.5)}
-body.sb-col .sidebar button.nv:hover::after{opacity:1;transform:translateY(-50%) scale(1)}
-.sidebar .user{flex-shrink:0;display:flex;align-items:center;gap:12px;padding:9px;margin-top:6px;
-  border-radius:15px;border:1px solid rgba(140,203,247,.18);background:rgba(140,203,247,.08);
-  min-width:0;transition:background .25s}
-.sidebar .user .av{width:38px;height:38px;flex:0 0 38px;border-radius:50%;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#082238;font-weight:800;font-size:15px;
-  display:grid;place-items:center}
-.sidebar .user .uname{white-space:nowrap;overflow:hidden;font-size:13px;font-weight:600;color:#dfe9f4}
-.sidebar .user .umail{white-space:nowrap;overflow:hidden;font-size:11px;color:#7E93AB;margin-top:2px}
-.cprt{position:fixed;right:20px;bottom:16px;z-index:60;font-size:12.5px;color:#5E6E82;pointer-events:none}
-.btn{cursor:pointer;border:none;font-family:inherit;font-weight:600;font-size:16.5px;padding:15px 26px;border-radius:14px;
-  text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s,background .25s}
-.btn:hover{transform:translateY(-3px)}
-.btn.primary{background:var(--accent);color:#06131F}
-.btn.primary:hover{box-shadow:0 14px 34px rgba(140,203,247,.4)}
-.btn.ghost{background:rgba(255,255,255,.07);color:var(--ink);border:1px solid var(--line)}
+/* ---------- shared components ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:var(--rs);
+  padding:13px 22px;font-size:.95rem;font-weight:600;font-family:Manrope,sans-serif;color:var(--ac-ink);
+  background:linear-gradient(135deg,var(--ac1),var(--ac2));cursor:pointer;
+  box-shadow:0 10px 26px rgba(92,168,240,.30),inset 0 1px 0 rgba(255,255,255,.5);
+  transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s cubic-bezier(.22,1,.36,1),filter .25s ease}
+.btn:hover{transform:translateY(-5px);filter:brightness(1.06);box-shadow:0 16px 34px rgba(92,168,240,.42),inset 0 1px 0 rgba(255,255,255,.5)}
+.btn:active{transform:translateY(-1px) scale(.98);transition-duration:.1s}
+.btn.ghost{background:rgba(255,255,255,.08);color:var(--text);box-shadow:inset 0 0 0 1px var(--linel)}
 .btn.ghost:hover{background:rgba(255,255,255,.13)}
-.btn.w100{width:100%}
+.field{border-radius:var(--rs);padding:13px 14px;font-size:.94rem;background:rgba(5,12,22,.72);
+  border:1px solid rgba(140,203,247,.30);color:var(--text);outline:none;width:100%;font-family:Manrope,sans-serif}
+.field::placeholder{color:#6E849D}
+.field:focus{border-color:var(--ac1);box-shadow:0 0 0 3px rgba(140,203,247,.18)}
+label.lbl{display:block;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);margin:0 0 6px;font-weight:600}
+.card{background:var(--panel);backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);
+  border:1px solid var(--line);border-radius:var(--r);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 18px 50px rgba(0,0,0,.35)}
+.glass{background:var(--panel2);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--linel);border-radius:var(--rs)}
 
-/* ---------- main / panels ---------- */
-.main{margin-left:var(--sbw);position:relative;z-index:1;height:100svh;overflow:hidden}
-.panel{position:absolute;inset:0;display:none;overflow-y:auto;padding:clamp(34px,4.6vw,72px) clamp(26px,4.8vw,80px)}
-.panel.on{display:block}
-.panel::-webkit-scrollbar{width:10px}
-.panel::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:10px}
-.ptitle{font-size:clamp(2.3rem,4.2vw,3.4rem);font-weight:600;color:#fff;letter-spacing:-.02em;line-height:1.1}
-.psub{font-size:18.5px;color:var(--body);max-width:680px;margin-top:14px;line-height:1.65}
-.eyebrow{font-size:13.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);display:inline-block;margin-bottom:18px}
-.blocktitle{margin-bottom:38px}
+/* ---------- modal base (save-login popup, profile popup) ---------- */
+.overlay{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;padding:22px;
+  background:rgba(4,9,18,.66);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.overlay.on{display:flex}
+.overlay .panel{width:100%;max-width:400px;padding:26px 24px;animation:pop .42s var(--sease)}
+@keyframes pop{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+.overlay h3{font-size:1.35rem;margin-bottom:4px}
+.overlay .sub{color:var(--text2);font-size:.86rem;margin-bottom:18px}
+.overlay .row{display:flex;gap:10px;margin-top:6px}
+.overlay .row .btn{flex:1}
 
-/* home */
-#p-home{padding:0}
-#p-home .bg{position:absolute;inset:0;z-index:0;background:url("bg-calligraphy.jpg") center 26%/cover no-repeat}
-#p-home .scr{position:absolute;inset:0;z-index:0;background:
-  radial-gradient(120% 70% at 70% 0%,rgba(74,168,240,.22),transparent 55%),
-  linear-gradient(180deg,rgba(6,11,19,.55) 0%,rgba(6,11,19,.72) 52%,rgba(6,11,19,.98) 100%)}
-.home-in{position:relative;z-index:2;min-height:100%;display:flex;flex-direction:column;justify-content:center;
-  padding:clamp(44px,6.4vw,88px) clamp(26px,4.8vw,80px)}
-.home-in h1{font-size:clamp(3rem,6.6vw,5.2rem);font-weight:600;line-height:1.02;letter-spacing:-.02em;color:#fff;max-width:16ch}
-.home-in h1 em{font-style:italic;color:var(--accent);font-weight:400}
-.home-in .lead{font-size:clamp(1.18rem,1.95vw,1.45rem);line-height:1.72;max-width:620px;margin-top:24px;color:#C2CFDF}
-.nextcard{margin-top:40px;max-width:600px;background:var(--glass);border:1px solid var(--line);border-radius:26px;
-  padding:26px 30px;backdrop-filter:blur(18px) saturate(150%);box-shadow:var(--sh);
-  display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
-.nextcard .lbl{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-.nextcard .big{font-family:Fraunces;font-size:clamp(1.9rem,3.8vw,2.7rem);color:#fff;margin-top:7px}
-.nextcard .cd{color:var(--accent);font-weight:600;font-size:17px}
-.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-top:32px}
+/* ---------- GATE (login) ---------- */
+#gate{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:22px;
+  background:linear-gradient(180deg,rgba(6,13,24,.85),rgba(6,13,24,.95))}
+#gate .card{width:100%;max-width:390px;padding:34px 28px 26px;text-align:center}
+.brandmark{margin:0 auto 14px;width:58px;height:58px;border-radius:18px;display:grid;place-items:center;
+  background:linear-gradient(135deg,rgba(168,217,255,.2),rgba(92,168,240,.12));border:1px solid var(--line)}
+#gate h2{font-size:1.6rem}
+#gate .tag{color:var(--text2);font-size:.84rem;margin:2px 0 22px}
+#gate .field{text-align:center;letter-spacing:.35em;font-size:1.15rem}
+#gate .err{color:#FF8B8B;font-size:.8rem;margin-top:8px;display:none}
+#gate.shake .card{animation:shake .4s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-4px)}}
+.resetlink{background:none;border:none;color:#6E849D;font-size:.76rem;cursor:pointer;margin-top:14px;text-decoration:underline}
 
-/* times */
-.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:960px}
-@media(max-width:640px){.tgrid{grid-template-columns:repeat(2,1fr)}}
-.tcell{background:var(--glass);border:1px solid var(--line);border-radius:22px;padding:28px 16px;text-align:center;
-  backdrop-filter:blur(10px);transition:transform .3s cubic-bezier(.22,1,.36,1),border-color .3s,box-shadow .3s}
-.tcell:hover{transform:translateY(-4px)}
-.tcell .n{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:#95A9BF}
-.tcell .t{font-family:Fraunces;font-size:clamp(2.1rem,4.1vw,3rem);font-weight:600;color:#EAF3FC;margin-top:12px}
-.tcell.on{background:linear-gradient(160deg,rgba(140,203,247,.2),rgba(255,255,255,.05));border-color:var(--accent);box-shadow:0 18px 40px rgba(62,155,232,.22)}
-.dateline{margin:0 0 30px;font-size:17px;color:var(--muted)}
-.locline{margin-top:28px;font-size:15.5px;color:var(--muted)}
-.locbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:0 0 22px}
-.locbar select{background:rgba(10,15,24,.92);border:1px solid var(--line);color:#EAF3FC;font-family:inherit;
-  font-size:16px;padding:13px 16px;border-radius:13px;cursor:pointer;min-width:240px;max-width:100%}
-.locbar select:focus{border-color:var(--accent);outline:none}
+/* ---------- app shell ---------- */
+.main{position:relative;flex:1;overflow:hidden;z-index:1}
+.panel{position:absolute;inset:0;overflow-y:auto;padding:24px clamp(16px,4vw,40px) 130px;
+  opacity:0;visibility:hidden;transform:translateY(14px);transition:opacity .3s var(--sease),transform .3s var(--sease),visibility 0s linear .3s}
+.panel.act{opacity:1;visibility:visible;transform:none;transition:opacity .34s var(--sease),transform .34s var(--sease)}
+.panel-inner{max-width:980px;margin:0 auto}
 
-/* generic info cards */
-.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:760px}
-@media(max-width:560px){.cards{grid-template-columns:1fr}}
-.cc{background:var(--glass);border:1px solid var(--line);border-radius:20px;padding:24px}
-.cc .who{display:flex;align-items:center;gap:13px}
-.cc .av{width:48px;height:48px;border-radius:13px;display:grid;place-items:center;font-weight:700;font-size:18px;color:#06131F;
-  background:linear-gradient(150deg,var(--accent),var(--accent2))}
-.cc .nm{color:#EAF3FC;font-weight:600;font-size:17px}
-.cc .rl{font-size:14.5px;color:var(--muted)}
-.cc a.call{display:inline-block;margin-top:16px;color:var(--accent);font-weight:600;font-size:16px;text-decoration:none}
-.info{margin-top:34px;max-width:680px}
-.info .row{display:flex;gap:16px;padding:17px 0;border-bottom:1px solid var(--line)}
-.info .row .k{color:var(--muted);font-size:15.5px;min-width:112px}
-.info .row .v{color:#E3ECF6;font-size:17px}
-.info a{color:var(--accent);text-decoration:none}
+/* ---------- home ---------- */
+.hello{display:flex;align-items:center;gap:14px;margin:6px 0 22px;animation:up .5s var(--sease) both}
+.hello .av{width:52px;height:52px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:1.4rem;font-weight:700;
+  background:linear-gradient(135deg,rgba(168,217,255,.25),rgba(92,168,240,.12));border:1px solid var(--line);color:var(--ac1);overflow:hidden}
+.hello .av img{width:100%;height:100%;object-fit:cover}
+.hello h1{font-size:clamp(1.5rem,4vw,2rem)}
+.hello p{color:var(--text2);font-size:.86rem}
+.hijri{font-size:.82rem;color:var(--text2);border:1px solid var(--line);border-radius:999px;padding:5px 13px;margin-left:auto;white-space:nowrap}
+.sec-t{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text2);margin:26px 0 12px;font-weight:700}
+.pray{overflow:hidden;animation:up .55s var(--sease) both}
+.pray .rowline{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;font-size:.96rem;
+  transition:background .2s}
+.pray .rowline+.rowline{border-top:1px solid rgba(255,255,255,.07)}
+.pray .rowline .t{color:var(--text2);font-size:.78rem;letter-spacing:.06em}
+.pray .rowline b{font-family:Fraunces,serif;font-size:1.08rem;font-weight:600}
+.pray .rowline.next{background:rgba(74,222,128,.09);box-shadow:inset 0 0 0 1px rgba(74,222,128,.25)}
+.pray .rowline.next .t{color:var(--ok)}
+.live{display:inline-flex;align-items:center;gap:6px;color:var(--ok);font-size:.7rem;font-weight:700;letter-spacing:.05em}
+.live i{width:7px;height:7px;border-radius:50%;background:var(--ok);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,.55)}50%{box-shadow:0 0 0 6px rgba(74,222,128,0)}}
+.prayloc{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.prayloc select{flex:1;min-width:160px}
+.prayloc .btn{padding:11px 16px;font-size:.85rem}
+.chipsrow{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.chip{flex:1;min-width:140px;padding:14px 16px}
+.chip .k{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text2)}
+.chip b{font-family:Fraunces,serif;font-size:1.25rem;font-weight:600}
+.alerts{animation:up .6s var(--sease) both}
+.alerts .a{display:flex;gap:10px;padding:12px 14px;font-size:.85rem;border-radius:var(--rs);margin-bottom:8px;
+  background:rgba(140,203,247,.10);border:1px solid rgba(140,203,247,.28)}
+.alerts .a .ad{width:6px;height:6px;border-radius:50%;background:var(--ac1);flex:none;margin-top:7px;box-shadow:0 0 8px rgba(168,217,255,.8)}
+.group{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+@media(max-width:640px){.group{grid-template-columns:1fr}}
+@keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 
-/* ---------- quran / duas / tasbeeh / qibla ---------- */
-@font-face{font-family:'Amiri';src:url('quran-font.ttf') format('truetype');font-display:swap;font-weight:400}
-.qtabs{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 30px}
-.qtabs button{border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--body);font-family:inherit;
-  font-size:16px;font-weight:600;padding:11px 20px;border-radius:999px;cursor:pointer;transition:.2s}
-.qtabs button:hover{color:#fff;background:rgba(255,255,255,.1)}
-.qtabs button.on{background:var(--accent);color:#06131F;border-color:transparent;box-shadow:0 12px 26px rgba(140,203,247,.35)}
-.qview{display:none}
-.qview.on{display:block}
-.qsearch{width:100%;max-width:520px;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px;
-  color:#EAF3FC;font-family:inherit;font-size:16.5px;padding:14px 18px;margin-bottom:24px;outline:none}
-.qsearch:focus{border-color:var(--accent)}
-.slist{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;max-width:1080px}
-.srow{display:flex;align-items:center;gap:16px;background:var(--glass);border:1px solid var(--line);border-radius:16px;
-  padding:14px 18px;cursor:pointer;text-align:left;color:inherit;font-family:inherit;transition:transform .25s,border-color .25s}
-.srow:hover{transform:translateY(-3px);border-color:rgba(140,203,247,.5)}
-.srow .num{width:44px;height:44px;flex:none;border-radius:12px;display:grid;place-items:center;font-family:Fraunces;
-  font-size:17px;color:#06131F;background:linear-gradient(150deg,var(--accent),var(--accent2))}
-.srow .nm{color:#EAF3FC;font-weight:600;font-size:17px}
-.srow .mt{font-size:13.5px;color:var(--muted)}
-.srow .arn{margin-left:auto;font-family:'Amiri',serif;font-size:22px;color:#B4C3D6}
-.rbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:24px}
-.rbar .back{width:46px;height:46px;flex:none;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.06);
-  color:#fff;cursor:pointer;display:grid;place-items:center;font-size:20px}
-.rbar h2{font-size:clamp(1.5rem,2.8vw,2.2rem);color:#fff;font-weight:600;margin-right:auto}
-.rbar select{background:rgba(10,15,24,.92);border:1px solid var(--line);color:#EAF3FC;font-family:inherit;font-size:15.5px;padding:12px 16px;border-radius:12px;cursor:pointer}
-.rplayall{background:var(--accent);color:#06131F;border:none;font-family:inherit;font-weight:600;font-size:15.5px;padding:13px 20px;border-radius:12px;cursor:pointer}
-.rplayall.stop{background:rgba(240,90,90,.92);color:#fff}
-.ayah{background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:22px 24px;margin-bottom:14px;max-width:900px;transition:border-color .25s,box-shadow .25s}
-.ayah.cur{border-color:var(--accent);box-shadow:0 16px 40px rgba(62,155,232,.22)}
-.ayah .top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.ayah .medal{width:36px;height:36px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:600;color:#06131F;background:var(--accent)}
-.ayah .play{width:36px;height:36px;flex:none;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--accent);cursor:pointer;display:grid;place-items:center;font-size:13px}
-.ayah .ar{font-family:'Amiri',serif;font-size:31px;line-height:2.05;color:#F2F7FD;direction:rtl;text-align:right}
-.ayah .tr{margin-top:14px;font-size:16.5px;color:var(--body);line-height:1.7}
-.dchips{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:22px}
-.dchips button{border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--body);font-family:inherit;font-size:14.5px;font-weight:600;padding:9px 17px;border-radius:999px;cursor:pointer;text-transform:capitalize}
-.dchips button.on{background:var(--accent);color:#06131F;border-color:transparent}
-.dua{background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:24px;margin-bottom:14px;max-width:820px}
-.dua h3{font-family:Inter;font-size:17.5px;color:#fff;font-weight:600}
-.dua .desc{font-size:14.5px;color:var(--muted);margin-top:4px}
-.dua .ar{font-family:'Amiri',serif;font-size:26px;line-height:2;color:#EAF3FC;direction:rtl;text-align:right;margin:16px 0}
-.dua .tr2{font-style:italic;color:#9FB2C6;font-size:15.5px}
-.dua .tr{margin-top:8px;font-size:16px;color:var(--body)}
-.tasb{max-width:400px;text-align:center;margin-top:8px}
-.tasb .ring{width:230px;height:230px;margin:0 auto 24px;border-radius:50%;display:grid;place-items:center;cursor:pointer;
-  background:radial-gradient(circle at 50% 30%,rgba(140,203,247,.22),rgba(255,255,255,.03));border:1px solid var(--line);
-  box-shadow:var(--sh);transition:transform .12s;user-select:none}
-.tasb .ring:active{transform:scale(.96)}
-.tasb .count{font-family:Fraunces;font-size:64px;color:#fff;line-height:1;font-weight:600}
-.tasb .sub{font-size:14.5px;color:var(--muted);margin-top:8px}
-.tasb .row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.tasb .row button{border:1px solid var(--line);background:rgba(255,255,255,.06);color:#EAF3FC;font-family:inherit;font-size:15.5px;font-weight:600;padding:12px 20px;border-radius:12px;cursor:pointer}
-.tasb .row button.on{background:var(--accent);color:#06131F;border-color:transparent}
-.qib{max-width:430px;text-align:center}
-.qib .dial{width:260px;height:260px;margin:0 auto 24px;border-radius:50%;position:relative;border:1px solid var(--line);
-  background:radial-gradient(circle at 50% 30%,rgba(140,203,247,.16),rgba(255,255,255,.02));box-shadow:var(--sh)}
-.qib .dial .kaaba{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:26px;height:26px;color:var(--accent)}
-.qib .dial .needle{position:absolute;left:50%;top:50%;width:0;height:0;transform-origin:center;transition:transform .3s ease}
-.qib .dial .needle::before{content:'';position:absolute;left:-9px;top:-106px;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:106px solid var(--accent)}
-.qib .dial .hub{position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--accent)}
-.qib .deg{font-family:Fraunces;font-size:38px;color:#fff;font-weight:600}
-.qib .note{font-size:15px;color:var(--muted);margin-top:12px;line-height:1.6}
-
-
-/* videos */
-.vids{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1000px}
-.vid{background:var(--glass);border:1px solid var(--line);border-radius:20px;overflow:hidden;cursor:pointer;padding:0;
-  transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s;text-align:left;color:inherit;font-family:inherit;display:block}
-.vid:hover{transform:translateY(-6px);box-shadow:var(--sh)}
-.vid .th{position:relative;aspect-ratio:16/9;overflow:hidden;background:#0A1420}
-.vid .th img{width:100%;height:100%;object-fit:cover;display:block}
-.vid .th .play{position:absolute;inset:0;display:grid;place-items:center;background:rgba(4,8,14,.28);transition:.25s}
-.vid:hover .th .play{background:rgba(4,8,14,.08)}
-.vid .th .play i{width:56px;height:56px;border-radius:50%;background:rgba(140,203,247,.92);display:grid;place-items:center;color:#06131F}
-.vid .body{padding:18px 19px 20px}
-.vid .body h3{font-family:Inter;font-size:17px;font-weight:600;color:#EAF3FC;line-height:1.45;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.vid .body .d{font-size:14.5px;color:var(--muted);margin-top:10px}
-@media(max-width:900px){.vids{grid-template-columns:1fr 1fr}}
-@media(max-width:600px){.vids{grid-template-columns:1fr}}
-
-/* app band */
-.band-in{background:linear-gradient(150deg,rgba(62,155,232,.18),rgba(140,203,247,.05));border:1px solid rgba(140,203,247,.28);
-  border-radius:26px;padding:clamp(34px,5vw,56px);max-width:820px;backdrop-filter:blur(12px)}
-.band-in h2{font-size:clamp(2.1rem,4.2vw,3.2rem);color:#fff;font-weight:600}
-.band-in p{margin-top:16px;font-size:18.5px;color:#C2CFDF;line-height:1.65}
-.band-in .btns{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
-
-/* modal */
-.modal{position:fixed;inset:0;z-index:300;background:rgba(3,6,11,.9);backdrop-filter:blur(8px);display:none;place-items:center;padding:20px}
-.modal.open{display:grid}
-.modal .box{width:min(960px,100%);aspect-ratio:16/9;border-radius:18px;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.7);background:#000}
-.modal iframe{width:100%;height:100%;border:0}
-.modal .x{position:absolute;top:22px;right:26px;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);
-  background:rgba(255,255,255,.08);color:#fff;font-size:22px;cursor:pointer}
-
-/* reveal */
-.rv{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s cubic-bezier(.16,1,.3,1)}
-.panel.on .rv{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
-
-/* ---------- mobile ---------- */
-@media(max-width:980px){
-  body.sb-col{--sbw:80px}
-  .sidebar{padding-top:18px}
-  .sidebar .brand{padding-bottom:12px}
-  .sidebar .brand .mark{width:40px;height:40px;flex-basis:40px}
-  .sidebar .brand .btxt{display:none}
-  .sidebar .collapse-btn,.sidebar .user .uname,.sidebar .user .umail{display:none}
-  body:not(.sb-col) .sidebar{width:80px}
-  body:not(.sb-col) .sidebar .brand .mark{margin:0 auto}
-  body.sb-col .sidebar .brand{padding-left:0}
-  .sidebar .user{padding:7px;background:transparent;border-color:transparent}
-  .sidebar .user .av{margin:0 auto}
-  .main{margin-left:80px}
-  .panel{padding:36px 18px 44px}
-  .cprt{display:none}
+/* ---------- DOCK (video 2nd-nav: sliding active pill + hover name + spring) ---------- */
+.dockwrap{position:relative;z-index:20;display:flex;justify-content:center;padding:0 14px 18px;pointer-events:none}
+.dock{pointer-events:auto;position:relative;display:flex;align-items:center;gap:6px;padding:10px;
+  border-radius:var(--rdock);background:rgba(10,18,32,.82);backdrop-filter:blur(24px) saturate(160%);
+  -webkit-backdrop-filter:blur(24px) saturate(160%);
+  border:1px solid rgba(140,203,247,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 22px 60px rgba(0,0,0,.5)}
+.pill{position:absolute;top:10px;left:10px;width:56px;height:56px;border-radius:16px;
+  background:linear-gradient(135deg,var(--ac1),var(--ac2));box-shadow:0 8px 22px rgba(92,168,240,.45),inset 0 1px 0 rgba(255,255,255,.5);
+  transform:translateX(calc(var(--ix,0)*62px));transition:transform .5s var(--ease)}
+.tile{position:relative;width:56px;height:56px;border-radius:16px;display:grid;place-items:center;cursor:pointer;border:none;background:transparent;
+  transition:transform .3s var(--ease)}
+.tile svg{width:23px;height:23px;color:#BFD6EF;transition:color .2s}
+.tile:hover{transform:translateY(-9px) scale(1.05)}
+.tile:hover svg{color:#EAF4FF}
+.tile.on svg{color:var(--ac-ink)}
+.tile .tt{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) translateY(5px);
+  font-size:.74rem;font-weight:600;padding:4px 11px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;
+  background:#0D1B2E;border:1px solid rgba(140,203,247,.4);color:var(--text);transition:opacity .18s,transform .18s}
+.tile:hover .tt{opacity:1;transform:translateX(-50%) translateY(0)}
+.tile .tt i{position:absolute;left:50%;top:100%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#0D1B2E}
+.tile .ml{display:none;font-size:.6rem;color:var(--text2);position:absolute;bottom:2px;left:0;right:0;text-align:center}
+@media(max-width:640px){
+  .dock{padding:8px;gap:2px;border-radius:18px;width:100%;justify-content:space-between}
+  .tile{width:48px;height:52px;border-radius:14px}
+  .pill{width:48px;height:52px;border-radius:14px;top:8px;left:8px;transform:translateX(calc(var(--ix,0)*50px))}
+  .tile .tt{display:none}
+  .tile .ml{display:block}
+  .tile.on svg{color:var(--ac-ink)}
+  .tile.on .ml{color:var(--ac-ink)}
+}
+@media(hover:none){.dock{padding:8px;gap:2px}.tile .tt{display:none}}
+@media (prefers-reduced-motion: reduce){
+  .pill,.tile,.panel,.btn{transition:none!important;transform:none!important}
+  .live i{animation:none}
 }
 </style>
 </head>
 <body>
 <div class="bgimg"></div><div class="bgscrim"></div>
 
-<aside class="sidebar" id="sb">
-  <div class="brand">
-    <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-2.6 3.2-6 2-6 6.6V20h12v-10.4C18 5 14.6 6.2 12 3Z"/><path d="M9.6 20v-4.2a2.4 2.4 0 0 1 4.8 0V20"/></svg></span>
-    <span class="btxt"><b>Masjid e Mohammadi</b><span>Official website</span></span>
+<!-- ================= GATE ================= -->
+<div id="gate">
+  <div class="card">
+    <div class="brandmark"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#8CCBF7" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-2.6 3.2-6 2-6 6.6V20h12v-10.4C18 5 14.6 6.2 12 3Z"/><path d="M9.6 20v-4.2a2.4 2.4 0 0 1 4.8 0V20"/></svg></div>
+    <h2>Masjid e Mohammadi</h2>
+    <p class="tag">Password dal ke unlock karein</p>
+    <input class="field" id="pwIn" type="password" placeholder="••••••••" autocomplete="off">
+    <p class="err" id="pwErr">Galat password — phir try karein</p>
+    <div style="margin-top:14px"><button class="btn" id="unlockBtn" style="width:100%">Unlock</button></div>
+    <button class="resetlink" id="resetBtn">Password bhool gaye? Reset karein</button>
   </div>
-  <button class="collapse-btn" id="tb" aria-label="Toggle sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-  <nav>
-    <div class="items" id="items">
-      <div class="pill" id="pill"></div>
-      <button class="nv on" data-go="home" data-lb="Home" aria-label="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg><span class="lbl"><i>Home</i></span></button>
-      <button class="nv" data-go="times" data-lb="Prayer Times" aria-label="Prayer Times"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span class="lbl"><i>Prayer Times</i></span></button>
-      <button class="nv" data-go="quran" data-lb="Quran" aria-label="Quran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span class="lbl"><i>Quran</i></span></button>
-      <button class="nv" data-go="videos" data-lb="Videos" aria-label="Videos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10.2 9.3v5.4l4.8-2.7Z"/></svg><span class="lbl"><i>Videos</i></span></button>
-      <button class="nv" data-go="contact" data-lb="Contact" aria-label="Contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.4h3.6L12 5.6v12.8L7.6 14.6H4a1 1 0 0 1-1-1v-3.2a1 1 0 0 1 1-1Z"/><path d="M15.4 9.2a4.2 4.2 0 0 1 0 5.6"/><path d="M18 6.6a7.8 7.8 0 0 1 0 10.8"/></svg><span class="lbl"><i>Contact</i></span></button>
-      <button class="nv" data-go="app" data-lb="Get the App" aria-label="Get the App"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M11 18.5h2"/></svg><span class="lbl"><i>Get the App</i></span></button>
-    </div>
-  </nav>
-  <div class="user">
-    <span class="av">M</span>
-    <span><span class="uname">Masjid e Mohammadi</span><br><span class="umail">Community mosque · Est. 2020</span></span>
-  </div>
-</aside>
-
-<main class="main">
-    <!-- HOME -->
-    <section class="panel on" id="p-home" data-p="home">
-      <div class="bg"></div><div class="scr"></div>
-      <div class="home-in">
-        <span class="eyebrow">Faith · Worship · Community</span>
-        <h1>Ibadah, Ilm aur <em>Mohabbat</em> ka markaz</h1>
-        <p class="lead">Masjid e Mohammadi ke saath har din rabta — sahi waqt par namaz, poora Quran, roz ki duaen aur qibla. Sab kuch ek jagah.</p>
-        <div class="nextcard">
-          <div><div class="lbl">Next Prayer</div><div class="big" id="nextName">Loading…</div></div>
-          <div class="cd" id="countdown">—</div>
-        </div>
-        <div class="hero-btns">
-          <button class="btn primary" data-go="times">Prayer Times</button>
-          <a class="btn ghost" href="./app/">Open Full App</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- TIMES -->
-    <section class="panel" id="p-times" data-p="times">
-      <div class="blocktitle rv"><span class="eyebrow">Today</span><h2 class="ptitle">Prayer Times</h2>
-        <p class="psub">Aapki location ke hisaab se — Hanafi (Karachi) method. Sheher khud bhi chun sakte hain.</p></div>
-      <div class="locbar rv">
-        <select id="citySel" aria-label="Select your city"></select>
-        <button class="btn ghost" id="useLoc" type="button">Use my location</button>
-      </div>
-      <p class="dateline" id="dateLine">…</p>
-      <div class="tgrid" id="tgrid">
-        <div class="tcell"><div class="n">Fajr</div><div class="t" id="t-fajr">—</div></div>
-        <div class="tcell"><div class="n">Sunrise</div><div class="t" id="t-sunrise">—</div></div>
-        <div class="tcell"><div class="n">Dhuhr</div><div class="t" id="t-dhuhr">—</div></div>
-        <div class="tcell"><div class="n">Asr</div><div class="t" id="t-asr">—</div></div>
-        <div class="tcell"><div class="n">Maghrib</div><div class="t" id="t-maghrib">—</div></div>
-        <div class="tcell"><div class="n">Isha</div><div class="t" id="t-isha">—</div></div>
-      </div>
-      <p class="locline" id="locLine">Detecting your location…</p>
-    </section>
-
-    <!-- QURAN -->
-    <section class="panel" id="p-quran" data-p="quran">
-      <div class="blocktitle rv"><span class="eyebrow">Al-Quran</span><h2 class="ptitle">Quran, Dua, Tasbeeh &amp; Qibla</h2>
-        <p class="psub">Poora Quran — 114 surah, tarjuma, 6 mashhoor qari. Saath hi roz ki duaen, tasbeeh counter aur qibla. Sab kuch isi page par.</p></div>
-      <div class="qtabs rv">
-        <button data-qt="quran" class="on">Quran</button>
-        <button data-qt="duas">Duas</button>
-        <button data-qt="tasbeeh">Tasbeeh</button>
-        <button data-qt="qibla">Qibla</button>
-      </div>
-
-      <div class="qview on" data-qv="quran">
-        <div id="qListWrap">
-          <input class="qsearch" id="qSearch" placeholder="Surah dhoondein… (naam ya number)" aria-label="Search surah">
-          <div class="slist" id="slist"></div>
-        </div>
-        <div id="qReader" style="display:none">
-          <div class="rbar">
-            <button class="back" id="qBack" aria-label="Back to surah list">&#8592;</button>
-            <h2 id="rTitle">&mdash;</h2>
-            <select id="rLang" aria-label="Choose translation"></select>
-            <select id="rQari" aria-label="Choose reciter"></select>
-            <button class="rplayall" id="rPlay">Play Surah</button>
-          </div>
-          <div id="ayahs"></div>
-        </div>
-      </div>
-
-      <div class="qview" data-qv="duas">
-        <div class="dchips" id="dchips"></div>
-        <div id="dlist"></div>
-      </div>
-
-      <div class="qview" data-qv="tasbeeh">
-        <div class="tasb">
-          <div class="ring" id="tRing" role="button" tabindex="0" aria-label="Count">
-            <div><div class="count" id="tCount">0</div><div class="sub" id="tSub">Tap to count</div></div>
-          </div>
-          <div class="row">
-            <button data-tg="33" class="on">33</button>
-            <button data-tg="99">99</button>
-            <button data-tg="0">Free</button>
-            <button id="tReset">Reset</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="qview" data-qv="qibla">
-        <div class="qib">
-          <div class="dial">
-            <svg class="kaaba" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 21 7v10l-9 4.5L3 17V7z"/><path d="M3 7l9 4.5 9-4.5M12 11.5v10"/></svg>
-            <div class="needle" id="qNeedle"></div>
-            <div class="hub"></div>
-          </div>
-          <div class="deg" id="qDeg">&mdash;</div>
-          <div class="note" id="qNote">Location allow karein to qibla direction nikal aayegi.</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- VIDEOS -->
-    <section class="panel" id="p-videos" data-p="videos">
-      <div class="blocktitle rv"><span class="eyebrow">Our Channel</span><h2 class="ptitle">Bayan &amp; Bayaanat</h2>
-        <p class="psub">Masjid e Mohammadi ke naye videos — taleem aur rehnumai ke liye.</p></div>
-      <div class="vids" id="vids"></div>
-      <div class="hero-btns rv" style="margin-top:34px"><a class="btn primary" href="https://www.youtube.com/@masjidemohammadi" target="_blank" rel="noopener">Subscribe on YouTube</a></div>
-    </section>
-
-    <!-- CONTACT -->
-    <section class="panel" id="p-contact" data-p="contact">
-      <div class="blocktitle rv"><span class="eyebrow">Get in touch</span><h2 class="ptitle">Contact &amp; Location</h2></div>
-      <div class="cards rv">
-        <div class="cc"><div class="who"><div class="av">I</div><div><div class="nm">Imam Sahab</div><div class="rl">Religious guidance</div></div></div><a class="call" href="tel:+919767543210">Call →</a></div>
-        <div class="cc"><div class="who"><div class="av">M</div><div><div class="nm">Muazzin</div><div class="rl">Azan &amp; masjid duties</div></div></div><a class="call" href="tel:+918765432101">Call →</a></div>
-        <div class="cc"><div class="who"><div class="av">O</div><div><div class="nm">Masjid Office</div><div class="rl">General enquiries</div></div></div><a class="call" href="tel:+918765432109">Call →</a></div>
-        <div class="cc"><div class="who"><div class="av">C</div><div><div class="nm">Committee</div><div class="rl">Management committee</div></div></div><a class="call" href="tel:+917654321098">Call →</a></div>
-      </div>
-      <div class="info rv">
-        <div class="row"><div class="k">Masjid</div><div class="v">Masjid e Mohammadi</div></div>
-        <div class="row"><div class="k">Timings</div><div class="v">Open for all five daily prayers · Jummah included</div></div>
-        <div class="row"><div class="k">YouTube</div><div class="v"><a href="https://www.youtube.com/@masjidemohammadi" target="_blank" rel="noopener">@masjidemohammadi</a></div></div>
-        <div class="row"><div class="k">Directions</div><div class="v"><a href="https://www.google.com/maps/search/Masjid+e+Mohammadi" target="_blank" rel="noopener">Open in Google Maps →</a></div></div>
-      </div>
-    </section>
-
-    <!-- APP -->
-    <section class="panel" id="p-app" data-p="app">
-      <div class="blocktitle rv"><span class="eyebrow">Mobile App</span><h2 class="ptitle">App apne phone me le jaayein</h2></div>
-      <div class="band-in rv">
-        <h2>Ek app — poori ibadat ki rehnumai</h2>
-        <p>Android ke liye APK, ya browser se seedha "Install app" — Windows, iPhone aur web par bhi.</p>
-        <div class="btns">
-          <a class="btn primary" href="https://github.com/shanhaq/masjid-e-mohammadi/releases/latest" target="_blank" rel="noopener">Download for Android</a>
-          <a class="btn ghost" href="./app/">Open Web App</a>
-        </div>
-      </div>
-    </section>
-</main>
-<div class="cprt">© <span id="yr"></span> Masjid e Mohammadi</div>
-
-<div class="modal" id="modal">
-  <button class="x" id="modalX" aria-label="Close">✕</button>
-  <div class="box"><iframe id="frame" title="YouTube video" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
 </div>
 
-<script src="quran-data.js"></script>
+<!-- ================= SAVE-LOGIN POPUP ================= -->
+<div class="overlay" id="saveOv">
+  <div class="card panel">
+    <h3>Save login?</h3>
+    <p class="sub">Save karein to agli baar seedha khulega — password nahi manglega. Not now to har baar password lagega.</p>
+    <div class="row">
+      <button class="btn" id="saveYes">Save</button>
+      <button class="btn ghost" id="saveNo">Not now</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PROFILE POPUP (first login) ================= -->
+<div class="overlay" id="profOv">
+  <div class="card panel">
+    <h3>Profile banayein</h3>
+    <p class="sub">Naam, gender, dob aur language <b>zaroori</b> hai. Photo optional hai.</p>
+    <div style="display:flex;gap:14px;align-items:center;margin-bottom:16px">
+      <div class="av" id="profAv" style="width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,rgba(168,217,255,.25),rgba(92,168,240,.12));border:1px solid var(--line);color:var(--ac1);overflow:hidden"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8CCBF7" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <div>
+        <button class="btn ghost" id="profImgBtn" style="padding:9px 16px;font-size:.82rem">Photo lagayein (optional)</button>
+        <input type="file" id="profFile" accept="image/*" style="display:none">
+      </div>
+    </div>
+    <div style="margin-bottom:12px"><label class="lbl" for="pName">Naam *</label><input class="field" id="pName" placeholder="e.g. Farhan"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div><label class="lbl" for="pGen">Gender *</label>
+        <select class="field" id="pGen"><option value="">--</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+      <div><label class="lbl" for="pDob">Date of birth *</label><input class="field" id="pDob" type="date"></div>
+    </div>
+    <div style="margin-bottom:18px"><label class="lbl" for="pLang">Language *</label>
+      <select class="field" id="pLang"></select></div>
+    <button class="btn" id="profSave" style="width:100%">Profile save karein</button>
+    <p class="err" id="profErr" style="color:#FF8B8B;font-size:.8rem;margin-top:8px;display:none"></p>
+  </div>
+</div>
+
+<!-- ================= APP ================= -->
+<div id="app">
+  <div class="main">
+    <!-- HOME -->
+    <section class="panel act" id="p-home">
+      <div class="panel-inner">
+        <div class="hello">
+          <div class="av" id="homeAv"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#8CCBF7" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div><h1 id="greet">Assalamu alaikum</h1><p id="greetSub">Masjid e Mohammadi</p></div>
+          <span class="hijri" id="hijriChip">Loading…</span>
+        </div>
+        <p class="sec-t">Namaz Timings</p>
+        <div class="card pray" id="prayCard">
+          <div class="rowline" data-n="Fajr"><span class="t">FAJR</span><span class="live" style="display:none"><i></i>Abhi</span><b>--:--</b></div>
+          <div class="rowline" data-n="Dhuhr"><span class="t">DHUHR</span><span class="live" style="display:none"><i></i>Abhi</span><b>--:--</b></div>
+          <div class="rowline" data-n="Asr"><span class="t">ASR</span><span class="live" style="display:none"><i></i>Abhi</span><b>--:--</b></div>
+          <div class="rowline" data-n="Maghrib"><span class="t">MAGHRIB</span><span class="live" style="display:none"><i></i>Abhi</span><b>--:--</b></div>
+          <div class="rowline" data-n="Isha"><span class="t">ISHA</span><span class="live" style="display:none"><i></i>Abhi</span><b>--:--</b></div>
+        </div>
+        <div class="prayloc">
+          <select class="field" id="citySel"><option value="">Sheher chunein…</option></select>
+          <button class="btn ghost" id="useLoc">Use my location</button>
+        </div>
+        <div class="chipsrow">
+          <div class="chip glass"><div class="k">QIBLA</div><b id="qiblaDeg">--</b></div>
+          <div class="chip glass"><div class="k">HIJRI</div><b id="hijriBig">--</b></div>
+        </div>
+        <p class="sec-t">Alerts &amp; Announcements</p>
+        <div class="alerts" id="alertsBox">
+          <div class="a"><i class="ad"></i>Jummah baya 12:45 — masjid me zaroor aaiye</div>
+          <div class="a"><i class="ad"></i>Winter timing effective — Isha 19:52</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLACEHOLDER PANELS (next milestones) -->
+    <section class="panel" id="p-quran"><div class="panel-inner"><h2 style="font-size:1.6rem;margin-bottom:8px">Quran</h2><p style="color:var(--text2);margin-bottom:18px">Surah list, reader, 6 qari, 36 translations — agli step me.</p><div class="card glass" style="padding:30px;text-align:center;color:var(--text2)">🔜 Building next</div></div></section>
+    <section class="panel" id="p-video"><div class="panel-inner"><h2 style="font-size:1.6rem;margin-bottom:8px">Videos</h2><p style="color:var(--text2);margin-bottom:18px">Channel videos + player — agli step me.</p><div class="card glass" style="padding:30px;text-align:center;color:var(--text2)">🔜 Building next</div></div></section>
+    <section class="panel" id="p-qibla"><div class="panel-inner"><h2 style="font-size:1.6rem;margin-bottom:8px">Qibla</h2><p style="color:var(--text2);margin-bottom:18px">Auto | manual degree — agli step me.</p><div class="card glass" style="padding:30px;text-align:center;color:var(--text2)">🔜 Building next</div></div></section>
+    <section class="panel" id="p-contact"><div class="panel-inner"><h2 style="font-size:1.6rem;margin-bottom:8px">Contact</h2><p style="color:var(--text2);margin-bottom:18px">Phone, maps, YouTube — agli step me.</p><div class="card glass" style="padding:30px;text-align:center;color:var(--text2)">🔜 Building next</div></div></section>
+    <section class="panel" id="p-profile"><div class="panel-inner"><h2 style="font-size:1.6rem;margin-bottom:8px">Profile</h2><p style="color:var(--text2);margin-bottom:18px">Edit profile, language options — agli step me.</p><div class="card glass" style="padding:30px;text-align:center;color:var(--text2)">🔜 Building next</div></div></section>
+  </div>
+
+  <!-- DOCK (2nd-nav style: sliding active pill, hover name, click=tab) -->
+  <div class="dockwrap">
+    <nav class="dock" id="dock" aria-label="Navigation">
+      <span class="pill" id="pill"></span>
+      <button class="tile on" data-go="home" aria-label="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span class="tt">Home<i></i></span><span class="ml">Home</span></button>
+      <button class="tile" data-go="quran" aria-label="Quran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15z"/><path d="M20 17v5H6.5a2.5 2.5 0 0 1 0-5"/></svg><span class="tt">Quran<i></i></span><span class="ml">Quran</span></button>
+      <button class="tile" data-go="video" aria-label="Videos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3"/></svg><span class="tt">Videos<i></i></span><span class="ml">Videos</span></button>
+      <button class="tile" data-go="qibla" aria-label="Qibla"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span class="tt">Qibla<i></i></span><span class="ml">Qibla</span></button>
+      <button class="tile" data-go="contact" aria-label="Contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.6 10a16 16 0 0 0 5.4 5.4l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"/></svg><span class="tt">Contact<i></i></span><span class="ml">Contact</span></button>
+      <button class="tile" data-go="profile" aria-label="Profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="tt">Profile<i></i></span><span class="ml">Profile</span></button>
+    </nav>
+  </div>
+</div>
+
 <script>
-/* ---------- data ---------- */
-var VIDEOS=[
-  {t:'Are You Truly Fulfilling the Rights of Your Children? | 3 Essential Duties of Every Parent in Islam.',d:'12 Jul 2026',id:'uTyu_zGmThc'},
-  {t:'A Daughter is a Precious Gift from Allah. By: Hazrat Hafiz Niyaz Ahmad Sahib DB.',d:'4 Jul 2026',id:'CI9pxqyhWtY'},
-  {t:'Daughters: Allah\u2019s Mercy & A Promise of Paradise for Parents',d:'27 Jun 2026',id:'dZ_rJW9VvMM'},
-  {t:'The Character (Seerah) of the Prophet\u2019s Grandson.',d:'12 Jun 2026',id:'dN1d_YT-ZZA'},
-  {t:'From Guidance to Misguidance: The Impact of Bad Company',d:'6 Jun 2026',id:'e4qotnjBPvQ'},
-  {t:'The Virtues and Blessings of Bismillah-ir-Rahman-ir-Raheem',d:'29 May 2026',id:'1nX0sND3dmo'}
-];
-var PRAYERS=['Fajr','Sunrise','Dhuhr','Asr','Maghrib','Isha'];
+/* ---------- helpers ---------- */
+var $=function(id){return document.getElementById(id)};
+function store(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function load(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function hashing(s){var h=5381;for(var i=0;i<s.length;i++){h=((h<<5)+h)+s.charCodeAt(i)}return (h>>>0).toString(36)+s.length}
+var PROFILE_KEY='masjid-profile', PW_KEY='masjid-pw-hash', SAVE_KEY='masjid-save', SESS_KEY='masjid-sess';
 
-/* ---------- sidebar router (sliding pill) ---------- */
-var SB_NVS=[].slice.call(document.querySelectorAll('.sidebar .nv'));
-var SB_PILL=document.getElementById('pill');
-function setPill(i){if(SB_PILL&&SB_PILL.style&&SB_PILL.style.setProperty)SB_PILL.style.setProperty('--iy',i)}
+/* ---------- router + dock ---------- */
+var PANELS=['home','quran','video','qibla','contact','profile'];
 function go(p){
-  document.querySelectorAll('.panel').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-p')===p)});
-  SB_NVS.forEach(function(b,i){b.classList.toggle('on',b.getAttribute('data-go')===p);if(b.getAttribute('data-go')===p)setPill(i)});
-  var el=document.querySelector('.panel.on');if(el)el.scrollTop=0;
-}
-document.addEventListener('click',function(e){
-  var t=e.target.closest('[data-go]');if(t){e.preventDefault();go(t.getAttribute('data-go'))}
-});
-document.getElementById('tb').addEventListener('click',function(){document.body.classList.toggle('sb-col')});
-setPill(0);
-document.getElementById('yr').textContent=new Date().getFullYear();
-
-/* ---------- videos ---------- */
-document.getElementById('vids').innerHTML=VIDEOS.map(function(v){
-  return '<button class="vid" data-id="'+v.id+'">'+
-    '<div class="th"><img loading="lazy" alt="'+v.t.replace(/"/g,'')+'" src="https://i.ytimg.com/vi/'+v.id+'/hqdefault.jpg">'+
-    '<span class="play"><i><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M8 5.5v13l11-6.5Z"/></svg></i></span></div>'+
-    '<div class="body"><h3>'+v.t+'</h3><div class="d">'+v.d+'</div></div></button>';
-}).join('');
-var modal=document.getElementById('modal'),frame=document.getElementById('frame');
-function openVid(id){frame.src='https://www.youtube-nocookie.com/embed/'+id+'?rel=0&autoplay=1';modal.classList.add('open')}
-document.getElementById('vids').addEventListener('click',function(e){var b=e.target.closest('.vid');if(b)openVid(b.getAttribute('data-id'))});
-function closeVid(){modal.classList.remove('open');frame.src='about:blank'}
-document.getElementById('modalX').addEventListener('click',closeVid);
-modal.addEventListener('click',function(e){if(e.target===modal)closeVid()});
-addEventListener('keydown',function(e){if(e.key==='Escape')closeVid()});
-
-/* ---------- live prayer times (Aladhan) ---------- */
-var times=null;
-function setTimes(data){
-  var t=data.timings;
-  PRAYERS.forEach(function(p){var el=document.getElementById('t-'+p.toLowerCase());if(el)el.textContent=(t[p]||'').slice(0,5)});
-  times={};PRAYERS.forEach(function(p){times[p]=(t[p]||'').slice(0,5)});
-  if(data.date){var h=data.date.hijri,g=data.date.gregorian;
-    document.getElementById('dateLine').textContent=(h?h.day+' '+h.month.en+' '+h.year+' AH · ':'')+(g?g.day+' '+g.month.en+' '+g.year+' CE':'')}
-  render();
-}
-function mins(s){var a=s.split(':');return (+a[0])*60+(+a[1])}
-function render(){
-  if(!times)return;
-  var now=new Date(),cur=now.getHours()*60+now.getMinutes(),best=null,bi=-1;
-  for(var i=0;i<PRAYERS.length;i++){var m=mins(times[PRAYERS[i]]);if(m>cur){best=m;bi=i;break}}
-  if(bi<0){best=mins(times.Fajr)+1440;bi=0}
-  document.getElementById('nextName').textContent=PRAYERS[bi]+' · '+times[PRAYERS[bi]];
-  document.querySelectorAll('.tcell').forEach(function(c){c.classList.remove('on')});
-  var cell=document.getElementById('t-'+PRAYERS[bi].toLowerCase());if(cell)cell.closest('.tcell').classList.add('on');
-  var left=best-cur;
-  document.getElementById('countdown').textContent='in '+Math.floor(left/60)+'h '+(left%60)+'m';
-}
-setInterval(render,30000);
-function aladhan(lat,lng,city,country){
-  var url=(lat!=null)?'https://api.aladhan.com/v1/timingsByCoordinates?latitude='+lat+'&longitude='+lng+'&method=1'
-    :'https://api.aladhan.com/v1/timingsByCity?city='+encodeURIComponent(city)+'&country='+encodeURIComponent(country||'')+'&method=1';
-  fetch(url).then(function(r){return r.json()}).then(function(j){if(j&&j.data)setTimes(j.data)}).catch(function(){});
-  var label=(city?city:(lat!=null?'your location':''))+(country?', '+country:'');
-  document.getElementById('locLine').textContent='Timings for '+label+' · Hanafi (Karachi) method';
-}
-function ipLoc(){
-  fetch('https://ipwho.is/').then(function(r){return r.json()}).then(function(j){
-    if(j&&j.success!==false&&j.latitude!=null){aladhan(j.latitude,j.longitude,j.city,j.country);return}throw 0;
-  }).catch(function(){
-    fetch('https://ipapi.co/json/').then(function(r){return r.json()}).then(function(j){
-      if(j&&j.latitude!=null){aladhan(j.latitude,j.longitude,j.city,j.country_name);return}throw 0;
-    }).catch(function(){
-      fetch('https://freeipapi.com/api/json').then(function(r){return r.json()}).then(function(j){
-        if(j&&j.latitude!=null)aladhan(j.latitude,j.longitude,j.cityName,j.countryName)
-      }).catch(function(){});
-    });
+  PANELS.forEach(function(x){
+    var el=$('p-'+x);
+    el.classList.toggle('act',x===p);
   });
+  var ix=PANELS.indexOf(p);
+  document.querySelectorAll('#dock .tile').forEach(function(t){t.classList.toggle('on',t.dataset.go===p)});
+  var pill=$('pill');pill.style.setProperty('--ix',ix);
+  document.title=p==='home'?'Masjid e Mohammadi':'Masjid e Mohammadi — '+p;
 }
-/* ---------- city picker (manual location) ---------- */
-var CITIES=[
- ["Mumbai","India"],["Delhi","India"],["Hyderabad","India"],["Bengaluru","India"],["Kolkata","India"],["Chennai","India"],["Pune","India"],["Ahmedabad","India"],["Lucknow","India"],["Bhopal","India"],["Jaipur","India"],["Kanpur","India"],["Surat","India"],["Nagpur","India"],["Indore","India"],["Patna","India"],["Srinagar","India"],
- ["Karachi","Pakistan"],["Lahore","Pakistan"],["Islamabad","Pakistan"],["Rawalpindi","Pakistan"],["Peshawar","Pakistan"],["Quetta","Pakistan"],["Multan","Pakistan"],["Faisalabad","Pakistan"],
- ["Dhaka","Bangladesh"],["Chittagong","Bangladesh"],["Sylhet","Bangladesh"],["Kabul","Afghanistan"],
- ["Dubai","United Arab Emirates"],["Abu Dhabi","United Arab Emirates"],["Sharjah","United Arab Emirates"],
- ["Riyadh","Saudi Arabia"],["Jeddah","Saudi Arabia"],["Mecca","Saudi Arabia"],["Medina","Saudi Arabia"],["Dammam","Saudi Arabia"],
- ["Doha","Qatar"],["Kuwait City","Kuwait"],["Muscat","Oman"],["Manama","Bahrain"],
- ["Istanbul","Turkey"],["Ankara","Turkey"],["Tehran","Iran"],["Baghdad","Iraq"],["Cairo","Egypt"],["Amman","Jordan"],["Beirut","Lebanon"],
- ["Kuala Lumpur","Malaysia"],["Jakarta","Indonesia"],["Bandung","Indonesia"],["Singapore","Singapore"],
- ["London","United Kingdom"],["Birmingham","United Kingdom"],["Manchester","United Kingdom"],
- ["New York","United States"],["Chicago","United States"],["Houston","United States"],["Los Angeles","United States"],["Dallas","United States"],
- ["Toronto","Canada"],["Cape Town","South Africa"],["Johannesburg","South Africa"],["Sydney","Australia"],["Melbourne","Australia"]
-];
-var CITYKEY='masjid-city';
-function setLocLine(txt){document.getElementById('locLine').textContent=txt}
-function applyCity(city,country,save){
-  setLocLine('Timings for '+city+(country?', '+country:'')+' · Hanafi (Karachi) method');
-  aladhan(null,null,city,country);
-  if(save!==false){try{localStorage.setItem(CITYKEY,city+'|'+(country||''))}catch(e){}}
-}
-function useGeo(){
-  setLocLine('Detecting your location…');
-  if(navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(function(p){aladhan(p.coords.latitude,p.coords.longitude,null,null)},function(){ipLoc()},{timeout:8000,maximumAge:600000});
-  }else{ipLoc()}
-}
-(function initLocPicker(){
-  var sel=document.getElementById('citySel');
-  sel.innerHTML='<option value="">Choose your city…</option>'+CITIES.map(function(c){return '<option value="'+c[0]+'|'+c[1]+'">'+c[0]+', '+c[1]+'</option>'}).join('');
-  sel.addEventListener('change',function(){var v=this.value;if(!v)return;var p=v.split('|');applyCity(p[0],p[1])});
-  document.getElementById('useLoc').addEventListener('click',function(){try{localStorage.removeItem(CITYKEY)}catch(e){}sel.value='';useGeo();});
-  var saved=null;try{saved=localStorage.getItem(CITYKEY)}catch(e){}
-  if(saved&&saved.split('|')[0]){sel.value=saved;var p=saved.split('|');applyCity(p[0],p[1]||'',false);return}
-  useGeo();
-  setTimeout(function(){if(!times)setLocLine('Location nahi mili — upar se apna sheher select karein.')},10000);
-})();
-
-/* ---------- Quran / Duas / Tasbeeh / Qibla ---------- */
-function q$(id){return document.getElementById(id)}
-function fmtQ(x){return ('00'+x).slice(-3)}
-var qariIdx=0;
-
-/* tabs */
-function showQV(v){
-  document.querySelectorAll('.qview').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-qv')===v)});
-  document.querySelectorAll('.qtabs button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-qt')===v)});
-  if(v==='quran')loadQuranText();
-}
-document.addEventListener('click',function(e){var b=e.target.closest('[data-qt]');if(b)showQV(b.getAttribute('data-qt'))});
-
-/* surah list + lazy text load */
-var QTLOAD=null;
-function loadQuranText(){
-  if(window.QTEXT)return Promise.resolve();
-  if(QTLOAD)return QTLOAD;
-  QTLOAD=new Promise(function(res,rej){var s=document.createElement('script');s.src='quran.js';s.onload=res;s.onerror=rej;document.body.appendChild(s)});
-  return QTLOAD;
-}
-function renderSList(){
-  var q=(q$('qSearch').value||'').toLowerCase();
-  q$('slist').innerHTML=CHMETA.filter(function(c){
-    return !q||(c[1]||'').toLowerCase().indexOf(q)>=0||(c[2]||'').toLowerCase().indexOf(q)>=0||(''+c[0])===q;
-  }).map(function(c){
-    return '<button class="srow" data-s="'+c[0]+'"><span class="num">'+c[0]+'</span>'+
-      '<span><span class="nm">'+c[1]+'</span><br><span class="mt">'+c[2]+' &middot; '+c[3]+' ayat &middot; '+c[4]+'</span></span>'+
-      '<span class="arn">'+(c[5]||'')+'</span></button>';
-  }).join('');
-}
-q$('qSearch').addEventListener('input',renderSList);
-renderSList();
-
-/* reader */
-var curS=null,curA=0,audio=null,playing=false;
-q$('rQari').innerHTML=QARIS.map(function(q,i){return '<option value="'+i+'">'+q.n+'</option>'}).join('');
-q$('rLang').innerHTML=LANGS.map(function(L){return '<option value="'+L.id+'">'+L.n+(L.b?' (bundled)':'')+'</option>'}).join('');
-q$('rLang').addEventListener('change',function(){trLang=+this.value;if(curS!=null)paintAyahs()});
-function auURL(n,a){return QARIS[qariIdx].base+fmtQ(n)+fmtQ(a)+'.mp3'}
-function openSurah(n){
-  var c=CHMETA.filter(function(x){return x[0]===n})[0];if(!c)return;curS=n;
-  q$('rTitle').textContent=c[0]+'. '+c[1]+' — '+c[2];
-  q$('qListWrap').style.display='none';q$('qReader').style.display='block';
-  q$('ayahs').innerHTML='<p class="psub">Quran load ho raha hai…</p>';
-  var pn=document.querySelector('.panel.on');if(pn)pn.scrollTop=0;
-  loadQuranText().then(paintAyahs).catch(function(){q$('ayahs').innerHTML='<p class="psub">Quran load nahi ho saka — internet check karein.</p>'});
-}
-/* translation: English bundled; other 35 languages fetched once from quran.com and cached */
-var trLang=85,trMem={};
-function paintAyahs(){
-  var ays=(window.QTEXT&&QTEXT[curS])||[];
-  if(!ays.length){q$('ayahs').innerHTML='<p class="psub">Is surah ka text load nahi hua — internet check karein.</p>';return}
-  q$('ayahs').innerHTML=ays.map(function(a,i){
-    var y=i+1;
-    return '<div class="ayah" data-a="'+y+'"><div class="top"><span class="medal">'+y+'</span>'+
-      '<button class="play" data-play="'+y+'" aria-label="Play ayah '+y+'">&#9654;</button></div>'+
-      '<div class="ar">'+a[0]+'</div><div class="tr">'+a[1]+'</div></div>';
-  }).join('');
-  if(trLang!==85)loadTr(curS);
-}
-function loadTr(n){
-  if(trLang===85||!n)return;
-  if(trMem[n]&&trMem[n][trLang]){applyTr(trMem[n][trLang]);return}
-  var key='masjid-tr'+trLang+'_'+n,ck=null;
-  try{ck=JSON.parse(localStorage.getItem(key)||'null')}catch(e){}
-  if(ck&&ck.length){trMem[n]=trMem[n]||{};trMem[n][trLang]=ck;applyTr(ck);return}
-  fetch('https://api.quran.com/api/v4/verses/by_chapter/'+n+'?fields=verse_key&translations='+trLang+'&per_page=300')
-   .then(function(r){if(!r.ok)throw 0;return r.json()})
-   .then(function(d){
-     var arr=(d.verses||[]).map(function(v){var t=v.translations&&v.translations[0];return t?t.text.replace(/<[^>]+>/g,'').trim():''});
-     if(!arr.length)throw 0;
-     trMem[n]=trMem[n]||{};trMem[n][trLang]=arr;
-     try{localStorage.setItem(key,JSON.stringify(arr))}catch(e){}
-     applyTr(arr);
-   }).catch(function(){});
-}
-function applyTr(arr){
-  document.querySelectorAll('.ayah .tr').forEach(function(el,i){if(arr[i])el.textContent=arr[i]});
-}
-q$('qBack').addEventListener('click',function(){stopAudio();q$('qReader').style.display='none';q$('qListWrap').style.display='block'});
-function markAyah(a){
-  document.querySelectorAll('.ayah').forEach(function(x){x.classList.toggle('cur',+x.getAttribute('data-a')===a)});
-  var el=document.querySelector('.ayah[data-a="'+a+'"]');if(el&&playing)el.scrollIntoView({behavior:'smooth',block:'center'});
-}
-function stopAudio(){
-  if(audio){audio.onended=null;try{audio.pause()}catch(e){}audio=null}
-  playing=false;q$('rPlay').textContent='Play Surah';q$('rPlay').classList.remove('stop');
-}
-function playAyah(a){
-  if(!window.QTEXT)return;
-  stopAudio();
-  curA=a;playing=true;
-  audio=new Audio(auURL(curS,a));audio.play().catch(function(){});
-  markAyah(a);
-  q$('rPlay').textContent='Stop';q$('rPlay').classList.add('stop');
-  audio.onended=function(){
-    var total=(QTEXT[curS]||[]).length;
-    if(curA<total)playAyah(curA+1);else stopAudio();
-  };
-}
-q$('rPlay').addEventListener('click',function(){if(playing)stopAudio();else playAyah(1)});
-q$('rQari').addEventListener('change',function(){qariIdx=+this.value;if(playing)playAyah(curA)});
-q$('ayahs').addEventListener('click',function(e){
-  var b=e.target.closest('[data-play]');if(!b)return;var a=+b.getAttribute('data-play');
-  if(playing&&curA===a){stopAudio()}else playAyah(a);
+document.querySelectorAll('#dock .tile').forEach(function(t){
+  t.addEventListener('click',function(){go(t.dataset.go)});
 });
-q$('slist').addEventListener('click',function(e){var b=e.target.closest('[data-s]');if(b)openSurah(+b.getAttribute('data-s'))});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){if($('profOv').classList.contains('on')){hideOv('profOv')}else if($('saveOv').classList.contains('on')){hideOv('saveOv')}}});
 
-/* duas */
-function renderDuas(cat){
-  q$('dlist').innerHTML=DUAS.filter(function(d){return !cat||d.c===cat}).map(function(d){
-    return '<div class="dua"><h3>'+d.name+'</h3><div class="desc">'+(d.desc||'')+'</div>'+
-      '<div class="ar">'+d.ar+'</div>'+(d.tr2?'<div class="tr2">'+d.tr2+'</div>':'')+'<div class="tr">'+(d.tr||'')+'</div></div>';
-  }).join('');
-}
+/* ---------- overlays ---------- */
+function showOv(id){$(id).classList.add('on')}
+function hideOv(id){$(id).classList.remove('on')}
+
+/* ---------- profile ---------- */
+var LANGS=[['en','English'],['ur','Urdu'],['hi','Hindi'],['bn','Bangla'],['ar','Arabic'],['tr','Turkish'],['id','Indonesian'],['fr','French'],['de','German'],['es','Spanish'],['ru','Russian'],['zh','Chinese']];
+var profImg='';
 (function(){
-  var cats=[];DUAS.forEach(function(d){if(cats.indexOf(d.c)<0)cats.push(d.c)});
-  q$('dchips').innerHTML='<button class="on" data-dc="">All</button>'+cats.map(function(c){return '<button data-dc="'+c+'">'+c+'</button>'}).join('');
-  q$('dchips').addEventListener('click',function(e){
-    var b=e.target.closest('[data-dc]');if(!b)return;
-    document.querySelectorAll('#dchips button').forEach(function(x){x.classList.toggle('on',x===b)});
-    renderDuas(b.getAttribute('data-dc'));
+  var sel=$('pLang');
+  LANGS.forEach(function(l){
+    var o=document.createElement('option');o.value=l[0];o.textContent=l[1];sel.appendChild(o);
   });
-  renderDuas('');
 })();
+$('profImgBtn').addEventListener('click',function(){$('profFile').click()});
+$('profFile').addEventListener('change',function(){
+  var f=this.files[0];if(!f)return;
+  var r=new FileReader();r.onload=function(){
+    var im=new Image();im.onload=function(){
+      var c=document.createElement('canvas'),s=168,k=Math.min(1,s/im.width,s/im.height);
+      c.width=im.width*k;c.height=im.height*k;
+      c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+      profImg=c.toDataURL('image/jpeg',.82);
+      $('profAv').innerHTML='<img src="'+profImg+'" alt="">';
+    };im.src=r.result;
+  };r.readAsDataURL(f);
+});
+$('profSave').addEventListener('click',function(){
+  var nm=$('pName').value.trim(),gen=$('pGen').value,dob=$('pDob').value,lg=$('pLang').value;
+  if(!nm||!gen||!dob||!lg){$('profErr').style.display='block';$('profErr').textContent='Sab required fields bharein — naam, gender, dob, language';return}
+  $('profErr').style.display='none';
+  store(PROFILE_KEY,JSON.stringify({img:profImg,name:nm,gender:gen,dob:dob,lang:lg}));
+  hideOv('profOv');bakeProfile();
+  if(load(SAVE_KEY)!=='1'&&load(SESS_KEY)!=='1')showOv('saveOv');
+});
+function bakeProfile(){
+  var p=null;try{p=JSON.parse(load(PROFILE_KEY)||'null')}catch(e){}
+  if(!p)return;
+  var g=(p.name||'').split(' ')[0];
+  $('greet').textContent='Assalamu alaikum, '+g;
+  $('greetSub').textContent=p.name+(p.gender?' · '+p.gender:'');
+  var hv=$('homeAv');
+  if(p.img){hv.innerHTML='<img src="'+p.img+'" alt="">';}
+}
 
-/* tasbeeh */
-var tCount=parseInt(localStorage.getItem('masjid-tasbeeh')||'0',10)||0,tGoal=33;
-function tRender(){
-  q$('tCount').textContent=tCount;
-  q$('tSub').textContent=tGoal?(tCount>=tGoal?'Complete — MashaAllah!':'Target '+tGoal):'Free count';
-}
-tRender();
-function tTick(){tCount++;if(navigator.vibrate)navigator.vibrate(12);try{localStorage.setItem('masjid-tasbeeh',''+tCount)}catch(e){}tRender()}
-q$('tRing').addEventListener('click',tTick);
-q$('tRing').addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter'){e.preventDefault();tTick()}});
-document.querySelectorAll('[data-tg]').forEach(function(b){b.addEventListener('click',function(){
-  tGoal=+b.getAttribute('data-tg');
-  document.querySelectorAll('[data-tg]').forEach(function(x){x.classList.toggle('on',x===b)});
-  tRender();
-})});
-q$('tReset').addEventListener('click',function(){tCount=0;try{localStorage.setItem('masjid-tasbeeh','0')}catch(e){}tRender()});
-
-/* qibla */
-function qiblaBearing(lat,lng){
-  var p1=lat*Math.PI/180,p2=21.4225*Math.PI/180,l1=lng*Math.PI/180,l2=39.8262*Math.PI/180,d=l2-l1;
-  var y=Math.sin(d),x=Math.cos(p1)*Math.tan(p2)-Math.sin(p1)*Math.cos(d);
-  return (Math.atan2(y,x)*180/Math.PI+360)%360;
-}
-var qibla=null,heading=null;
-function drawQibla(){
-  if(qibla==null)return;
-  q$('qDeg').textContent=Math.round(qibla)+'°';
-  q$('qNeedle').style.transform='rotate('+((heading!=null)?(qibla-heading):qibla)+'deg)';
-  q$('qNote').textContent=heading!=null?'Phone ko flat rakhein — needle Kaaba ki taraf hai.'
-    :'Qibla North se '+Math.round(qibla)+'° par. Live compass ke liye phone par allow karein.';
-}
-function setQibla(lat,lng){qibla=qiblaBearing(lat,lng);drawQibla()}
-function hQ(e){
-  var h=(e.webkitCompassHeading!=null)?e.webkitCompassHeading:(e.alpha!=null?(360-e.alpha):null);
-  if(h!=null){heading=h;drawQibla()}
-}
-if(navigator.geolocation){
-  navigator.geolocation.getCurrentPosition(function(p){setQibla(p.coords.latitude,p.coords.longitude)},
-    function(){fetch('https://ipwho.is/').then(function(r){return r.json()}).then(function(j){if(j&&j.latitude!=null)setQibla(j.latitude,j.longitude)}).catch(function(){})},
-    {timeout:8000,maximumAge:600000});
-}else{
-  fetch('https://ipwho.is/').then(function(r){return r.json()}).then(function(j){if(j&&j.latitude!=null)setQibla(j.latitude,j.longitude)}).catch(function(){});
-}
-addEventListener('deviceorientationabsolute',hQ,true);
-addEventListener('deviceorientation',hQ,true);
-
-/* ---------- ADMIN WALLPAPER OVERRIDE ----------
-   Agar admin panel (docs/admin-preview.html) me wallpaper save hua ho
-   (localStorage draft 'masjid-admin-content' -> bg.upload), to wahi lagao.
-   Jaise hi real backend aayega, ye localStorage draft -> remote JSON banega. */
-try{
-  var ac=JSON.parse(localStorage.getItem('masjid-admin-content'));
-  if(ac&&ac.bg&&ac.bg.kind==='upload'&&ac.bg.data){
-    var bgel=document.querySelector('.bgimg');
-    if(bgel)bgel.style.background='url("'+ac.bg.data+'") center 28%/cover no-repeat';
+/* ---------- GATE flow ---------- */
+function tryUnlock(){
+  var pw=$('pwIn').value;
+  if(pw.length<4){$('pwErr').textContent='Kam se kam 4 characters';$('pwErr').style.display='block';return}
+  var stored=load(PW_KEY);
+  if(stored&&hashing(pw)!==stored){
+    $('pwErr').textContent='Galat password — phir try karein';
+    $('pwErr').style.display='block';
+    $('gate').classList.add('shake');setTimeout(function(){$('gate').classList.remove('shake')},420);
+    return;
   }
-}catch(e){}
+  if(!stored)store(PW_KEY,hashing(pw));
+  $('pwErr').style.display='none';
+  $('gate').style.display='none';$('app').style.display='flex'; // app visible
+  var p=null;try{p=JSON.parse(load(PROFILE_KEY)||'null')}catch(e){}
+  if(!p){showOv('profOv');return}
+  if(load(SAVE_KEY)==='1'||load(SESS_KEY)==='1'){bakeProfile();return}
+  showOv('saveOv');
+}
+$('unlockBtn').addEventListener('click',tryUnlock);
+$('pwIn').addEventListener('keydown',function(e){if(e.key==='Enter')tryUnlock()});
+$('saveYes').addEventListener('click',function(){store(SAVE_KEY,'1');hideOv('saveOv');bakeProfile()});
+$('saveNo').addEventListener('click',function(){store(SESS_KEY,'1');hideOv('saveOv');bakeProfile()});
+$('resetBtn').addEventListener('click',function(){
+  if(confirm('Password + profile reset? (Sirf is browser ka data)')){
+    localStorage.removeItem(PW_KEY);localStorage.removeItem(PROFILE_KEY);
+    localStorage.removeItem(SAVE_KEY);sessionStorage.removeItem(SESS_KEY);
+    location.reload();
+  }
+});
+
+/* ---------- boot ---------- */
+
+/* ---------- prayer times (Aladhan + geo/IP + city) ---------- */
+var CITIES=['Dhaka|Bangladesh','Delhi|India','Mumbai|India','Kolkata|India','Chittagong|Bangladesh','Lucknow|India','Hyderabad|India','Karachi|Pakistan','Riyadh|Saudi Arabia','Makkah|Saudi Arabia','Madinah|Saudi Arabia','Dubai|UAE','London|UK','New York|USA','Toronto|Canada','Kuala Lumpur|Malaysia','Jakarta|Indonesia','Istanbul|Turkey','Cairo|Egypt','Lahore|Pakistan'];
+function loadCities(){
+  var s=$('citySel'),c=load('masjid-city');s.innerHTML='<option value="">Sheher chunein…</option>';
+  CITIES.forEach(function(x){var o=document.createElement('option');o.value=x;o.textContent=x.split('|')[0];s.appendChild(o)});
+  if(c){s.value=c;fetchTimes(c)}
+}
+$('citySel').addEventListener('change',function(){
+  var v=this.value;if(!v)return;store('masjid-city',v);fetchTimes(v);
+});
+$('useLoc').addEventListener('click',function(){
+  if(!navigator.geolocation){fetchByIP();return}
+  navigator.geolocation.getCurrentPosition(function(p){fetchTimes(null,p.coords.latitude,p.coords.longitude)},
+    function(){fetchByIP()},{timeout:7000,maximumAge:600000});
+});
+function fetchByIP(){
+  fetch('https://ipwho.is/').then(function(r){return r.json()}).then(function(j){
+    if(j&&j.latitude!=null)fetchTimes(null,j.latitude,j.longitude);
+  }).catch(function(){});
+}
+function fetchTimes(city,lat,lon){
+  var url;
+  if(city){var a=city.split('|');url='https://api.aladhan.com/v1/timingsByCity?city='+encodeURIComponent(a[0])+'&country='+encodeURIComponent(a[1])+'&method=3'}
+  else{url='https://api.aladhan.com/v1/timings?latitude='+lat+'&longitude='+lon+'&method=3'}
+  fetch(url).then(function(r){return r.json()}).then(function(j){
+    if(!j||!j.data)return;
+    var t=j.data.timings,d=j.data.date;
+    var map={Fajr:t.Fajr,Dhuhr:t.Dhuhr,Asr:t.Asr,Maghrib:t.Maghrib,Isha:t.Isha};
+    [['Fajr',0],['Dhuhr',1],['Asr',2],['Maghrib',3],['Isha',4]].forEach(function(pair){
+      var row=$('prayCard').children[pair[1]];
+      row.querySelector('b').textContent=map[pair[0]];
+    });
+    markNext(map);
+    if(d&&d.hijri){
+      $('hijriChip').textContent=d.hijri.day+' '+d.hijri.month.en+' '+d.hijri.year;
+      $('hijriBig').textContent=d.hijri.day+' '+d.hijri.month.en;
+    }
+    if(lat!=null&&lon!=null){$('qiblaDeg').textContent=qiblaBearing(lat,lon).toFixed(1)+'°'}
+  }).catch(function(){});
+}
+function markNext(map){
+  var now=new Date();
+  var mins=now.getHours()*60+now.getMinutes(),names=['Fajr','Dhuhr','Asr','Maghrib','Isha'],order=['Fajr','Dhuhr','Asr','Maghrib','Isha'];
+  var next=null,minDiff=1e9;
+  order.forEach(function(n){
+    var parts=map[n].split(':'),m=+parts[0]*60+ +parts[1];
+    var diff=m-mins;if(diff<0)diff+=1440;
+    if(diff<minDiff){minDiff=diff;next=n}
+  });
+  [].forEach.call($('prayCard').children,function(row){
+    row.classList.remove('next');
+    row.querySelector('.live').style.display='none';
+  });
+  var target=null;
+  [].forEach.call($('prayCard').children,function(row){if(row.dataset.n===next)target=row});
+  if(target){
+    target.classList.add('next');
+    target.querySelector('.live').style.display='inline-flex';
+  }
+}
+function qiblaBearing(lat,lon){
+  var ka=21.4225,kl=39.8262;
+  var la=lat*Math.PI/180,lo=lon*Math.PI/180,ka2=ka*Math.PI/180,kl2=kl*Math.PI/180;
+  var y=Math.sin(kl2-lo),x=Math.cos(la)*Math.tan(ka2)-Math.sin(la)*Math.cos(kl2-lo);
+  var b=Math.atan2(y,x)*180/Math.PI;return (b+360)%360;
+}
+function initTimes(){
+  var c=load('masjid-city');
+  if(c)fetchTimes(c);
+  else if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(function(p){fetchTimes(null,p.coords.latitude,p.coords.longitude)},
+      function(){fetchByIP()},{timeout:7000,maximumAge:600000});
+  }else fetchByIP();
+}
+
+/* ---------- admin wallpaper + alerts override ---------- */
+function loadAdmin(){
+  try{
+    var ac=JSON.parse(load('masjid-admin-content'));
+    if(ac&&ac.bg&&ac.bg.kind==='upload'&&ac.bg.data){
+      var b=document.querySelector('.bgimg');
+      if(b)b.style.background='url("'+ac.bg.data+'") center 28%/cover no-repeat';
+    }
+    if(ac&&ac.announcements&&ac.announcements.length){
+      $('alertsBox').innerHTML=ac.announcements.map(function(a){
+        return '<div class="a"><i class="ad"></i>'+a.text+'</div>';
+      }).join('');
+    }
+  }catch(e){}
+}
+
+/* ---------- boot (runs last, after all data + handlers are defined) ---------- */
+(function(){
+  document.getElementById('app').style.display='none';
+  var pw=load(PW_KEY);
+  if(pw&&(load(SAVE_KEY)==='1'||load(SESS_KEY)==='1')){
+    document.getElementById('gate').style.display='none';
+    document.getElementById('app').style.display='flex';
+    bakeProfile();if(!load(PROFILE_KEY))showOv('profOv');
+  }
+  loadCities();initTimes();loadAdmin();go('home');
+})();
 
 /* ---------- PWA ---------- */
 if('serviceWorker' in navigator && location.protocol==='https:'){
