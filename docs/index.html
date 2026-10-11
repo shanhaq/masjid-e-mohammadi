@@ -59,7 +59,7 @@ label.lbl{display:block;font-size:.76rem;letter-spacing:.08em;text-transform:upp
 .overlay{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;padding:22px;
   background:rgba(4,9,18,.66);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .overlay.on{display:flex}
-.overlay .panel{width:100%;max-width:400px;padding:26px 24px;animation:pop .42s var(--sease)}
+.overlay .card{width:100%;max-width:400px;padding:26px 24px;animation:pop .42s var(--sease)}
 @keyframes pop{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
 .overlay h3{font-size:1.35rem;margin-bottom:4px}
 .overlay .sub{color:var(--text2);font-size:.86rem;margin-bottom:18px}
@@ -228,7 +228,7 @@ label.lbl{display:block;font-size:.76rem;letter-spacing:.08em;text-transform:upp
 
 <!-- ================= SAVE-LOGIN POPUP ================= -->
 <div class="overlay" id="saveOv">
-  <div class="card panel">
+  <div class="card">
     <h3>Save login?</h3>
     <p class="sub">Save karein to agli baar seedha khulega — password nahi manglega. Not now to har baar password lagega.</p>
     <div class="row">
@@ -240,7 +240,7 @@ label.lbl{display:block;font-size:.76rem;letter-spacing:.08em;text-transform:upp
 
 <!-- ================= PROFILE POPUP (first login) ================= -->
 <div class="overlay" id="profOv">
-  <div class="card panel">
+  <div class="card">
     <h3>Profile banayein</h3>
     <p class="sub">Naam, gender, dob aur language <b>zaroori</b> hai. Photo optional hai.</p>
     <div style="display:flex;gap:14px;align-items:center;margin-bottom:16px">
